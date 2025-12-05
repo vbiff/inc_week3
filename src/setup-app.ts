@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import { HttpStatuses } from "./core/types/http-statuses";
 import { db } from "./db/in-memory.db";
 import { Video } from "./videos/types/video";
+import {testingRouter} from "./testing/routers/testing.router";
 
 export const setupApp = (app: Express): void => {
   app.use(express.json());
@@ -9,6 +10,8 @@ export const setupApp = (app: Express): void => {
   app.get("/", (req, res) => {
     res.status(200).send("Welcome!!!");
   });
+
+  app.use('/testing', testingRouter);
 
   //videos
   app.get("/videos", (req, res) => {
@@ -46,8 +49,5 @@ export const setupApp = (app: Express): void => {
     res.status(HttpStatuses.CREATED_201).send(newVideo);
   });
 
-  app.delete("/testing/all-data", (req, res) => {
-    db.videos = [];
-    res.sendStatus(HttpStatuses.NO_CONTENT_204);
-  });
+
 };
