@@ -1,6 +1,6 @@
 import {AvailableResolutions} from "../types/video";
 
-export type videoInputDto = {
+export type videoUpdateDto = {
     title: string;
     author: string;
     canBeDownloaded: boolean;
