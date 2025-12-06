@@ -37,9 +37,9 @@ export const videoUpdateDtoValidation = (videoUpdate: videoUpdateDto) => {
         videoUpdate.minAgeRestriction > 18 ||
         videoUpdate.minAgeRestriction < 1
     ) {
-        if (videoUpdate.minAgeRestriction === null) {
-            errors.push({ field: "minAgeRestriction", message: "null - no restriction" })
-        }
+        // if (videoUpdate.minAgeRestriction === null) {
+        //    return;
+        // }
         errors.push({ field: "minAgeRestriction", message: "Invalid min or max age" });
     }
     if (

@@ -27,6 +27,11 @@ videosRouter.get("/:id", (req: Request, res: Response) => {
 });
 
 // create video
+
+const addOneDayToDate = (date : Date) => {
+    date.setDate(date.getDate() + 1)
+    return date
+}
 videosRouter.post("/", (req: Request<videoInputDto>, res: Response) => {
     const errors: ValidationError[] = videoInputDtoValidation(req.body)
   if (errors.length > 0) {
@@ -34,13 +39,13 @@ videosRouter.post("/", (req: Request<videoInputDto>, res: Response) => {
         .send(createErrorMessage(errors));
     return;
   }
-
+      const creationDate: Date= new Date();
   const newVideo: Video = {
     availableResolutions: req.body.availableResolutions,
     canBeDownloaded: true,
-    createdAt: new Date(),
+    createdAt: creationDate.toISOString(),
     minAgeRestriction: null,
-    publicationDate: new Date(),
+    publicationDate: addOneDayToDate(creationDate).toISOString(),
     id: +new Date(),
     title: req.body.title,
     author: req.body.author,
