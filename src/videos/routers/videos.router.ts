@@ -6,6 +6,7 @@ import { videoInputDto } from "../dto/video.input-dto";
 import {videoInputDtoValidation} from "../validation/videoInputDtoValidation";
 import {ValidationError} from "../types/validationError";
 import {createErrorMessage} from "../../core/utils/error.utils";
+import {videoUpdateDtoValidation} from "../validation/videoUpdateDtoValidation";
 
 export const videosRouter = Router();
 
@@ -51,6 +52,12 @@ videosRouter.post("/", (req: Request<videoInputDto>, res: Response) => {
 
 // update video
 videosRouter.put("/:id", (req: Request, res: Response) => {
+    const errors: ValidationError[] = videoUpdateDtoValidation(req.body)
+    if (errors.length > 0) {
+        res.status(HttpStatuses.BAD_REQUEST_400)
+            .send(createErrorMessage(errors));
+        return;
+    }
   const movieIndex = db.videos.findIndex((m) => m.id === +req.params.id);
   if (!movieIndex) {
     res.status(HttpStatuses.NOT_FOUND_404);
