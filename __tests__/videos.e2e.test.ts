@@ -95,7 +95,7 @@ describe("Videos API testing", () => {
     expect(responseVideoById.body).toEqual({
       id: videoId,
       canBeDownloaded: false,
-      minAgeRestriction: 37,
+      minAgeRestriction: 16,
       createdAt: expect.any(String),
       publicationDate: expect.any(String),
       author: "Jack",
@@ -111,7 +111,7 @@ describe("Videos API testing", () => {
   it("Should delete video by Id", async () => {
     await request(app)
       .delete("/videos/" + videoId)
-      .expect(HttpStatuses.OK_200);
+      .expect(HttpStatuses.NO_CONTENT_204);
 
     await request(app)
       .get("/videos/" + videoId)

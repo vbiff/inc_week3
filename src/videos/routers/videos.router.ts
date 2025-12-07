@@ -61,9 +61,9 @@ videosRouter.put("/:id", (req: Request, res: Response) => {
     res.status(HttpStatuses.BAD_REQUEST_400).send(createErrorMessage(errors));
     return;
   }
-  const movieIndex = db.videos.findIndex((m) => m.id === +req.params.id);
-  if (!movieIndex) {
-    res.status(HttpStatuses.NOT_FOUND_404);
+  const movieIndex: number = db.videos.findIndex((m) => m.id === +req.params.id);
+  if (movieIndex === -1) {
+    res.sendStatus(HttpStatuses.NOT_FOUND_404);
     return;
   }
 
@@ -96,7 +96,7 @@ videosRouter.delete("/:id", (req: Request, res: Response) => {
     res
       .status(HttpStatuses.NOT_FOUND_404)
       .send(
-        createErrorMessage([{ field: "id", message: "Vehicle not found" }]),
+        createErrorMessage([{ field: "id", message: "Video not found" }]),
       );
     return;
   }
