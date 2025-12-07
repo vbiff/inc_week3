@@ -53,6 +53,15 @@ export const videoUpdateDtoValidation = (videoUpdate: videoUpdateDto) => {
       message: "Unacceptable resolution name(s)",
     });
   }
+    if (
+        !videoUpdate.canBeDownloaded
+       // videoUpdate.canBeDownloaded !== boolean ||
+    ) {
+        errors.push({
+            field: "canBeDownloaded",
+            message: "Unacceptable resolution name(s)",
+        });
+    }
   // if (
   //    typeof !videoUpdate.publicationDate !== typeof new Date()
   //
