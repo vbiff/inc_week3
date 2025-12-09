@@ -1,48 +1,33 @@
 import { Router, Request, Response } from "express";
-import { HttpStatuses } from "../../core/types/http-statuses";
 import { blogInputDto } from "../dto/blog.input_dto";
-import { blogsRepository } from "../repositories/blogs.repositories";
-import {createErrorMessage} from "../../core/utils/error.utils";
+import { getAllBlogsHandler } from "./handlers/get-all-blogs.handler";
+import { getBlogById } from "./handlers/get-by-id.handler";
+import { createBlogHandler } from "./handlers/create-blog.handler";
+import { updateBlogHandler } from "./handlers/update-blog.handler";
+import { deleteBlogHandler } from "./handlers/delete-blog.handler";
 
 export const blogRouter = Router();
 //get all
 blogRouter.get("/", (req: Request, res: Response) => {
-  const blogs = blogsRepository.findAll();
-  res.status(HttpStatuses.OK_200).send(blogs);
+  getAllBlogsHandler(req, res);
 });
 // create
 blogRouter.post("/", (req: Request<blogInputDto>, res: Response) => {
-  const newBlog = blogsRepository.createBlog(req.body);
-  res.status(HttpStatuses.CREATED_201).send(newBlog);
+  createBlogHandler(req, res);
 });
 
 // get by id
 
 blogRouter.get("/:id", (req: Request, res: Response) => {
-  const blog = blogsRepository.findById(req.params.id);
-  if (!blog) {
-    res.sendStatus(HttpStatuses.NOT_FOUND_404);
-    return;
-  }
-
-  res.status(HttpStatuses.OK_200).send(blog);
+  getBlogById(req, res);
 });
 
 // update
 blogRouter.put("/:id", (req: Request, res: Response) => {
-  blogsRepository.updateBlog(req.body, req.params.id);
-  res.sendStatus(HttpStatuses.NO_CONTENT_204);
+  updateBlogHandler(req, res);
 });
 
 //delete
 blogRouter.delete("/:id", (req: Request, res: Response) => {
-    const blog = blogsRepository.findById(req.params.id)
-    if (!blog) {
-        res
-            .status(HttpStatuses.NOT_FOUND_404)
-            .send(createErrorMessage([{ field: 'id', message: 'blog not found' }]));
-        return;
-    }
-  blogsRepository.deleteBlog(req.params.id);
-  res.sendStatus(HttpStatuses.NO_CONTENT_204);
+  deleteBlogHandler(req, res);
 });
