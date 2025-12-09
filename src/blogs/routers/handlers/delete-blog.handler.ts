@@ -5,7 +5,7 @@ import { Response, Request } from "express";
 
 export function deleteBlogHandler(req: Request, res: Response) {
   const blog = blogsRepository.findById(req.params.id);
-  if (blog !== null) {
+  if (blog === null) {
     res
       .status(HttpStatuses.NOT_FOUND_404)
       .send(createErrorMessage([{ field: "id", message: "blog not found" }]));
