@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import { testingRouter } from "./testing/routers/testing.router";
 import { videosRouter } from "./videos/routers/videos.router";
-import {blogRouter} from "./blogs/routers/blogs.router";
+import { blogRouter } from "./blogs/routers/blogs.router";
 
 export const setupApp = (app: Express): void => {
   app.use(express.json());
