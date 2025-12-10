@@ -27,16 +27,16 @@ blogRouter.get("/", (req: Request, res: Response) => {
 blogRouter.post(
   "/",
   body("name")
-      .exists()
+      .exists().withMessage({ field: "name", message: "Name is required" })
     .trim()
     .isLength({ max: 15 })
-    .withMessage({ field: "name", message: "Name is required" }),
+    .withMessage({ field: "name", message: "Name is too long. Should be less 15 symbols" }),
   body("description")
     .trim()
     .isLength({ max: 500 })
     .withMessage({
       field: "description",
-      message: "description is < 500 symbols",
+      message: "description should be less than 500 symbols",
     }),
   body("websiteUrl")
     .trim()
@@ -46,7 +46,6 @@ blogRouter.post(
   (req: Request<blogInputDto>, res: Response) => {
     const result = validationResult(req).formatWith(formatErrors).array({onlyFirstError: true});
     if (result.length > 0) {
-
       return res.status(400).send({ errorsMessages: result });
     }
     createBlogHandler(req, res);
