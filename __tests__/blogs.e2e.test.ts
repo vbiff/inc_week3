@@ -1,0 +1,62 @@
+import express from "express";
+import { setupApp } from "../src/setup-app";
+import request from "supertest";
+import { HttpStatuses } from "../src/core/types/http-statuses";
+import { Blog } from "../src/blogs/types/blog";
+import { blogInputDto } from "../src/blogs/dto/blog.input_dto";
+
+describe("Test for CRUD blogs", () => {
+  const app = express();
+  setupApp(app);
+
+  beforeAll(async () => {
+    await request(app)
+      .delete("/testing/all-data")
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
+
+  let blogId = "";
+
+  //post blog
+  it("Should create a blog", async () => {
+    const newBlog: blogInputDto = {
+      description: "description",
+      name: "NAME",
+      websiteUrl: "https://example.com/",
+    };
+
+    await request(app)
+      .post("/blogs")
+      .send(newBlog)
+      .expect(HttpStatuses.CREATED_201);
+  });
+
+  it("Should get all blogs", async () => {
+    const blogs = await request(app).get("/blogs").expect(HttpStatuses.OK_200);
+
+    expect(blogs.body.length).toBe(1);
+
+    blogId = blogs.body[0].id;
+  });
+
+  it("Should get a blog by id", async () => {
+    const blog = await request(app)
+      .get(`/blogs/${blogId}`)
+      .expect(HttpStatuses.OK_200);
+  });
+  it("Should delete blog by id", async () => {
+    await request(app)
+      .delete(`/blogs/${blogId}`)
+      .expect(HttpStatuses.NO_CONTENT_204);
+
+    const blogs = await request(app)
+      .get(`/blogs/${blogId}`)
+      .expect(HttpStatuses.NOT_FOUND_404);
+  });
+
+  it("Shouldnt delete blog by id", async () => {
+    await request(app)
+      .delete(`/blogs/${blogId}`)
+      .expect(HttpStatuses.NOT_FOUND_404);
+  });
+});

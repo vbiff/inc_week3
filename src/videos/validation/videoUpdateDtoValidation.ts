@@ -45,7 +45,7 @@ export const videoUpdateDtoValidation = (videoUpdate: videoUpdateDto) => {
     });
   }
   if (
-    !videoUpdate.canBeDownloaded ||
+    videoUpdate.canBeDownloaded === null ||
     typeof (videoUpdate as any).canBeDownloaded !== "boolean"
   ) {
     errors.push({
