@@ -40,6 +40,7 @@ blogRouter.post(
     }),
   body("websiteUrl")
     .trim()
+      .isLength({ max: 100 }).withMessage({ field: "websiteUrl", message: "websiteUrl is too long" })
     .matches(urlPattern)
     .withMessage({ field: "websiteUrl", message: "url is wrong" }),
 
