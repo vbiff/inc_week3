@@ -14,7 +14,7 @@ const formatErrors = (error: ValidationError) => {
     const expressError = error as unknown as FieldValidationError
     return {
         field: expressError.path,
-        message: expressError.msg
+        message: expressError.msg.message
     }
 }
 
