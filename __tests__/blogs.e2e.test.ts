@@ -42,6 +42,11 @@ describe("Test for CRUD blogs", () => {
     await request(app)
       .get(`/blogs/${blogId}`)
       .expect(HttpStatuses.OK_200);
+
+      await request(app)
+          .get(`/blogs/wrongId`)
+          .expect(HttpStatuses.NOT_FOUND_404);
+
   });
   it("Should delete blog by id", async () => {
     await request(app)
