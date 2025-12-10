@@ -5,11 +5,10 @@ import { getBlogById } from "./handlers/get-by-id.handler";
 import { createBlogHandler } from "./handlers/create-blog.handler";
 import { updateBlogHandler } from "./handlers/update-blog.handler";
 import { deleteBlogHandler } from "./handlers/delete-blog.handler";
-import {body, validationResult} from "express-validator";
+import { body, validationResult } from "express-validator";
 
-
-const urlPattern = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
-
+const urlPattern =
+  /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
 
 export const blogRouter = Router();
 //get all
@@ -19,16 +18,28 @@ blogRouter.get("/", (req: Request, res: Response) => {
 // create
 blogRouter.post(
   "/",
-  body("name").trim().isLength({ max: 15 }).withMessage({ field: "name" , message: "Name is required" }),
-  body('description').trim().isLength({ max: 500 }).withMessage({ field: "description" , message: "description is < 500 symbols" }),
-  body('websiteUrl').trim().matches(urlPattern).withMessage({ field: "websiteUrl" , message: "url is wrong" }),
+  body("name")
+    .trim()
+    .isLength({ max: 15 })
+    .withMessage({ field: "name", message: "Name is required" }),
+  body("description")
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage({
+      field: "description",
+      message: "description is < 500 symbols",
+    }),
+  body("websiteUrl")
+    .trim()
+    .matches(urlPattern)
+    .withMessage({ field: "websiteUrl", message: "url is wrong" }),
 
   (req: Request<blogInputDto>, res: Response) => {
-      const result = validationResult(req);
-      if (!result.isEmpty()) {
-          return res.status(400).send({ errorsMessages: result.array() });
-      }
-      createBlogHandler(req, res);
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).send({ errorsMessages: result.array() });
+    }
+    createBlogHandler(req, res);
   },
 );
 

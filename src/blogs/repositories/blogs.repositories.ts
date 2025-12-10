@@ -8,7 +8,7 @@ export const blogsRepository = {
   },
 
   findById(id: string): Blog | null {
-    return db.blogs.find((blog) => (blog.id === id)) ?? null;
+    return db.blogs.find((blog) => blog.id === id) ?? null;
   },
 
   createBlog(inputBlog: blogInputDto): Blog {

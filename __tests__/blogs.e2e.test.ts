@@ -29,7 +29,7 @@ describe("Test for CRUD blogs", () => {
       .send(newBlog)
       .expect(HttpStatuses.CREATED_201);
   });
-
+  //get all
   it("Should get all blogs", async () => {
     const blogs = await request(app).get("/blogs").expect(HttpStatuses.OK_200);
 
@@ -37,17 +37,42 @@ describe("Test for CRUD blogs", () => {
 
     blogId = blogs.body[0].id;
   });
-
+  //get by id
   it("Should get a blog by id", async () => {
+    await request(app).get(`/blogs/${blogId}`).expect(HttpStatuses.OK_200);
+
+    await request(app).get(`/blogs/wrongId`).expect(HttpStatuses.NOT_FOUND_404);
+  });
+  //update
+  it("Should update blog with valid id", async () => {
+    const updateBlog: blogInputDto = {
+      description: "description22",
+      name: "NAME22",
+      websiteUrl: "https://example22.com/",
+    };
+
     await request(app)
+      .put(`/blogs/${blogId}`)
+      .send(updateBlog)
+      .expect(HttpStatuses.NO_CONTENT_204);
+
+    const response = await request(app)
       .get(`/blogs/${blogId}`)
       .expect(HttpStatuses.OK_200);
 
-      await request(app)
-          .get(`/blogs/wrongId`)
-          .expect(HttpStatuses.NOT_FOUND_404);
-
+    expect(response.body).toEqual({
+      description: "description22",
+      name: "NAME22",
+      websiteUrl: "https://example22.com/",
+      id: blogId,
+    });
+    // put wrong id
+    await request(app)
+      .put(`/blogs/wrongId`)
+      .send(updateBlog)
+      .expect(HttpStatuses.NOT_FOUND_404);
   });
+  //delete
   it("Should delete blog by id", async () => {
     await request(app)
       .delete(`/blogs/${blogId}`)
