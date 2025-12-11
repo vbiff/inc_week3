@@ -9,6 +9,6 @@ export function updatePostHandler(req: Request, res: Response) {
         res.sendStatus(HttpStatuses.NOT_FOUND_404);
         return;
     }
-    postsRepository.updateBlog(req.body, req.params.id);
+    postsRepository.updatePost(req.body, req.params.id);
     res.sendStatus(HttpStatuses.NO_CONTENT_204);
 }

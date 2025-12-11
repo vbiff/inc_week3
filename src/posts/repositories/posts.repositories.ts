@@ -13,7 +13,7 @@ export const postsRepository = {
         return db.posts.find((post) => post.id === id) ?? null;
     },
 
-    createBlog(inputPost: PostInputDTO): Post {
+    createPost(inputPost: PostInputDTO): Post {
         const blog = db.blogs.find((blog) => blog.id === inputPost.blogId)
         if (!blog) {
             throw new Error("blog not found");
@@ -23,7 +23,7 @@ export const postsRepository = {
         return newPost;
     },
 
-    updateBlog(dto: PostInputDTO, id: string) {
+    updatePost(dto: PostInputDTO, id: string) {
         const post = db.posts.find((post) => (post.id === id));
         if (!post) {
             throw new Error("blog does not exist");
@@ -42,7 +42,7 @@ export const postsRepository = {
         return;
     },
 
-    deleteBlog(id: string) {
+    deletePost(id: string) {
         const postIndex = db.posts.findIndex((m) => m.id === id);
         if (postIndex === -1) {
             throw new Error("blog not found");
