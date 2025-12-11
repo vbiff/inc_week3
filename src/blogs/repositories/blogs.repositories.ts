@@ -18,7 +18,7 @@ export const blogsRepository = {
   },
 
   updateBlog(dto: blogInputDto, id: string) {
-    const blog = db.blogs.find((blog) => (blog.id === id));
+    const blog = db.blogs.find((blog) => blog.id === id);
     if (!blog) {
       throw new Error("blog does not exist");
     }

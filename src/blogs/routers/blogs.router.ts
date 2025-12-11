@@ -7,6 +7,7 @@ import { updateBlogHandler } from "./handlers/update-blog.handler";
 import { deleteBlogHandler } from "./handlers/delete-blog.handler";
 import { validationResultMiddleware } from "../../core/middlewares/validation/input-validation-result-middleware";
 import { blogInputDtoValidation } from "../validation/input-dto.validation-middleware";
+import { adminGuardMiddleware } from "../../core/middlewares/auth/admin.guard-middleware";
 
 export const blogRouter = Router();
 //get all
@@ -16,6 +17,7 @@ blogRouter.get("/", (req: Request, res: Response) => {
 // create
 blogRouter.post(
   "/",
+  adminGuardMiddleware,
   blogInputDtoValidation,
   validationResultMiddleware,
   (req: Request<blogInputDto>, res: Response) => {
@@ -30,14 +32,21 @@ blogRouter.get("/:id", (req: Request, res: Response) => {
 });
 
 // update
-blogRouter.put("/:id",
-    blogInputDtoValidation,
-    validationResultMiddleware,
-    (req: Request, res: Response) => {
-  updateBlogHandler(req, res);
-});
+blogRouter.put(
+  "/:id",
+  adminGuardMiddleware,
+  blogInputDtoValidation,
+  validationResultMiddleware,
+  (req: Request, res: Response) => {
+    updateBlogHandler(req, res);
+  },
+);
 
 //delete
-blogRouter.delete("/:id", (req: Request, res: Response) => {
-  deleteBlogHandler(req, res);
-});
+blogRouter.delete(
+  "/:id",
+  adminGuardMiddleware,
+  (req: Request, res: Response) => {
+    deleteBlogHandler(req, res);
+  },
+);
