@@ -21,7 +21,8 @@ describe("Test for CRUD blogs", () => {
     const newBlog: blogInputDto = {
       description: "description",
       name: "NAME",
-      websiteUrl: "https://length_101-DnZlTI1khUHpqOqCzftIYiSHCV8fKjYFQOoCIwmUczzW9V5K8cqY.com",
+      websiteUrl:
+        "https://length_101-DnZlTI1khUHpqOqCzftIYiSHCV8fKjYFQOoCIwmUczzW9V5K8cqY.com",
     };
 
     await request(app)
