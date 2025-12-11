@@ -5,7 +5,8 @@ const titleValidation = body("title")
     .trim()
     .exists()
     .withMessage({ message: "Name is required" })
-    .isLength({ min: 1, max: 30 })
+    .notEmpty().withMessage({ message: "Tile can not be empty" })
+    .isLength({ max: 30 })
     .withMessage({
         message: "Name is too long. Should be less 30 symbols",
     });
@@ -18,6 +19,7 @@ const shortDescriptionValidation = body("shortDescription")
     });
 const content = body("content")
     .trim()
+    .notEmpty().withMessage({ message: "Content is required" })
     .isLength({ max: 1000 })
     .withMessage({ message: "content is too long" })
 
