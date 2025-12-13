@@ -43,7 +43,7 @@ describe("Test for CRUD blogs", () => {
 
     expect(blogs.body.length).toBe(1); //I have deleted everything
 
-    blogId = blogs.body[0].id;
+    blogId = blogs.body[0]._id;
   });
   //get by id
   it("Should get a blog by id", async () => {
@@ -52,7 +52,7 @@ describe("Test for CRUD blogs", () => {
       .expect(HttpStatuses.OK_200);
 
     await request(app)
-      .get(`${BLOGS_PATH}/wrongId`)
+      .get(`${BLOGS_PATH}/693c45f575a8c9cafc5843d1`)
       .expect(HttpStatuses.NOT_FOUND_404);
   });
   //update
@@ -73,15 +73,10 @@ describe("Test for CRUD blogs", () => {
       .get(`${BLOGS_PATH}/${blogId}`)
       .expect(HttpStatuses.OK_200);
 
-    expect(response.body).toEqual({
-      description: "description22",
-      name: "NAME22",
-      websiteUrl: "https://example22.com/",
-      id: blogId,
-    });
+    expect(response.body).toMatchObject(updateBlog);
     // put wrong id
     await request(app)
-      .put(`${BLOGS_PATH}/wrongId`)
+      .put(`${BLOGS_PATH}/693c45f575a8c9cafc5843d1`)
       .set("Authorization", adminToken)
       .send(updateBlog)
       .expect(HttpStatuses.NOT_FOUND_404);

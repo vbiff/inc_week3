@@ -3,21 +3,26 @@ import { db } from "../../db/in-memory.db";
 import { blogInputDto } from "../dto/blog.input_dto";
 
 export const blogsRepository = {
-  findAll(): Blog[] {
+  async findAll(): Promise<Blog[]> {
     return db.blogs;
   },
 
-  findById(id: string): Blog | null {
+  async findById(id: string): Promise<Blog | null> {
     return db.blogs.find((blog) => blog.id === id) ?? null;
   },
 
-  createBlog(inputBlog: blogInputDto): Blog {
-    const newBlog = { ...inputBlog, id: new Date().toISOString() };
+  async createBlog(inputBlog: blogInputDto): Promise<Blog> {
+    const newBlog = {
+      ...inputBlog,
+      id: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      isMembership: false,
+    };
     db.blogs.push(newBlog);
     return newBlog;
   },
 
-  updateBlog(dto: blogInputDto, id: string) {
+  async updateBlog(dto: blogInputDto, id: string): Promise<void> {
     const blog = db.blogs.find((blog) => blog.id === id);
     if (!blog) {
       throw new Error("blog does not exist");
@@ -29,7 +34,7 @@ export const blogsRepository = {
     return;
   },
 
-  deleteBlog(id: string) {
+  async deleteBlog(id: string): Promise<void> {
     const blogIndex = db.blogs.findIndex((m) => m.id === id);
     if (blogIndex === -1) {
       throw new Error("blog not found");

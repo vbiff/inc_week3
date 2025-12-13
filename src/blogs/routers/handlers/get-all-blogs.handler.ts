@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { blogsRepository } from "../../repositories/blogs.repositories";
+import { blogsRepository } from "../../repositories/blogs.mongodb.repositories";
 
-export function getAllBlogsHandler(req: Request, res: Response) {
-  const blogs = blogsRepository.findAll();
+export async function getAllBlogsHandler(req: Request, res: Response) {
+  const blogs = await blogsRepository.findAll();
   res.send(blogs);
 }

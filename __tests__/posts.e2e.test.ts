@@ -73,7 +73,7 @@ describe("Test for CRUD posts", () => {
 
     expect(posts.body.length).toBe(1);
 
-    postId = posts.body[0].id;
+    postId = posts.body[0]._id;
   });
   //get by id
   it("Should get a post by id", async () => {
@@ -82,7 +82,7 @@ describe("Test for CRUD posts", () => {
       .expect(HttpStatuses.OK_200);
 
     await request(app)
-      .get(`${POSTS_PATH}/wrongId`)
+      .get(`${POSTS_PATH}/693c45f575a8c9cafc5843d1`)
       .expect(HttpStatuses.NOT_FOUND_404);
   });
   //update
@@ -104,8 +104,8 @@ describe("Test for CRUD posts", () => {
       .get(`${POSTS_PATH}/${postId}`)
       .expect(HttpStatuses.OK_200);
 
-    expect(response.body).toEqual({
-      id: postId,
+    expect(response.body).toMatchObject({
+      _id: postId,
       blogName: "NAME",
       title: "test2",
       shortDescription: "description2",
@@ -114,7 +114,7 @@ describe("Test for CRUD posts", () => {
     });
     // put wrong id
     await request(app)
-      .put(`${POSTS_PATH}/wrongId`)
+      .put(`${POSTS_PATH}/693c45f575a8c9cafc5843d1`)
       .set("Authorization", adminToken)
       .send(updatePost)
       .expect(HttpStatuses.NOT_FOUND_404);

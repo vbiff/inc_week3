@@ -42,23 +42,24 @@ describe("InputValidation", () => {
       .get(BLOGS_PATH)
       .expect(HttpStatuses.OK_200);
 
-    expect(blogs.body.length).toBe(1); //I have deleted everything beforeall
+    expect(blogs.body.length).toBe(1); //I have deleted everything before all
 
     blogId = blogs.body[0].id;
   });
 
-  const validInputData = {
-    title: "test",
-    shortDescription: "description",
-    content: "content",
-    blogId: blogId,
-  };
-
   it("Should pass all validation on create", async () => {
-    await request(app)
+    const validInputData = {
+      title: "",
+      shortDescription: "description",
+      content: "content",
+      blogId: blogId,
+    };
+    const response = await request(app)
       .post(POSTS_PATH)
       .set("Authorization", adminToken)
       .send(validInputData)
-      .expect(HttpStatuses.CREATED_201);
+      .expect(HttpStatuses.BAD_REQUEST_400);
+
+    console.log(response.body);
   });
 });

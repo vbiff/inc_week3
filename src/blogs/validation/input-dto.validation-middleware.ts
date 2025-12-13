@@ -24,8 +24,14 @@ const websiteUrl = body("websiteUrl")
   .matches(urlPattern)
   .withMessage({ message: "url is wrong" });
 
+// const isMembership = body("isMembership")
+//   .trim()
+//   .isBoolean()
+//   .withMessage({ message: "isMembership should be boolean" });
+
 export const blogInputDtoValidation = [
   nameValidation,
   descriptionValidation,
   websiteUrl,
+  // isMembership,
 ];
