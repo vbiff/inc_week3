@@ -1,7 +1,7 @@
 import { Blog } from "../types/blog";
 import { blogInputDto } from "../dto/blog.input_dto";
 import { client } from "../../db/mongo.db";
-import { ObjectId, WithId } from "mongodb";
+import { ObjectId } from "mongodb";
 
 export const blogCollection = client.db("blogger").collection<Blog>("blogs");
 
@@ -10,8 +10,8 @@ export const blogsRepository = {
     return client.db("blogger").collection<Blog>("blogs").find({}).toArray();
   },
 
-  async findById(id: string): Promise<WithId<Blog> | null> {
-    const blog = await blogCollection.findOne({ _id: new ObjectId(id) });
+  async findById(id: string): Promise<Blog | null> {
+    const blog = await blogCollection.findOne({ _id: new ObjectId(id) }, {projection: {_id: 0} });
     if (!blog) {
       return null;
     }
