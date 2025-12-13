@@ -18,15 +18,15 @@ export const blogsRepository = {
     return blog;
   },
 
-  async createBlog(inputBlog: blogInputDto): Promise<WithId<Blog>> {
+  async createBlog(inputBlog: blogInputDto): Promise<Blog> {
     const newBlog = {
       ...inputBlog,
       id: new Date().toISOString(),
       createdAt: new Date().toISOString(),
-      isMembership: true,
+      isMembership: false,
     };
-    const insertResult = await blogCollection.insertOne(newBlog);
-    return { ...newBlog, _id: insertResult.insertedId };
+    await blogCollection.insertOne(newBlog);
+    return { ...newBlog};
   },
 
   async updateBlog(dto: blogInputDto, id: string): Promise<void> {
