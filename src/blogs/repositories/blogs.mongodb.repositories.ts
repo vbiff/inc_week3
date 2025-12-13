@@ -23,7 +23,7 @@ export const blogsRepository = {
       ...inputBlog,
       id: new Date().toISOString(),
       createdAt: new Date().toISOString(),
-      isMembership: false,
+      isMembership: true,
     };
     const insertResult = await blogCollection.insertOne(newBlog);
     return { ...newBlog, _id: insertResult.insertedId };
