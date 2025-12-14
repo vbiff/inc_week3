@@ -15,7 +15,8 @@ export const blogsRepository = {
     if (!blog) {
       return null;
     }
-    return blog;
+    const { _id, ...noIdblog } = blog;
+    return noIdblog;
   },
 
   async createBlog(inputBlog: blogInputDto): Promise<Blog> {

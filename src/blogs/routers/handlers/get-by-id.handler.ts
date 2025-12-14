@@ -8,5 +8,6 @@ export async function getBlogById(req: Request, res: Response) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
     return;
   }
+  console.log(blog);
   res.status(HttpStatuses.OK_200).send(blog);
 }
