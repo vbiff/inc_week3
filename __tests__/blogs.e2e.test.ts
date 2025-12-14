@@ -29,11 +29,13 @@ describe("Test for CRUD blogs", () => {
         "https://length_101-DnZlTI1khUHpqOqCzftIYiSHCV8fKjYFQOoCIwmUczzW9V5K8cqY.com",
     };
 
-    await request(app)
+    const result = await request(app)
       .post(BLOGS_PATH)
       .set("Authorization", adminToken)
       .send(newBlog)
       .expect(HttpStatuses.CREATED_201);
+
+    console.log(result.body);
   });
   //get all
   it("Should get all blogs", async () => {

@@ -25,8 +25,10 @@ export const blogsRepository = {
       createdAt: new Date().toISOString(),
       isMembership: false,
     };
+    const noMongoIdBlog = {...newBlog}
     await blogCollection.insertOne(newBlog);
-    return { ...newBlog};
+
+    return noMongoIdBlog;
   },
 
   async updateBlog(dto: blogInputDto, id: string): Promise<void> {
