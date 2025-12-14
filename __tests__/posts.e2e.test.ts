@@ -73,7 +73,7 @@ describe("Test for CRUD posts", () => {
 
     expect(posts.body.length).toBe(1);
 
-    postId = posts.body[0]._id;
+    postId = posts.body[0].id;
   });
   //get by id
   it("Should get a post by id", async () => {

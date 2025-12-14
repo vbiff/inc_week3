@@ -1,18 +1,17 @@
 import { Post } from "../types/posts";
 import { PostInputDTO } from "../dto/post-input-dto";
 import { client } from "../../db/mongo.db";
-import { ObjectId } from "mongodb";
 import { blogCollection } from "../../blogs/repositories/blogs.mongodb.repositories";
 
 const postsCollection = client.db("blogger").collection<Post>("posts");
 
 export const postsRepository = {
   async findAll(): Promise<Post[]> {
-    return postsCollection.find().toArray();
+    return postsCollection.find({}, { projection: { _id: 0 } }).toArray();
   },
 
   async findById(id: string): Promise<Post | null> {
-    return await postsCollection.findOne({ _id: new ObjectId(id) });
+    return await postsCollection.findOne({ id: id });
   },
 
   async createPost(inputPost: PostInputDTO): Promise<Post> {
@@ -26,8 +25,9 @@ export const postsRepository = {
       blogName: blog.name,
       createdAt: new Date().toISOString(),
     };
+    const noMongoId = {...newPost}
     await postsCollection.insertOne(newPost);
-    return newPost;
+    return noMongoId;
   },
 
   async updatePost(dto: PostInputDTO, id: string): Promise<void> {
@@ -41,7 +41,7 @@ export const postsRepository = {
     }
     await postsCollection.updateOne(
       {
-        _id: new ObjectId(id),
+        id: id,
       },
       {
         $set: {
@@ -58,7 +58,7 @@ export const postsRepository = {
   },
 
   async deletePost(id: string): Promise<void> {
-    await postsCollection.deleteOne({ _id: new ObjectId(id) });
+    await postsCollection.deleteOne({ id: id });
     return;
   },
 };
