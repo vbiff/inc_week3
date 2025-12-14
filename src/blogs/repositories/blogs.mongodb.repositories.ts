@@ -7,7 +7,7 @@ export const blogCollection = client.db("blogger").collection<Blog>("blogs");
 
 export const blogsRepository = {
   async findAll(): Promise<Blog[]> {
-    return client.db("blogger").collection<Blog>("blogs").find({}).toArray();
+    return client.db("blogger").collection<Blog>("blogs").find({}, { projection: { _id: 0 } }).toArray();
   },
 
   async findById(id: string): Promise<Blog | null> {
