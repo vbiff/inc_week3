@@ -45,7 +45,7 @@ describe("Test for CRUD blogs", () => {
 
     expect(blogs.body.length).toBe(1); //I have deleted everything
 
-    blogId = blogs.body[0]._id;
+    blogId = blogs.body[0].id;
   });
   //get by id
   it("Should get a blog by id", async () => {

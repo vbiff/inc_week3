@@ -1,7 +1,7 @@
 import { Blog } from "../types/blog";
 import { blogInputDto } from "../dto/blog.input_dto";
 import { client } from "../../db/mongo.db";
-import { ObjectId } from "mongodb";
+
 
 export const blogCollection = client.db("blogger").collection<Blog>("blogs");
 
@@ -11,7 +11,7 @@ export const blogsRepository = {
   },
 
   async findById(id: string): Promise<Blog | null> {
-    const blog = await blogCollection.findOne({ _id: new ObjectId(id) }, {projection: {_id: 0} });
+    const blog = await blogCollection.findOne({ id: id });
     if (!blog) {
       return null;
     }
@@ -33,7 +33,7 @@ export const blogsRepository = {
 
   async updateBlog(dto: blogInputDto, id: string): Promise<void> {
     await blogCollection.updateOne(
-      { _id: new ObjectId(id) },
+      { id: id },
 
       {
         $set: {
@@ -47,7 +47,7 @@ export const blogsRepository = {
   },
 
   async deleteBlog(id: string): Promise<void> {
-    await blogCollection.deleteOne({ _id: new ObjectId(id) });
+    await blogCollection.deleteOne({ id: id });
     return;
   },
 };
