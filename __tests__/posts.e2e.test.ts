@@ -59,11 +59,13 @@ describe("Test for CRUD posts", () => {
       blogId: blogId,
     };
 
-    await request(app)
+   const result =  await request(app)
       .post(POSTS_PATH)
       .set("Authorization", adminToken)
       .send(newPost)
       .expect(HttpStatuses.CREATED_201);
+
+   console.log(result.body);
   });
   //get all
   it("Should get all posts", async () => {
@@ -105,7 +107,6 @@ describe("Test for CRUD posts", () => {
       .expect(HttpStatuses.OK_200);
 
     expect(response.body).toMatchObject({
-      _id: postId,
       blogName: "NAME",
       title: "test2",
       shortDescription: "description2",

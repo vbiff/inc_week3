@@ -11,7 +11,7 @@ export const postsRepository = {
   },
 
   async findById(id: string): Promise<Post | null> {
-    return await postsCollection.findOne({ id: id });
+    return await postsCollection.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
   async createPost(inputPost: PostInputDTO): Promise<Post> {
