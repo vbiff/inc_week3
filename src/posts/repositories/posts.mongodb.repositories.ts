@@ -11,7 +11,10 @@ export const postsRepository = {
   },
 
   async findById(id: string): Promise<Post | null> {
-    return await postsCollection.findOne({ id: id }, { projection: { _id: 0 } });
+    return await postsCollection.findOne(
+      { id: id },
+      { projection: { _id: 0 } },
+    );
   },
 
   async createPost(inputPost: PostInputDTO): Promise<Post> {
@@ -25,21 +28,17 @@ export const postsRepository = {
       blogName: blog.name,
       createdAt: new Date().toISOString(),
     };
-    const noMongoId = {...newPost}
+    const noMongoId = { ...newPost };
     await postsCollection.insertOne(newPost);
     return noMongoId;
   },
 
-  async updatePost(dto: PostInputDTO, id: string): Promise<void> {
-    const post = await this.findById(id);
-    if (!post) {
-      throw new Error("blog does not exist");
-    }
+  async updatePost(dto: PostInputDTO, id: string): Promise<void | null> {
     const blog = await blogCollection.findOne({ id: dto.blogId });
     if (!blog) {
       throw new Error("blog not found");
     }
-    await postsCollection.updateOne(
+    const result = await postsCollection.updateOne(
       {
         id: id,
       },
@@ -54,11 +53,14 @@ export const postsRepository = {
       },
     );
 
-    return;
+    if (result.matchedCount > 0) {
+      return;
+    }
+    return null;
   },
 
-  async deletePost(id: string): Promise<void> {
-    await postsCollection.deleteOne({ id: id });
-    return;
+  async deletePost(id: string): Promise<boolean> {
+    const result = await postsCollection.deleteOne({ id: id });
+    return result.deletedCount === 1;
   },
 };

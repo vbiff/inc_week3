@@ -1,4 +1,4 @@
-import { Router} from "express";
+import { Router } from "express";
 
 import { getAllBlogsHandler } from "./handlers/get-all-blogs.handler";
 import { getBlogById } from "./handlers/get-by-id.handler";
@@ -17,6 +17,15 @@ blogRouter.post(
   "/",
   adminGuardMiddleware,
   blogInputDtoValidation,
+  validationResultMiddleware,
+
+  createBlogHandler,
+);
+
+blogRouter.post(
+  "/:blogId/posts",
+  adminGuardMiddleware,
+
   validationResultMiddleware,
 
   createBlogHandler,

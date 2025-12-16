@@ -1,13 +1,13 @@
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { postsRepository } from "../../repositories/posts.mongodb.repositories";
+import { postsServices } from "../../domain/posts-services";
 
 export async function updatePostHandler(req: Request, res: Response) {
-  const post = await postsRepository.findById(req.params.id);
-  if (!post) {
+  const result = await postsServices.updatePost(req.body, req.params.id);
+  if (result === null) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
     return;
   }
-  await postsRepository.updatePost(req.body, req.params.id);
+
   res.sendStatus(HttpStatuses.NO_CONTENT_204);
 }

@@ -29,12 +29,11 @@ describe("Test for CRUD blogs", () => {
         "https://length_101-DnZlTI1khUHpqOqCzftIYiSHCV8fKjYFQOoCIwmUczzW9V5K8cqY.com",
     };
 
-   await request(app)
+    await request(app)
       .post(BLOGS_PATH)
       .set("Authorization", adminToken)
       .send(newBlog)
       .expect(HttpStatuses.CREATED_201);
-
   });
   //get all
   it("Should get all blogs", async () => {
@@ -43,7 +42,7 @@ describe("Test for CRUD blogs", () => {
       .expect(HttpStatuses.OK_200);
 
     expect(blogs.body.length).toBe(1); //I have deleted everything
-console.log(blogs.body);
+    console.log(blogs.body);
     blogId = blogs.body[0].id;
   });
   //get by id
