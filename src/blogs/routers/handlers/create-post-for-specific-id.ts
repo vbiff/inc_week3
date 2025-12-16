@@ -6,7 +6,7 @@ export async function createPostForSpecificBlogIdHandler(
   req: Request,
   res: Response,
 ) {
-  const newBlog = await postsServices.createPostforSpecificBlogId(
+  const newBlog = await postsServices.createPostForSpecificBlogId(
     req.body,
     req.params.blogId,
   );
