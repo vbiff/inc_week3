@@ -2,6 +2,7 @@ import { Post } from "../types/posts";
 import { PostInputDTO } from "../dto/post-input-dto";
 import { postsRepository } from "../repositories/posts.mongodb.repositories";
 import { blogsRepository } from "../../blogs/repositories/blogs.mongodb.repositories";
+import { PostInputWithBlogIdDTO } from "../dto/post-input-with_blog-id-dto";
 
 export const postsServices = {
   async findAll(): Promise<Post[]> {
@@ -33,7 +34,7 @@ export const postsServices = {
   },
 
   async createPostForSpecificBlogId(
-    inputPost: PostInputDTO,
+    inputPost: PostInputWithBlogIdDTO,
     blogId: string,
   ): Promise<Post> {
     const blog = await blogsRepository.findById(blogId);
@@ -45,6 +46,7 @@ export const postsServices = {
       id: new Date().toISOString(),
       blogName: blog.name,
       createdAt: new Date().toISOString(),
+      blogId: blogId,
     };
     const noMongoId = { ...newPost };
     await postsRepository.createPost(newPost);

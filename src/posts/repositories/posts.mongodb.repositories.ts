@@ -23,19 +23,9 @@ export const postsRepository = {
       .toArray();
   },
 
-  async createPost(inputPost: PostInputDTO): Promise<Post> {
-    const blog = await blogCollection.findOne({ id: inputPost.blogId });
-    if (!blog) {
-      throw new Error("blog not found");
-    }
-    const newPost = {
-      ...inputPost,
-      id: new Date().toISOString(),
-      blogName: blog.name,
-      createdAt: new Date().toISOString(),
-    };
-    const noMongoId = { ...newPost };
-    await postsCollection.insertOne(newPost);
+  async createPost(inputPost: Post): Promise<Post> {
+    const noMongoId = { ...inputPost };
+    await postsCollection.insertOne(inputPost);
     return noMongoId;
   },
 

@@ -43,8 +43,18 @@ describe("Test for CRUD blogs", () => {
 
     expect(blogs.body.length).toBe(1); //I have deleted everything
     console.log(blogs.body);
+
     blogId = blogs.body[0].id;
   });
+
+  //create a post by blogId
+  it("should create a post with specific blogId", async () => {
+    await request(app)
+      .post(`${BLOGS_PATH}/${blogId}/posts`)
+      .set("Authorization", adminToken)
+      .expect(HttpStatuses.CREATED_201);
+  });
+
   //get by id
   it("Should get a blog by id", async () => {
     await request(app)
