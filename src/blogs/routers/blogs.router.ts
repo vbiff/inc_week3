@@ -9,6 +9,7 @@ import { validationResultMiddleware } from "../../core/middlewares/validation/in
 import { blogInputDtoValidation } from "../validation/input-dto.validation-middleware";
 import { adminGuardMiddleware } from "../../core/middlewares/auth/admin.guard-middleware";
 import { createPostForSpecificBlogIdHandler } from "./handlers/create-post-for-specific-id";
+import { getAllPostsForSpecificBlogIdHandler } from "./handlers/get-all-posts-for-specific-blog-id";
 
 export const blogRouter = Router();
 //get all
@@ -32,7 +33,7 @@ blogRouter.post(
 );
 
 //get all posts for a specific blog
-blogRouter.get("/:blogId/posts");
+blogRouter.get("/:blogId/posts", getAllPostsForSpecificBlogIdHandler);
 
 // get by id
 blogRouter.get("/:id", getBlogById);
