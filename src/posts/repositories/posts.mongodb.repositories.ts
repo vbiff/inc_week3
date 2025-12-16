@@ -17,6 +17,12 @@ export const postsRepository = {
     );
   },
 
+  async findAllPostsByBlogId(blogId: string): Promise<Post[] | null> {
+    return await postsCollection
+      .find({ blogId: blogId }, { projection: { _id: 0 } })
+      .toArray();
+  },
+
   async createPost(inputPost: PostInputDTO): Promise<Post> {
     const blog = await blogCollection.findOne({ id: inputPost.blogId });
     if (!blog) {

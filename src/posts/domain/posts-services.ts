@@ -12,8 +12,31 @@ export const postsServices = {
     return await postsRepository.findById(id);
   },
 
+  async findAllPostsByBlogId(blogId: string): Promise<Post[] | null> {
+    return await postsRepository.findAllPostsByBlogId(blogId);
+  },
+
   async createPost(inputPost: PostInputDTO): Promise<Post> {
     const blog = await blogsRepository.findById(inputPost.blogId);
+    if (!blog) {
+      throw new Error("Blog not found");
+    }
+    const newPost = {
+      ...inputPost,
+      id: new Date().toISOString(),
+      blogName: blog.name,
+      createdAt: new Date().toISOString(),
+    };
+    const noMongoId = { ...newPost };
+    await postsRepository.createPost(newPost);
+    return noMongoId;
+  },
+
+  async createPostForSpecificBlogId(
+    inputPost: PostInputDTO,
+    blogId: string,
+  ): Promise<Post> {
+    const blog = await blogsRepository.findById(blogId);
     if (!blog) {
       throw new Error("Blog not found");
     }

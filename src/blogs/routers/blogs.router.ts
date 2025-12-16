@@ -8,6 +8,7 @@ import { deleteBlogHandler } from "./handlers/delete-blog.handler";
 import { validationResultMiddleware } from "../../core/middlewares/validation/input-validation-result-middleware";
 import { blogInputDtoValidation } from "../validation/input-dto.validation-middleware";
 import { adminGuardMiddleware } from "../../core/middlewares/auth/admin.guard-middleware";
+import { createPostForSpecificBlogIdHandler } from "./handlers/create-post-for-specific-id";
 
 export const blogRouter = Router();
 //get all
@@ -22,17 +23,18 @@ blogRouter.post(
   createBlogHandler,
 );
 
+//create a post for a specific blog
 blogRouter.post(
   "/:blogId/posts",
   adminGuardMiddleware,
-
   validationResultMiddleware,
-
-  createBlogHandler,
+  createPostForSpecificBlogIdHandler,
 );
 
-// get by id
+//get all posts for a specific blog
+blogRouter.get("/:blogId/posts");
 
+// get by id
 blogRouter.get("/:id", getBlogById);
 
 // update
