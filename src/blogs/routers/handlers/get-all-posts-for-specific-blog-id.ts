@@ -6,5 +6,8 @@ export async function getAllPostsForSpecificBlogIdHandler(
   res: Response,
 ) {
   const blogs = await postsServices.findAllPostsByBlogId(req.params.blogId);
+  if (!blogs || !blogs.length) {
+    res.sendStatus(404);
+  }
   res.send(blogs);
 }
