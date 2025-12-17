@@ -20,6 +20,7 @@ export async function getAllPostsHandler(req: Request, res: Response) {
     pageSize: Number(req.query.pageSize ?? DEFAULT_PAGE_SIZE),
     sortBy: String(req.query.sortBy ?? DEFAULT_SORT_BY),
     sortDirection: sortDirection ?? DEFAULT_SORT_DIRECTION,
+    searchNameTerm: String(req.query.searchNameTerm ?? ""),
   };
 
   const blogs = await postsServices.findAll(queryInput);

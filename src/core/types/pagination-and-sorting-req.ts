@@ -5,4 +5,5 @@ export type PaginationAndSortingReq = {
   pageSize: number;
   sortBy: string;
   sortDirection: SortDirection;
+  searchNameTerm: string;
 };

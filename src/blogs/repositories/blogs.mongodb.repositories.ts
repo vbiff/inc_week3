@@ -2,7 +2,7 @@ import { Blog } from "../types/blog";
 import { blogInputDto } from "../dto/blog.input_dto";
 import { client } from "../../db/mongo.db";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
 
 export const blogCollection = client.db("blogger").collection<Blog>("blogs");
 
@@ -10,11 +10,18 @@ export const blogsRepository = {
   async findAll(
     query: PaginationAndSortingReq,
   ): Promise<{ items: Blog[]; totalCount: number }> {
-    const { pageNumber, pageSize, sortBy, sortDirection } = query;
+    const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
+      query;
     const skip: number = (pageNumber - 1) * pageSize;
+    const filter: Filter<Blog> = {};
+
+    if (searchNameTerm) {
+      filter.$or = [];
+      filter.$or.push({ name: { $regex: searchNameTerm, $options: "i" } });
+    }
 
     const items = await blogCollection
-      .find({}, { projection: { _id: 0 } })
+      .find(filter, { projection: { _id: 0 } })
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(pageSize)
