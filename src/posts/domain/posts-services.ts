@@ -6,8 +6,8 @@ import { PostInputWithBlogIdDTO } from "../dto/post-input-with_blog-id-dto";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 
 export const postsServices = {
-  async findAll(): Promise<Post[]> {
-    return postsRepository.findAll();
+  async findAll(queryInput: PaginationAndSortingReq): Promise<Post[]> {
+    return postsRepository.findAll(queryInput);
   },
 
   async findById(id: string): Promise<Post | null> {
