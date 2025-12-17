@@ -7,23 +7,28 @@ import { validationResultMiddleware } from "../../core/middlewares/validation/in
 import { getAllPostsHandler } from "./handlers/get-all-posts.handler";
 import { postInputDtoValidation } from "../validation/input-dto.validation-middleware";
 import { adminGuardMiddleware } from "../../core/middlewares/auth/admin.guard-middleware";
+import { queryValidation } from "../../core/middlewares/validation/query-pagination-sorting.validation";
 
 export const postRouter = Router();
 
 //get all
-postRouter.get("/", getAllPostsHandler);
+postRouter.get(
+  "/",
+  queryValidation,
+  validationResultMiddleware,
+  getAllPostsHandler,
+);
+
 // create
 postRouter.post(
   "/",
   adminGuardMiddleware,
   postInputDtoValidation,
   validationResultMiddleware,
-
   createPostHandler,
 );
 
 // get by id
-
 postRouter.get("/:id", getPostById);
 
 // update

@@ -10,17 +10,23 @@ import { blogInputDtoValidation } from "../validation/input-dto.validation-middl
 import { adminGuardMiddleware } from "../../core/middlewares/auth/admin.guard-middleware";
 import { createPostForSpecificBlogIdHandler } from "./handlers/create-post-for-specific-id";
 import { getAllPostsForSpecificBlogIdHandler } from "./handlers/get-all-posts-for-specific-blog-id";
+import { queryValidation } from "../../core/middlewares/validation/query-pagination-sorting.validation";
 
 export const blogRouter = Router();
 //get all
-blogRouter.get("/", getAllBlogsHandler);
+blogRouter.get(
+  "/",
+  queryValidation,
+  validationResultMiddleware,
+  getAllBlogsHandler,
+);
+
 // create
 blogRouter.post(
   "/",
   adminGuardMiddleware,
   blogInputDtoValidation,
   validationResultMiddleware,
-
   createBlogHandler,
 );
 
@@ -33,7 +39,12 @@ blogRouter.post(
 );
 
 //get all posts for a specific blog
-blogRouter.get("/:blogId/posts", getAllPostsForSpecificBlogIdHandler);
+blogRouter.get(
+  "/:blogId/posts",
+  queryValidation,
+  validationResultMiddleware,
+  getAllPostsForSpecificBlogIdHandler,
+);
 
 // get by id
 blogRouter.get("/:id", getBlogById);
