@@ -9,6 +9,7 @@ import {
   DEFAULT_SORT_BY,
   DEFAULT_SORT_DIRECTION,
 } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
+import { mapperOutput } from "../../../core/mappers/mapper-output";
 
 export async function getAllPostsForSpecificBlogIdHandler(
   req: Request,
@@ -27,14 +28,22 @@ export async function getAllPostsForSpecificBlogIdHandler(
     searchNameTerm: String(req.query.searchNameTerm ?? ""),
   };
 
-  const blogs = await postsServices.findAllPostsByBlogId(
+  const { posts, totalCount } = await postsServices.findAllPostsByBlogId(
     req.params.blogId,
     queryInput,
   );
 
-  if (!blogs || !blogs.length) {
+  if (!posts || !posts.length) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
+    return;
   }
 
-  res.send(blogs);
+  const resultPosts = mapperOutput(posts, {
+    pagesCount: Math.ceil(totalCount / queryInput.pageSize),
+    page: queryInput.pageNumber,
+    pageSize: queryInput.pageSize,
+    totalCount: totalCount,
+  });
+
+  res.send(resultPosts);
 }

@@ -2,7 +2,7 @@ import { Post } from "../types/posts";
 import { PostInputDTO } from "../dto/post-input-dto";
 import { client } from "../../db/mongo.db";
 import { blogCollection } from "../../blogs/repositories/blogs.mongodb.repositories";
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 
 const postsCollection = client.db("blogger").collection<Post>("posts");
@@ -36,15 +36,22 @@ export const postsRepository = {
   async findAllPostsByBlogId(
     blogId: string,
     queryInput: PaginationAndSortingReq,
-  ): Promise<Post[] | null> {
+  ): Promise<{ posts: Post[] | null; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryInput;
     const skip: number = (pageNumber - 1) * pageSize;
-    return await postsCollection
-      .find({ blogId: blogId }, { projection: { _id: 0 } })
+
+    const filter: Filter<Post> = { blogId: blogId };
+
+    const posts = await postsCollection
+      .find(filter, { projection: { _id: 0 } })
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(pageSize)
       .toArray();
+
+    const totalCount = await postsCollection.countDocuments(filter);
+
+    return { posts, totalCount };
   },
 
   async createPost(inputPost: Post): Promise<string> {

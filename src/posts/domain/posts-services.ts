@@ -17,7 +17,7 @@ export const postsServices = {
   async findAllPostsByBlogId(
     blogId: string,
     queryInput: PaginationAndSortingReq,
-  ): Promise<Post[] | null> {
+  ): Promise<{ posts: Post[] | null; totalCount: number }> {
     return await postsRepository.findAllPostsByBlogId(blogId, queryInput);
   },
 
