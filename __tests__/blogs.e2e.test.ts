@@ -49,9 +49,15 @@ describe("Test for CRUD blogs", () => {
 
   //create a post by blogId
   it("should create a post with specific blogId", async () => {
+    const newPost = {
+      title: "test",
+      shortDescription: "description",
+      content: "content",
+    };
     await request(app)
       .post(`${BLOGS_PATH}/${blogId}/posts`)
       .set("Authorization", adminToken)
+      .send(newPost)
       .expect(HttpStatuses.CREATED_201);
   });
 
