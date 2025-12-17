@@ -73,9 +73,9 @@ describe("Test for CRUD posts", () => {
       .get(POSTS_PATH)
       .expect(HttpStatuses.OK_200);
 
-    expect(posts.body.length).toBe(1);
+    expect(posts.body.items.length).toBe(1);
 
-    postId = posts.body[0].id;
+    postId = posts.body.items[0].id;
   });
   //get by id
   it("Should get a post by id", async () => {

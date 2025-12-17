@@ -8,15 +8,21 @@ import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting
 const postsCollection = client.db("blogger").collection<Post>("posts");
 
 export const postsRepository = {
-  async findAll(query: PaginationAndSortingReq): Promise<Post[]> {
+  async findAll(
+    query: PaginationAndSortingReq,
+  ): Promise<{ posts: Post[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = query;
     const skip: number = (pageNumber - 1) * pageSize;
-    return postsCollection
+    const posts = await postsCollection
       .find({}, { projection: { _id: 0 } })
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(pageSize)
       .toArray();
+
+    const totalCount = await postsCollection.countDocuments({});
+
+    return { posts, totalCount };
   },
 
   async findByObjectId(id: string): Promise<Post | null> {

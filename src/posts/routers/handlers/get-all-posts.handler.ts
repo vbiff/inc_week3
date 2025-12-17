@@ -8,6 +8,7 @@ import {
   DEFAULT_SORT_BY,
   DEFAULT_SORT_DIRECTION,
 } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
+import { mapperOutput } from "../../../core/mappers/mapper-output";
 
 export async function getAllPostsHandler(req: Request, res: Response) {
   const sortDirection =
@@ -23,6 +24,14 @@ export async function getAllPostsHandler(req: Request, res: Response) {
     searchNameTerm: String(req.query.searchNameTerm ?? ""),
   };
 
-  const blogs = await postsServices.findAll(queryInput);
-  res.send(blogs);
+  const { posts, totalCount } = await postsServices.findAll(queryInput);
+
+  const resultPosts = mapperOutput(posts, {
+    pagesCount: Math.ceil(totalCount / queryInput.pageSize),
+    page: queryInput.pageNumber,
+    pageSize: queryInput.pageSize,
+    totalCount: totalCount,
+  });
+
+  res.send(resultPosts);
 }
