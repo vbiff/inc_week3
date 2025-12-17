@@ -3,6 +3,7 @@ import { PostInputDTO } from "../dto/post-input-dto";
 import { postsRepository } from "../repositories/posts.mongodb.repositories";
 import { blogsRepository } from "../../blogs/repositories/blogs.mongodb.repositories";
 import { PostInputWithBlogIdDTO } from "../dto/post-input-with_blog-id-dto";
+import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 
 export const postsServices = {
   async findAll(): Promise<Post[]> {
@@ -13,8 +14,11 @@ export const postsServices = {
     return postsRepository.findById(id);
   },
 
-  async findAllPostsByBlogId(blogId: string): Promise<Post[] | null> {
-    return await postsRepository.findAllPostsByBlogId(blogId);
+  async findAllPostsByBlogId(
+    blogId: string,
+    queryInput: PaginationAndSortingReq,
+  ): Promise<Post[] | null> {
+    return await postsRepository.findAllPostsByBlogId(blogId, queryInput);
   },
 
   async createPost(inputPost: PostInputDTO): Promise<Post | null> {
