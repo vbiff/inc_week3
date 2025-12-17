@@ -6,5 +6,11 @@ export function mapperOutputForBlogs(
   blogs: Blog[],
   meta: PaginationRes,
 ): BlogsOutput {
-  return { meta, items: blogs };
+  return {
+    page: meta.page,
+    pagesCount: meta.pagesCount,
+    totalCount: meta.totalCount,
+    pageSize: meta.pageSize,
+    items: blogs,
+  };
 }

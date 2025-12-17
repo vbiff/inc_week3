@@ -8,7 +8,7 @@ import {
   DEFAULT_SORT_DIRECTION,
 } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
 import { SortDirection } from "../../../core/types/sort-directions";
-import { mapperOutputForBlogs } from "../../mappers/mapper-output";
+import { mapperOutputForBlogs } from "../../mappers/mapper-output-for-blogs";
 
 export async function getAllBlogsHandler(req: Request, res: Response) {
   const sortDirection =
