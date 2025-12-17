@@ -2,6 +2,7 @@ import { Post } from "../types/posts";
 import { PostInputDTO } from "../dto/post-input-dto";
 import { client } from "../../db/mongo.db";
 import { blogCollection } from "../../blogs/repositories/blogs.mongodb.repositories";
+import { ObjectId } from "mongodb";
 
 const postsCollection = client.db("blogger").collection<Post>("posts");
 
@@ -12,7 +13,7 @@ export const postsRepository = {
 
   async findById(id: string): Promise<Post | null> {
     return await postsCollection.findOne(
-      { id: id },
+      { $or: [{ id: id }, { _id: new ObjectId(id) }] },
       { projection: { _id: 0 } },
     );
   },
