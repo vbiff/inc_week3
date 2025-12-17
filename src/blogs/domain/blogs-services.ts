@@ -21,7 +21,7 @@ export const blogsServices = {
     };
     const _blogId = await blogsRepository.createBlog(newBlog);
 
-    return blogsRepository.findById(_blogId);
+    return blogsRepository.findByObjectId(_blogId);
   },
 
   async updateBlog(dto: blogInputDto, id: string): Promise<void | null> {
