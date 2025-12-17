@@ -11,7 +11,7 @@ import { adminGuardMiddleware } from "../../core/middlewares/auth/admin.guard-mi
 import { createPostForSpecificBlogIdHandler } from "./handlers/create-post-for-specific-id";
 import { getAllPostsForSpecificBlogIdHandler } from "./handlers/get-all-posts-for-specific-blog-id";
 import { queryValidation } from "../../core/middlewares/validation/query-pagination-sorting.validation";
-import { postInputDtoValidation } from "../../posts/validation/input-dto.validation-middleware";
+import { postInputDtoValidationForPostsByBlogId } from "../../posts/validation/input-dto.validation-middleware-posts-by-id";
 
 export const blogRouter = Router();
 //get all
@@ -35,7 +35,7 @@ blogRouter.post(
 blogRouter.post(
   "/:blogId/posts",
   adminGuardMiddleware,
-  postInputDtoValidation,
+  postInputDtoValidationForPostsByBlogId,
   validationResultMiddleware,
   createPostForSpecificBlogIdHandler,
 );

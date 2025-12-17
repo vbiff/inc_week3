@@ -1,4 +1,4 @@
-import { SortDirection } from "mongodb";
+import { SortDirection } from "./sort-directions";
 
 export type PaginationAndSortingReq = {
   pageNumber: number;

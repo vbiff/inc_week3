@@ -1,15 +1,19 @@
 import { Blog } from "../types/blog";
 import { blogInputDto } from "../dto/blog.input_dto";
 import { client } from "../../db/mongo.db";
+import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 
 export const blogCollection = client.db("blogger").collection<Blog>("blogs");
 
 export const blogsRepository = {
-  async findAll(): Promise<Blog[]> {
-    return client
-      .db("blogger")
-      .collection<Blog>("blogs")
+  async findAll(query: PaginationAndSortingReq): Promise<Blog[]> {
+    const { pageNumber, pageSize, sortBy, sortDirection } = query;
+    const skip: number = (pageNumber - 1) * pageSize;
+    return blogCollection
       .find({}, { projection: { _id: 0 } })
+      .sort({ [sortBy]: sortDirection })
+      .skip(skip)
+      .limit(pageSize)
       .toArray();
   },
 
@@ -17,16 +21,15 @@ export const blogsRepository = {
     return await blogCollection.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
-  async createBlog(inputBlog: blogInputDto): Promise<Blog> {
+  async createBlog(inputBlog: blogInputDto): Promise<string> {
     const newBlog = {
       ...inputBlog,
       id: new Date().toISOString(),
       createdAt: new Date().toISOString(),
       isMembership: false,
     };
-    const noMongoIdBlog = { ...newBlog };
-    await blogCollection.insertOne(newBlog);
-    return noMongoIdBlog;
+    const blogId = await blogCollection.insertOne(newBlog);
+    return blogId.insertedId.toString();
   },
 
   async updateBlog(dto: blogInputDto, id: string): Promise<void | null> {

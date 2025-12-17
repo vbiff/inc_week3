@@ -22,6 +22,7 @@ export const validationResultMiddleware = (
   const result = validationResult(req)
     .formatWith(formatErrors)
     .array({ onlyFirstError: true });
+
   if (result.length > 0) {
     res.status(HttpStatuses.BAD_REQUEST_400).send({ errorsMessages: result });
     return;

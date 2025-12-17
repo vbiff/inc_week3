@@ -23,10 +23,9 @@ export const postsRepository = {
       .toArray();
   },
 
-  async createPost(inputPost: Post): Promise<Post> {
-    const noMongoId = { ...inputPost };
-    await postsCollection.insertOne(inputPost);
-    return noMongoId;
+  async createPost(inputPost: Post): Promise<string> {
+    const postId = await postsCollection.insertOne(inputPost);
+    return postId.insertedId.toString();
   },
 
   async updatePost(dto: PostInputDTO, id: string): Promise<void | null> {

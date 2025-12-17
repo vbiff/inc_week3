@@ -10,14 +10,14 @@ export const postsServices = {
   },
 
   async findById(id: string): Promise<Post | null> {
-    return await postsRepository.findById(id);
+    return postsRepository.findById(id);
   },
 
   async findAllPostsByBlogId(blogId: string): Promise<Post[] | null> {
     return await postsRepository.findAllPostsByBlogId(blogId);
   },
 
-  async createPost(inputPost: PostInputDTO): Promise<Post> {
+  async createPost(inputPost: PostInputDTO): Promise<Post | null> {
     const blog = await blogsRepository.findById(inputPost.blogId);
     if (!blog) {
       throw new Error("Blog not found");
@@ -28,15 +28,14 @@ export const postsServices = {
       blogName: blog.name,
       createdAt: new Date().toISOString(),
     };
-    const noMongoId = { ...newPost };
-    await postsRepository.createPost(newPost);
-    return noMongoId;
+    const postId = await postsRepository.createPost(newPost);
+    return postsRepository.findById(postId);
   },
 
   async createPostForSpecificBlogId(
     inputPost: PostInputWithBlogIdDTO,
     blogId: string,
-  ): Promise<Post> {
+  ): Promise<Post | null> {
     const blog = await blogsRepository.findById(blogId);
     if (!blog) {
       throw new Error("Blog not found");
@@ -48,9 +47,9 @@ export const postsServices = {
       createdAt: new Date().toISOString(),
       blogId: blogId,
     };
-    const noMongoId = { ...newPost };
-    await postsRepository.createPost(newPost);
-    return noMongoId;
+
+    const postId = await postsRepository.createPost(newPost);
+    return await postsRepository.findById(postId);
   },
 
   async updatePost(dto: PostInputDTO, id: string): Promise<void | null> {

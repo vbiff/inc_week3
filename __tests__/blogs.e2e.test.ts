@@ -54,11 +54,13 @@ describe("Test for CRUD blogs", () => {
       shortDescription: "description",
       content: "content",
     };
-    await request(app)
+    const result = await request(app)
       .post(`${BLOGS_PATH}/${blogId}/posts`)
       .set("Authorization", adminToken)
       .send(newPost)
       .expect(HttpStatuses.CREATED_201);
+
+    console.log("TEST", result.body);
   });
 
   //get by id

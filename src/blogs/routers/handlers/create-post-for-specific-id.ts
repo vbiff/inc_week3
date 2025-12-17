@@ -17,8 +17,10 @@ export async function createPostForSpecificBlogIdHandler(
     req.body,
     req.params.blogId,
   );
-  if (!newBlog) {
-    res.sendStatus(404);
+
+  if (newBlog === null) {
+    console.log("AAAAAAAA");
+    res.sendStatus(HttpStatuses.NOT_FOUND_404);
   }
   res.status(HttpStatuses.CREATED_201).send(newBlog);
 }

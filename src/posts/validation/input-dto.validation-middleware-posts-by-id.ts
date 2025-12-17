@@ -27,15 +27,8 @@ const content = body("content")
   .isLength({ max: 1000 })
   .withMessage({ message: "content is too long" });
 
-const blogId = body("blogId")
-  .trim()
-  .notEmpty()
-  .isLength({ max: 100 })
-  .withMessage({ message: "blogId is needed" });
-
-export const postInputDtoValidation = [
+export const postInputDtoValidationForPostsByBlogId = [
   titleValidation,
   shortDescriptionValidation,
   content,
-  blogId,
 ];

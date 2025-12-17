@@ -1,10 +1,10 @@
 import { SortDirection } from "../../types/sort-directions";
 import { query } from "express-validator";
 
-const DEFAULT_PAGE = 1;
-const DEFAULT_PAGE_SIZE = 10;
-const DEFAULT_SORT_BY = "createdAt";
-const DEFAULT_SORT_DIRECTION = SortDirection.DESC;
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_SORT_BY = "createdAt";
+export const DEFAULT_SORT_DIRECTION = SortDirection.DESC;
 
 const pageNumberValidation = query("pageNumber")
   .default(DEFAULT_PAGE)
