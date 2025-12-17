@@ -7,15 +7,22 @@ import { ObjectId } from "mongodb";
 export const blogCollection = client.db("blogger").collection<Blog>("blogs");
 
 export const blogsRepository = {
-  async findAll(query: PaginationAndSortingReq): Promise<Blog[]> {
+  async findAll(
+    query: PaginationAndSortingReq,
+  ): Promise<{ items: Blog[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = query;
     const skip: number = (pageNumber - 1) * pageSize;
-    return blogCollection
+
+    const items = await blogCollection
       .find({}, { projection: { _id: 0 } })
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(pageSize)
       .toArray();
+
+    const totalCount = await blogCollection.countDocuments({});
+
+    return { items, totalCount };
   },
 
   async findByObjectId(id: string): Promise<Blog | null> {

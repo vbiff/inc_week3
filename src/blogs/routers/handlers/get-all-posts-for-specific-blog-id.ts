@@ -34,5 +34,6 @@ export async function getAllPostsForSpecificBlogIdHandler(
   if (!blogs || !blogs.length) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
   }
+
   res.send(blogs);
 }

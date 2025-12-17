@@ -4,7 +4,9 @@ import { blogsRepository } from "../repositories/blogs.mongodb.repositories";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 
 export const blogsServices = {
-  async findBlogs(query: PaginationAndSortingReq): Promise<Blog[]> {
+  async findBlogs(
+    query: PaginationAndSortingReq,
+  ): Promise<{ items: Blog[]; totalCount: number }> {
     return blogsRepository.findAll(query);
   },
 

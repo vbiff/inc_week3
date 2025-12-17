@@ -8,6 +8,7 @@ import {
   DEFAULT_SORT_DIRECTION,
 } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
 import { SortDirection } from "../../../core/types/sort-directions";
+import { mapperOutputForBlogs } from "../../mappers/mapper-output";
 
 export async function getAllBlogsHandler(req: Request, res: Response) {
   const sortDirection =
@@ -21,7 +22,16 @@ export async function getAllBlogsHandler(req: Request, res: Response) {
     sortBy: String(req.query.sortBy ?? DEFAULT_SORT_BY),
     sortDirection: sortDirection ?? DEFAULT_SORT_DIRECTION,
   };
-  const blogs = await blogsServices.findBlogs(queryInput);
+  const { items, totalCount } = await blogsServices.findBlogs(queryInput);
+
+  const blogs = mapperOutputForBlogs(items, {
+    pagesCount: Math.ceil(totalCount / queryInput.pageSize),
+    page: queryInput.pageNumber,
+    pageSize: queryInput.pageSize,
+    totalCount: totalCount,
+  });
+
+  console.log("blogs", blogs);
   res.send(blogs);
 }
 

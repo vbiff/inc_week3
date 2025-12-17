@@ -43,9 +43,9 @@ describe("Test for CRUD posts", () => {
       .get(BLOGS_PATH)
       .expect(HttpStatuses.OK_200);
 
-    expect(blogs.body.length).toBe(1); //I have deleted everything
+    expect(blogs.body.items.length).toBe(1); //I have deleted everything
 
-    blogId = blogs.body[0].id;
+    blogId = blogs.body.items[0].id;
   });
 
   let postId = "";
@@ -59,13 +59,13 @@ describe("Test for CRUD posts", () => {
       blogId: blogId,
     };
 
-   const result =  await request(app)
+    const result = await request(app)
       .post(POSTS_PATH)
       .set("Authorization", adminToken)
       .send(newPost)
       .expect(HttpStatuses.CREATED_201);
 
-   console.log(result.body);
+    console.log(result.body);
   });
   //get all
   it("Should get all posts", async () => {

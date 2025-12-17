@@ -41,10 +41,10 @@ describe("Test for CRUD blogs", () => {
       .get(BLOGS_PATH)
       .expect(HttpStatuses.OK_200);
 
-    expect(blogs.body.length).toBe(1); //I have deleted everything
+    expect(blogs.body.items.length).toBe(1); //I have deleted everything
     console.log(blogs.body);
 
-    blogId = blogs.body[0].id;
+    blogId = blogs.body.items[0].id;
   });
 
   //create a post by blogId
