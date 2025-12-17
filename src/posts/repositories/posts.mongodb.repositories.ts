@@ -11,9 +11,16 @@ export const postsRepository = {
     return postsCollection.find({}, { projection: { _id: 0 } }).toArray();
   },
 
+  async findByObjectId(id: string): Promise<Post | null> {
+    return await postsCollection.findOne(
+      { _id: new ObjectId(id) },
+      { projection: { _id: 0 } },
+    );
+  },
+
   async findById(id: string): Promise<Post | null> {
     return await postsCollection.findOne(
-      { $or: [{ id: id }, { _id: new ObjectId(id) }] },
+      { id: id },
       { projection: { _id: 0 } },
     );
   },

@@ -28,8 +28,9 @@ export const postsServices = {
       blogName: blog.name,
       createdAt: new Date().toISOString(),
     };
+
     const postId = await postsRepository.createPost(newPost);
-    return postsRepository.findById(postId);
+    return postsRepository.findByObjectId(postId);
   },
 
   async createPostForSpecificBlogId(
@@ -49,7 +50,7 @@ export const postsServices = {
     };
 
     const postId = await postsRepository.createPost(newPost);
-    return await postsRepository.findById(postId);
+    return await postsRepository.findByObjectId(postId);
   },
 
   async updatePost(dto: PostInputDTO, id: string): Promise<void | null> {

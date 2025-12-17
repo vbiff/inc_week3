@@ -2,6 +2,7 @@ import { Blog } from "../types/blog";
 import { blogInputDto } from "../dto/blog.input_dto";
 import { client } from "../../db/mongo.db";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
+import { ObjectId } from "mongodb";
 
 export const blogCollection = client.db("blogger").collection<Blog>("blogs");
 
@@ -15,6 +16,13 @@ export const blogsRepository = {
       .skip(skip)
       .limit(pageSize)
       .toArray();
+  },
+
+  async findByObjectId(id: string): Promise<Blog | null> {
+    return await blogCollection.findOne(
+      { _id: new ObjectId(id) },
+      { projection: { _id: 0 } },
+    );
   },
 
   async findById(id: string): Promise<Blog | null> {
