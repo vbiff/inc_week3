@@ -2,6 +2,9 @@ import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { postsServices } from "../../../posts/domain/posts-services";
 import { blogsServices } from "../../domain/blogs-services";
+import { mapperPost } from "../../../posts/mappers/mapper-post";
+import { WithId } from "mongodb";
+import { PostCreateDto } from "../../../posts/dto/post-create-dto";
 
 export async function createPostForSpecificBlogIdHandler(
   req: Request,
@@ -14,13 +17,18 @@ export async function createPostForSpecificBlogIdHandler(
     return;
   }
 
-  const newBlog = await postsServices.createPostForSpecificBlogId(
-    req.body,
-    req.params.blogId,
-  );
+  const newPost: WithId<PostCreateDto> | null =
+    await postsServices.createPostForSpecificBlogId(
+      req.body,
+      req.params.blogId,
+    );
 
-  if (newBlog === null) {
+  if (!newPost) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
+    return;
   }
-  res.status(HttpStatuses.CREATED_201).send(newBlog);
+
+  const mappedPost = mapperPost(newPost);
+
+  res.status(HttpStatuses.CREATED_201).send(mappedPost);
 }

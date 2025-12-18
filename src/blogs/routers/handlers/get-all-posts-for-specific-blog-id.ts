@@ -10,6 +10,8 @@ import {
   DEFAULT_SORT_DIRECTION,
 } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
+import { mapperPost } from "../../../posts/mappers/mapper-post";
+import { Post } from "../../../posts/types/posts";
 
 export async function getAllPostsForSpecificBlogIdHandler(
   req: Request,
@@ -38,7 +40,9 @@ export async function getAllPostsForSpecificBlogIdHandler(
     return;
   }
 
-  const resultPosts = mapperOutput(posts, {
+  const mappedPosts: Post[] = posts.map((post) => mapperPost(post));
+
+  const resultPosts = mapperOutput(mappedPosts, {
     pagesCount: Math.ceil(totalCount / queryInput.pageSize),
     page: queryInput.pageNumber,
     pageSize: queryInput.pageSize,
