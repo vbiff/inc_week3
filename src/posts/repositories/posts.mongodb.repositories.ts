@@ -1,20 +1,20 @@
-import { Post } from "../types/posts";
 import { PostInputDTO } from "../dto/post-input-dto";
 import { client } from "../../db/mongo.db";
 import { blogCollection } from "../../blogs/repositories/blogs.mongodb.repositories";
-import { Filter, ObjectId } from "mongodb";
+import { Filter, ObjectId, WithId } from "mongodb";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
+import { PostCreateDto } from "../dto/post-create-dto";
 
-const postsCollection = client.db("blogger").collection<Post>("posts");
+const postsCollection = client.db("blogger").collection<PostCreateDto>("posts");
 
 export const postsRepository = {
   async findAll(
     query: PaginationAndSortingReq,
-  ): Promise<{ posts: Post[]; totalCount: number }> {
+  ): Promise<{ posts: WithId<PostCreateDto>[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = query;
     const skip: number = (pageNumber - 1) * pageSize;
     const posts = await postsCollection
-      .find({}, { projection: { _id: 0 } })
+      .find({})
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(pageSize)
@@ -25,31 +25,21 @@ export const postsRepository = {
     return { posts, totalCount };
   },
 
-  async findByObjectId(id: string): Promise<Post | null> {
-    return await postsCollection.findOne(
-      { _id: new ObjectId(id) },
-      { projection: { _id: 0 } },
-    );
-  },
-
-  async findById(id: string): Promise<Post | null> {
-    return await postsCollection.findOne(
-      { id: id },
-      { projection: { _id: 0 } },
-    );
+  async findByObjectId(id: string): Promise<WithId<PostCreateDto> | null> {
+    return await postsCollection.findOne({ _id: new ObjectId(id) });
   },
 
   async findAllPostsByBlogId(
     blogId: string,
     queryInput: PaginationAndSortingReq,
-  ): Promise<{ posts: Post[] | null; totalCount: number }> {
+  ): Promise<{ posts: WithId<PostCreateDto>[] | null; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryInput;
     const skip: number = (pageNumber - 1) * pageSize;
 
-    const filter: Filter<Post> = { blogId: blogId };
+    const filter: Filter<PostCreateDto> = { blogId: blogId };
 
     const posts = await postsCollection
-      .find(filter, { projection: { _id: 0 } })
+      .find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(pageSize)
@@ -60,19 +50,22 @@ export const postsRepository = {
     return { posts, totalCount };
   },
 
-  async createPost(inputPost: Post): Promise<string> {
+  async createPost(inputPost: PostCreateDto): Promise<ObjectId> {
     const postId = await postsCollection.insertOne(inputPost);
-    return postId.insertedId.toString();
+    return postId.insertedId;
   },
 
   async updatePost(dto: PostInputDTO, id: string): Promise<void | null> {
-    const blog = await blogCollection.findOne({ id: dto.blogId });
+    console.log(dto.blogId);
+    const blog = await blogCollection.findOne({
+      _id: new ObjectId(dto.blogId),
+    });
     if (!blog) {
       throw new Error("blog not found");
     }
     const result = await postsCollection.updateOne(
       {
-        id: id,
+        _id: new ObjectId(id),
       },
       {
         $set: {
@@ -92,7 +85,7 @@ export const postsRepository = {
   },
 
   async deletePost(id: string): Promise<boolean> {
-    const result = await postsCollection.deleteOne({ id: id });
+    const result = await postsCollection.deleteOne({ _id: new ObjectId(id) });
     return result.deletedCount === 1;
   },
 };

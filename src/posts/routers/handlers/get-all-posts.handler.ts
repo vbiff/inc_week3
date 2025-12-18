@@ -9,6 +9,8 @@ import {
   DEFAULT_SORT_DIRECTION,
 } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
+import { Post } from "../../types/posts";
+import { mapperPost } from "../../mappers/mapper-post";
 
 export async function getAllPostsHandler(req: Request, res: Response) {
   const sortDirection =
@@ -26,7 +28,9 @@ export async function getAllPostsHandler(req: Request, res: Response) {
 
   const { posts, totalCount } = await postsServices.findAll(queryInput);
 
-  const resultPosts = mapperOutput(posts, {
+  const mappedPosts: Post[] = posts.map((post) => mapperPost(post));
+
+  const resultPosts = mapperOutput(mappedPosts, {
     pagesCount: Math.ceil(totalCount / queryInput.pageSize),
     page: queryInput.pageNumber,
     pageSize: queryInput.pageSize,

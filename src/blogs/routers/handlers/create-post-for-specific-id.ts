@@ -8,6 +8,7 @@ export async function createPostForSpecificBlogIdHandler(
   res: Response,
 ) {
   const blog = await blogsServices.findBlogById(req.params.blogId);
+
   if (!blog) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
     return;
@@ -19,7 +20,6 @@ export async function createPostForSpecificBlogIdHandler(
   );
 
   if (newBlog === null) {
-    console.log("AAAAAAAA");
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
   }
   res.status(HttpStatuses.CREATED_201).send(newBlog);

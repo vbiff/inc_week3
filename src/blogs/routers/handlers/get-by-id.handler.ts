@@ -1,6 +1,7 @@
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { blogsServices } from "../../domain/blogs-services";
+import { mapBlogs } from "../../mappers/mapper-blogs-output";
 
 export async function getBlogById(req: Request, res: Response) {
   const blog = await blogsServices.findBlogById(req.params.id);
@@ -8,5 +9,7 @@ export async function getBlogById(req: Request, res: Response) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
     return;
   }
-  res.status(HttpStatuses.OK_200).send(blog);
+  const mappedBlog = mapBlogs(blog);
+
+  res.status(HttpStatuses.OK_200).send(mappedBlog);
 }

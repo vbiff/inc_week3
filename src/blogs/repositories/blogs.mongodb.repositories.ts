@@ -1,19 +1,21 @@
-import { Blog } from "../types/blog";
 import { blogInputDto } from "../dto/blog.input_dto";
 import { client } from "../../db/mongo.db";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
-import { Filter, ObjectId } from "mongodb";
+import { Filter, ObjectId, WithId } from "mongodb";
+import { blogCreateDto } from "../dto/blog-create-dto";
 
-export const blogCollection = client.db("blogger").collection<Blog>("blogs");
+export const blogCollection = client
+  .db("blogger")
+  .collection<blogCreateDto>("blogs");
 
 export const blogsRepository = {
   async findAll(
     query: PaginationAndSortingReq,
-  ): Promise<{ items: Blog[]; totalCount: number }> {
+  ): Promise<{ items: WithId<blogCreateDto>[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
     const skip: number = (pageNumber - 1) * pageSize;
-    const filter: Filter<Blog> = {};
+    const filter: Filter<blogCreateDto> = {};
 
     if (searchNameTerm) {
       filter.$or = [];
@@ -21,7 +23,7 @@ export const blogsRepository = {
     }
 
     const items = await blogCollection
-      .find(filter, { projection: { _id: 0 } })
+      .find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(pageSize)
@@ -32,31 +34,18 @@ export const blogsRepository = {
     return { items, totalCount };
   },
 
-  async findByObjectId(id: string): Promise<Blog | null> {
-    return await blogCollection.findOne(
-      { _id: new ObjectId(id) },
-      { projection: { _id: 0 } },
-    );
+  async findByObjectId(id: string): Promise<WithId<blogCreateDto> | null> {
+    return await blogCollection.findOne({ _id: new ObjectId(id) });
   },
 
-  async findById(id: string): Promise<Blog | null> {
-    return await blogCollection.findOne({ id: id }, { projection: { _id: 0 } });
-  },
-
-  async createBlog(inputBlog: blogInputDto): Promise<string> {
-    const newBlog = {
-      ...inputBlog,
-      id: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-      isMembership: false,
-    };
-    const blogId = await blogCollection.insertOne(newBlog);
-    return blogId.insertedId.toString();
+  async createBlog(inputBlog: blogCreateDto): Promise<ObjectId> {
+    const blogId = await blogCollection.insertOne(inputBlog);
+    return blogId.insertedId;
   },
 
   async updateBlog(dto: blogInputDto, id: string): Promise<void | null> {
     const res = await blogCollection.updateOne(
-      { id: id },
+      { _id: new ObjectId(id) },
       {
         $set: {
           name: dto.name,
@@ -72,7 +61,7 @@ export const blogsRepository = {
   },
 
   async deleteBlog(id: string): Promise<boolean> {
-    const result = await blogCollection.deleteOne({ id: id });
+    const result = await blogCollection.deleteOne({ _id: new ObjectId(id) });
     return result.deletedCount === 1;
   },
 };

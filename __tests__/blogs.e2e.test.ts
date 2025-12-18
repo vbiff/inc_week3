@@ -42,7 +42,6 @@ describe("Test for CRUD blogs", () => {
       .expect(HttpStatuses.OK_200);
 
     expect(blogs.body.items.length).toBe(1); //I have deleted everything
-    console.log(blogs.body);
 
     blogId = blogs.body.items[0].id;
   });
@@ -54,13 +53,11 @@ describe("Test for CRUD blogs", () => {
       shortDescription: "description",
       content: "content",
     };
-    const result = await request(app)
+    await request(app)
       .post(`${BLOGS_PATH}/${blogId}/posts`)
       .set("Authorization", adminToken)
       .send(newPost)
       .expect(HttpStatuses.CREATED_201);
-
-    console.log("TEST", result.body);
   });
 
   //get by id

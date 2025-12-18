@@ -79,6 +79,7 @@ describe("Test for CRUD posts", () => {
   });
   //get by id
   it("Should get a post by id", async () => {
+    console.log(postId);
     await request(app)
       .get(`${POSTS_PATH}/${postId}`)
       .expect(HttpStatuses.OK_200);
