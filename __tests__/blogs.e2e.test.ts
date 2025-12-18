@@ -53,6 +53,7 @@ describe("Test for CRUD blogs", () => {
       shortDescription: "description",
       content: "content",
     };
+    console.log(blogId);
     await request(app)
       .post(`${BLOGS_PATH}/${blogId}/posts`)
       .set("Authorization", adminToken)
