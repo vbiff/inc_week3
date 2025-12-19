@@ -7,12 +7,14 @@ export const DEFAULT_SORT_BY = "createdAt";
 export const DEFAULT_SORT_DIRECTION = SortDirection.DESC;
 
 const pageNumberValidation = query("pageNumber")
+  .optional()
   .default(DEFAULT_PAGE)
   .isInt({ min: 1 })
   .withMessage("page number must be a positive integer")
   .toInt();
 
 const pageSizeValidation = query("pageSize")
+  .optional()
   .default(DEFAULT_PAGE_SIZE)
   .isInt({ min: 1, max: 100 })
   .withMessage("pageSize must be a positive integer form 1 to 100")
@@ -21,15 +23,22 @@ const pageSizeValidation = query("pageSize")
 const sortByValidation = query("sortBy").default(DEFAULT_SORT_BY);
 
 const sortDirectionValidation = query("sortDirection")
+  .optional()
   .default(DEFAULT_SORT_DIRECTION)
   .isIn(Object.values(SortDirection))
   .withMessage(
     `Sort direction must be one of: ${Object.values(SortDirection).join(", ")}`,
   );
 
+const searchNameTermValidation = query("searchNameTerm")
+  .optional()
+  .isString()
+  .withMessage(`searchNameTerm must be String`);
+
 export const queryValidation = [
   pageNumberValidation,
   pageSizeValidation,
   sortByValidation,
   sortDirectionValidation,
+  searchNameTermValidation,
 ];
