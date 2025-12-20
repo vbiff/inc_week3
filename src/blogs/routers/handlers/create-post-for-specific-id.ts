@@ -1,16 +1,16 @@
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { postsServices } from "../../../posts/domain/posts-services";
-import { blogsServices } from "../../domain/blogs-services";
 import { mapperPost } from "../../../posts/mappers/mapper-post";
 import { WithId } from "mongodb";
 import { PostCreateDto } from "../../../posts/dto/post-create-dto";
+import { blogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
 
 export async function createPostForSpecificBlogIdHandler(
   req: Request,
   res: Response,
 ) {
-  const blog = await blogsServices.findBlogById(req.params.blogId);
+  const blog = await blogsQueryRepository.findByObjectId(req.params.blogId);
 
   if (!blog) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);

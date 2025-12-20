@@ -1,14 +1,13 @@
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { postsServices } from "../../domain/posts-services";
 import { mapperPost } from "../../mappers/mapper-post";
 import { WithId } from "mongodb";
 import { PostCreateDto } from "../../dto/post-create-dto";
+import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-repository";
 
 export async function getPostById(req: Request, res: Response) {
-  const post: WithId<PostCreateDto> | null = await postsServices.findById(
-    req.params.id,
-  );
+  const post: WithId<PostCreateDto> | null =
+    await postsQueryRepositories.findByObjectId(req.params.id);
 
   if (!post) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);

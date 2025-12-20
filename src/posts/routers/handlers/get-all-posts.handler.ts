@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { postsServices } from "../../domain/posts-services";
 import { SortDirection } from "../../../core/types/sort-directions";
 import { PaginationAndSortingReq } from "../../../core/types/pagination-and-sorting-req";
 import {
@@ -11,6 +10,7 @@ import {
 import { mapperOutput } from "../../../core/mappers/mapper-output";
 import { Post } from "../../types/posts";
 import { mapperPost } from "../../mappers/mapper-post";
+import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-repository";
 
 export async function getAllPostsHandler(req: Request, res: Response) {
   const sortDirection =
@@ -26,7 +26,8 @@ export async function getAllPostsHandler(req: Request, res: Response) {
     searchNameTerm: String(req.query.searchNameTerm ?? ""),
   };
 
-  const { posts, totalCount } = await postsServices.findAll(queryInput);
+  const { posts, totalCount } =
+    await postsQueryRepositories.findAll(queryInput);
 
   const mappedPosts: Post[] = posts.map((post) => mapperPost(post));
 

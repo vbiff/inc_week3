@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { blogsServices } from "../../domain/blogs-services";
 import { PaginationAndSortingReq } from "../../../core/types/pagination-and-sorting-req";
 import {
   DEFAULT_PAGE,
@@ -13,6 +12,7 @@ import { blogCreateDto } from "../../dto/blog-create-dto";
 import { mapBlogs } from "../../mappers/mapper-blogs-output";
 import { Blog } from "../../types/blog";
 import { WithId } from "mongodb";
+import { blogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
 
 export async function getAllBlogsHandler(req: Request, res: Response) {
   const sortDirection =
@@ -28,7 +28,7 @@ export async function getAllBlogsHandler(req: Request, res: Response) {
     searchNameTerm: String(req.query.searchNameTerm ?? ""),
   };
 
-  const { items, totalCount } = await blogsServices.findBlogs(queryInput);
+  const { items, totalCount } = await blogsQueryRepository.findAll(queryInput);
 
   const mappedItems: Blog[] = items.map(
     (item: WithId<blogCreateDto>): Blog => mapBlogs(item),

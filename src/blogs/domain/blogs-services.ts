@@ -1,20 +1,10 @@
 import { blogInputDto } from "../dto/blog.input_dto";
 import { blogsRepository } from "../repositories/blogs.mongodb.repositories";
-import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 import { blogCreateDto } from "../dto/blog-create-dto";
 import { WithId } from "mongodb";
+import { blogsQueryRepository } from "../repositories/blogs.query-mongodb.repositories";
 
 export const blogsServices = {
-  async findBlogs(
-    query: PaginationAndSortingReq,
-  ): Promise<{ items: WithId<blogCreateDto>[]; totalCount: number }> {
-    return blogsRepository.findAll(query);
-  },
-
-  async findBlogById(id: string): Promise<WithId<blogCreateDto> | null> {
-    return await blogsRepository.findByObjectId(id);
-  },
-
   async createBlog(
     inputBlog: blogInputDto,
   ): Promise<WithId<blogCreateDto> | null> {
@@ -25,7 +15,7 @@ export const blogsServices = {
     };
     const _blogId = await blogsRepository.createBlog(newBlog);
 
-    return blogsRepository.findByObjectId(_blogId.toString());
+    return blogsQueryRepository.findByObjectId(_blogId.toString());
   },
 
   async updateBlog(dto: blogInputDto, id: string): Promise<void | null> {

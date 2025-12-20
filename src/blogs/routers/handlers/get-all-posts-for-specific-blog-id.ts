@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { postsServices } from "../../../posts/domain/posts-services";
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { SortDirection } from "../../../core/types/sort-directions";
 import { PaginationAndSortingReq } from "../../../core/types/pagination-and-sorting-req";
@@ -12,6 +11,7 @@ import {
 import { mapperOutput } from "../../../core/mappers/mapper-output";
 import { mapperPost } from "../../../posts/mappers/mapper-post";
 import { Post } from "../../../posts/types/posts";
+import { postsQueryRepositories } from "../../../posts/repositories/posts.mongodb-query-repository";
 
 export async function getAllPostsForSpecificBlogIdHandler(
   req: Request,
@@ -30,10 +30,11 @@ export async function getAllPostsForSpecificBlogIdHandler(
     searchNameTerm: String(req.query.searchNameTerm ?? ""),
   };
 
-  const { posts, totalCount } = await postsServices.findAllPostsByBlogId(
-    req.params.blogId,
-    queryInput,
-  );
+  const { posts, totalCount } =
+    await postsQueryRepositories.findAllPostsByBlogId(
+      req.params.blogId,
+      queryInput,
+    );
 
   if (!posts || !posts.length) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
