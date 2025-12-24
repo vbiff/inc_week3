@@ -1,21 +1,15 @@
 import { blogInputDto } from "../dto/blog.input_dto";
 import { blogsRepository } from "../repositories/blogs.mongodb.repositories";
-import { blogCreateDto } from "../dto/blog-create-dto";
-import { WithId } from "mongodb";
-import { blogsQueryRepository } from "../repositories/blogs.query-mongodb.repositories";
+import { ObjectId } from "mongodb";
 
 export const blogsServices = {
-  async createBlog(
-    inputBlog: blogInputDto,
-  ): Promise<WithId<blogCreateDto> | null> {
+  async createBlog(inputBlog: blogInputDto): Promise<ObjectId | null> {
     const newBlog = {
       ...inputBlog,
       createdAt: new Date().toISOString(),
       isMembership: false,
     };
-    const _blogId = await blogsRepository.createBlog(newBlog);
-
-    return blogsQueryRepository.findByObjectId(_blogId.toString());
+    return await blogsRepository.createBlog(newBlog);
   },
 
   async updateBlog(dto: blogInputDto, id: string): Promise<void | null> {

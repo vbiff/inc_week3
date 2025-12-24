@@ -2,9 +2,9 @@ import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { postsServices } from "../../../posts/domain/posts-services";
 import { mapperPost } from "../../../posts/mappers/mapper-post";
-import { WithId } from "mongodb";
-import { PostCreateDto } from "../../../posts/dto/post-create-dto";
+import { ObjectId } from "mongodb";
 import { blogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
+import { postsQueryRepositories } from "../../../posts/repositories/posts.mongodb-query-repository";
 
 export async function createPostForSpecificBlogIdHandler(
   req: Request,
@@ -17,11 +17,16 @@ export async function createPostForSpecificBlogIdHandler(
     return;
   }
 
-  const newPost: WithId<PostCreateDto> | null =
+  const newPostId: ObjectId | null =
     await postsServices.createPostForSpecificBlogId(
       req.body,
       req.params.blogId,
+      blog.name,
     );
+
+  const newPost = await postsQueryRepositories.findByObjectId(
+    newPostId!.toString(),
+  );
 
   if (!newPost) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
