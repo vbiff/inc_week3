@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 import { usersCollection } from "../../db/mongo.db";
 import { UserCreateDto } from "../dto/input-dto/user-create-dto";
 
@@ -13,5 +13,13 @@ export const userRepository = {
       _id: new ObjectId(id),
     });
     return deleteResult.deletedCount === 1;
+  },
+
+  async findUserByLoginOrEmail(
+    loginOrEmail: string,
+  ): Promise<WithId<UserCreateDto> | null> {
+    return await usersCollection.findOne({
+      $or: [{ login: loginOrEmail }, { email: loginOrEmail }],
+    });
   },
 };
