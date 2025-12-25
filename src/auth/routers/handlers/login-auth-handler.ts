@@ -9,5 +9,5 @@ export async function loginAuthHandler(req: Request, res: Response) {
     res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
     return;
   }
-  res.status(HttpStatuses.NO_CONTENT_204);
+  res.sendStatus(HttpStatuses.NO_CONTENT_204);
 }
