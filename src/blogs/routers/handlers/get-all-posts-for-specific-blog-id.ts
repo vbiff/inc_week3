@@ -8,6 +8,8 @@ import {
   DEFAULT_SORT_DIRECTION,
 } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
 import { postsQueryRepositories } from "../../../posts/repositories/posts.mongodb-query-repository";
+import { blogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
+import { HttpStatuses } from "../../../core/types/http-statuses";
 
 export async function getAllPostsForSpecificBlogIdHandler(
   req: Request,
@@ -25,6 +27,12 @@ export async function getAllPostsForSpecificBlogIdHandler(
     sortDirection: sortDirection ?? DEFAULT_SORT_DIRECTION,
     searchNameTerm: String(req.query.searchNameTerm ?? ""),
   };
+
+  const blog = await blogsQueryRepository.findByObjectId(req.params.blogId);
+  if (!blog) {
+    res.sendStatus(HttpStatuses.NOT_FOUND_404);
+    return;
+  }
 
   const resultPosts = await postsQueryRepositories.findAllPostsByBlogId(
     req.params.blogId,
