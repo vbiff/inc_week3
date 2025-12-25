@@ -1,11 +1,11 @@
 import { blogCreateDto } from "../dto/input-dto/blog-create-dto";
 import { Filter, ObjectId, WithId } from "mongodb";
-import { blogCollection } from "./blogs.mongodb.repositories";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 import { BlogView } from "../dto/output-dto/blog-view";
 import { mapBlogs } from "../mappers/mapper-blogs-output";
 import { mapperOutput } from "../../core/mappers/mapper-output";
 import { OutputDtoBlogs } from "../dto/output-dto/output-dto-blogs";
+import { blogCollection } from "../../db/mongo.db";
 
 export const blogsQueryRepository = {
   async findAll(query: PaginationAndSortingReq): Promise<OutputDtoBlogs> {

@@ -1,4 +1,3 @@
-import { client } from "../../db/mongo.db";
 import { UserCreateDto } from "../dto/input-dto/user-create-dto";
 import { UserView } from "../dto/output-dto/user-view";
 import { Filter, ObjectId, WithId } from "mongodb";
@@ -6,8 +5,7 @@ import { mapperUserMongoId } from "../mappers/mapper-user-mongoId";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 import { ResultUsersOutputDto } from "../dto/output-dto/result-users-output-dto";
 import { mapperOutput } from "../../core/mappers/mapper-output";
-
-const usersCollection = client.db("blogger").collection<UserCreateDto>("users");
+import { usersCollection } from "../../db/mongo.db";
 
 export const userQueryRepositoryMongodb = {
   async findUserById(id: string): Promise<UserView | null> {
@@ -36,13 +34,14 @@ export const userQueryRepositoryMongodb = {
     const skip: number = (pageNumber - 1) * pageSize;
 
     const filter: Filter<UserCreateDto> = {};
+    filter.$or = [];
 
     if (searchLoginTerm) {
-      filter.login = { $regex: searchLoginTerm, $options: "i" };
+      filter.$or.push({ login: { $regex: searchLoginTerm, $options: "i" } });
     }
 
     if (searchEmailTerm) {
-      filter.email = { $regex: searchEmailTerm, $options: "i" };
+      filter.$or.push({ email: { $regex: searchEmailTerm, $options: "i" } });
     }
 
     const users = await usersCollection
@@ -52,7 +51,7 @@ export const userQueryRepositoryMongodb = {
       .limit(pageSize)
       .toArray();
 
-    const totalCount = await usersCollection.countDocuments({});
+    const totalCount = await usersCollection.countDocuments(filter);
 
     const mappedUsers: UserView[] = users.map((user) =>
       mapperUserMongoId(user),

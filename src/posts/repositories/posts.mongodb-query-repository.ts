@@ -1,12 +1,11 @@
 import { PostCreateDto } from "../dto/input-dto/post-create-dto";
 import { Filter, ObjectId } from "mongodb";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
-import { client } from "../../db/mongo.db";
+import { postsCollection } from "../../db/mongo.db";
 import { PostView } from "../dto/output-dto/posts-view";
 import { mapperPost } from "../mappers/mapper-post";
 import { mapperOutput } from "../../core/mappers/mapper-output";
 import { ResultPostOutputDto } from "../dto/output-dto/result-post-output-dto";
-const postsCollection = client.db("blogger").collection<PostCreateDto>("posts");
 
 export const postsQueryRepositories = {
   async findAll(query: PaginationAndSortingReq): Promise<ResultPostOutputDto> {

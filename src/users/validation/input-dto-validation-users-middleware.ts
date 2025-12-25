@@ -27,7 +27,7 @@ const emailValidation = body("email")
   .isString()
   .trim()
   .notEmpty()
-  .withMessage("Password can not be empty")
+  .withMessage("email can not be empty")
   .matches(emailPattern);
 
 export const validationUserInputMiddleware = [

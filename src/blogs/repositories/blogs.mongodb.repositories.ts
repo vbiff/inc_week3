@@ -1,11 +1,7 @@
 import { BlogInputDto } from "../dto/input-dto/blog_input_dto";
-import { client } from "../../db/mongo.db";
+import { blogCollection } from "../../db/mongo.db";
 import { ObjectId } from "mongodb";
 import { blogCreateDto } from "../dto/input-dto/blog-create-dto";
-
-export const blogCollection = client
-  .db("blogger")
-  .collection<blogCreateDto>("blogs");
 
 export const blogsRepository = {
   async createBlog(inputBlog: blogCreateDto): Promise<ObjectId> {
