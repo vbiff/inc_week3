@@ -1,7 +1,6 @@
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { blogsServices } from "../../domain/blogs-services";
-import { mapBlogs } from "../../mappers/mapper-blogs-output";
 import { blogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
 
 export async function createBlogHandler(req: Request, res: Response) {
@@ -17,7 +16,5 @@ export async function createBlogHandler(req: Request, res: Response) {
     return;
   }
 
-  const mappedBlog = mapBlogs(newBlog);
-
-  res.status(HttpStatuses.CREATED_201).send(mappedBlog);
+  res.status(HttpStatuses.CREATED_201).send(newBlog);
 }

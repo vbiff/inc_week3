@@ -7,11 +7,6 @@ import {
   DEFAULT_SORT_DIRECTION,
 } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
 import { SortDirection } from "../../../core/types/sort-directions";
-import { mapperOutput } from "../../../core/mappers/mapper-output";
-import { blogCreateDto } from "../../dto/blog-create-dto";
-import { mapBlogs } from "../../mappers/mapper-blogs-output";
-import { Blog } from "../../types/blog";
-import { WithId } from "mongodb";
 import { blogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
 
 export async function getAllBlogsHandler(req: Request, res: Response) {
@@ -28,18 +23,7 @@ export async function getAllBlogsHandler(req: Request, res: Response) {
     searchNameTerm: String(req.query.searchNameTerm ?? ""),
   };
 
-  const { items, totalCount } = await blogsQueryRepository.findAll(queryInput);
-
-  const mappedItems: Blog[] = items.map(
-    (item: WithId<blogCreateDto>): Blog => mapBlogs(item),
-  );
-
-  const blogs = mapperOutput(mappedItems, {
-    pagesCount: Math.ceil(totalCount / queryInput.pageSize),
-    page: queryInput.pageNumber,
-    pageSize: queryInput.pageSize,
-    totalCount: totalCount,
-  });
+  const blogs = await blogsQueryRepository.findAll(queryInput);
 
   res.send(blogs);
 }

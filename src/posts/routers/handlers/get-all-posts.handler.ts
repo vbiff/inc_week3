@@ -7,9 +7,6 @@ import {
   DEFAULT_SORT_BY,
   DEFAULT_SORT_DIRECTION,
 } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
-import { mapperOutput } from "../../../core/mappers/mapper-output";
-import { Post } from "../../types/posts";
-import { mapperPost } from "../../mappers/mapper-post";
 import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-repository";
 
 export async function getAllPostsHandler(req: Request, res: Response) {
@@ -26,17 +23,7 @@ export async function getAllPostsHandler(req: Request, res: Response) {
     searchNameTerm: String(req.query.searchNameTerm ?? ""),
   };
 
-  const { posts, totalCount } =
-    await postsQueryRepositories.findAll(queryInput);
-
-  const mappedPosts: Post[] = posts.map((post) => mapperPost(post));
-
-  const resultPosts = mapperOutput(mappedPosts, {
-    pagesCount: Math.ceil(totalCount / queryInput.pageSize),
-    page: queryInput.pageNumber,
-    pageSize: queryInput.pageSize,
-    totalCount: totalCount,
-  });
+  const resultPosts = await postsQueryRepositories.findAll(queryInput);
 
   res.send(resultPosts);
 }

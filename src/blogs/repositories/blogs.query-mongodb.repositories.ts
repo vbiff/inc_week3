@@ -2,11 +2,13 @@ import { blogCreateDto } from "../dto/blog-create-dto";
 import { Filter, ObjectId, WithId } from "mongodb";
 import { blogCollection } from "./blogs.mongodb.repositories";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
+import { Blog } from "../types/blog";
+import { mapBlogs } from "../mappers/mapper-blogs-output";
+import { mapperOutput } from "../../core/mappers/mapper-output";
+import { BlogOutputDto } from "../types/blog-output-dto";
 
 export const blogsQueryRepository = {
-  async findAll(
-    query: PaginationAndSortingReq,
-  ): Promise<{ items: WithId<blogCreateDto>[]; totalCount: number }> {
+  async findAll(query: PaginationAndSortingReq): Promise<BlogOutputDto> {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
     const skip: number = (pageNumber - 1) * pageSize;
@@ -26,10 +28,21 @@ export const blogsQueryRepository = {
 
     const totalCount = await blogCollection.countDocuments(filter);
 
-    return { items, totalCount };
+    const mappedItems: Blog[] = items.map(
+      (item: WithId<blogCreateDto>): Blog => mapBlogs(item),
+    );
+
+    return mapperOutput(mappedItems, {
+      pagesCount: Math.ceil(totalCount / pageSize),
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount: totalCount,
+    });
   },
 
-  async findByObjectId(id: string): Promise<WithId<blogCreateDto> | null> {
-    return await blogCollection.findOne({ _id: new ObjectId(id) });
+  async findByObjectId(id: string): Promise<Blog | null> {
+    const blog = await blogCollection.findOne({ _id: new ObjectId(id) });
+    if (!blog) return null;
+    return mapBlogs(blog);
   },
 };

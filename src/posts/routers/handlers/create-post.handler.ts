@@ -1,15 +1,14 @@
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { postsServices } from "../../domain/posts-services";
-import { mapperPost } from "../../mappers/mapper-post";
 import { blogsQueryRepository } from "../../../blogs/repositories/blogs.query-mongodb.repositories";
-import { blogCreateDto } from "../../../blogs/dto/blog-create-dto";
-import { WithId } from "mongodb";
 import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-repository";
+import { Blog } from "../../../blogs/types/blog";
 
 export async function createPostHandler(req: Request, res: Response) {
-  const blog: WithId<blogCreateDto> | null =
-    await blogsQueryRepository.findByObjectId(req.body.blogId);
+  const blog: Blog | null = await blogsQueryRepository.findByObjectId(
+    req.body.blogId,
+  );
   if (!blog) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
   }
@@ -20,13 +19,9 @@ export async function createPostHandler(req: Request, res: Response) {
     return;
   }
 
-  const newPost = await postsQueryRepositories.findByObjectId(
+  const mappedPost = await postsQueryRepositories.findByObjectId(
     newPostId.toString(),
   );
-  if (!newPost) {
-    return;
-  }
-  const mappedPost = mapperPost(newPost);
 
   res.status(HttpStatuses.CREATED_201).send(mappedPost);
 }

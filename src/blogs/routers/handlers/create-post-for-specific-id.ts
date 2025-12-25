@@ -1,7 +1,6 @@
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { postsServices } from "../../../posts/domain/posts-services";
-import { mapperPost } from "../../../posts/mappers/mapper-post";
 import { ObjectId } from "mongodb";
 import { blogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
 import { postsQueryRepositories } from "../../../posts/repositories/posts.mongodb-query-repository";
@@ -33,7 +32,5 @@ export async function createPostForSpecificBlogIdHandler(
     return;
   }
 
-  const mappedPost = mapperPost(newPost);
-
-  res.status(HttpStatuses.CREATED_201).send(mappedPost);
+  res.status(HttpStatuses.CREATED_201).send(newPost);
 }
