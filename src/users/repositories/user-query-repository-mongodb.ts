@@ -39,11 +39,13 @@ export const userQueryRepositoryMongodb = {
       filter.$or = [];
       if (searchLoginTerm) {
         filter.$or.push({ login: { $regex: searchLoginTerm, $options: "i" } });
-      } else if (searchEmailTerm) {
+      }
+      if (searchEmailTerm) {
         filter.$or.push({ email: { $regex: searchEmailTerm, $options: "i" } });
       }
     }
-
+    console.log("REPO QUERY", query);
+    console.log("REPO FILTER", filter);
     const users = await usersCollection
       .find(filter)
       .sort({ [sortBy]: sortDirection })
