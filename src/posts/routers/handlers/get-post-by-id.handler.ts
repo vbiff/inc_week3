@@ -1,10 +1,10 @@
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-repository";
-import { Post } from "../../dto/output-dto/posts";
+import { PostView } from "../../dto/output-dto/posts-view";
 
 export async function getPostById(req: Request, res: Response) {
-  const post: Post | null = await postsQueryRepositories.findByObjectId(
+  const post: PostView | null = await postsQueryRepositories.findByObjectId(
     req.params.id,
   );
 

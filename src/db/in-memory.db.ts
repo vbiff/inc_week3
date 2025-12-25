@@ -1,8 +1,8 @@
 //db
 import { BlogView } from "../blogs/dto/output-dto/blog-view";
-import { Post } from "../posts/dto/output-dto/posts";
+import { PostView } from "../posts/dto/output-dto/posts-view";
 
 export const db = {
   blogs: <BlogView[]>[],
-  posts: <Post[]>[],
+  posts: <PostView[]>[],
 };

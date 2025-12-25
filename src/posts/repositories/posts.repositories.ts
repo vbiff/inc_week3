@@ -1,17 +1,17 @@
 import { db } from "../../db/in-memory.db";
-import { Post } from "../dto/output-dto/posts";
+import { PostView } from "../dto/output-dto/posts-view";
 import { PostInputDTO } from "../dto/input-dto/post-input-dto";
 
 export const postsRepository = {
-  findAll(): Post[] {
+  findAll(): PostView[] {
     return db.posts;
   },
 
-  findById(id: string): Post | null {
+  findById(id: string): PostView | null {
     return db.posts.find((post) => post.id === id) ?? null;
   },
 
-  createPost(inputPost: PostInputDTO): Post {
+  createPost(inputPost: PostInputDTO): PostView {
     const blog = db.blogs.find((blog) => blog.id === inputPost.blogId);
     if (!blog) {
       throw new Error("blog not found");
