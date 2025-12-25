@@ -9,4 +9,11 @@ export const userRepository = {
     const userId = await usersCollection.insertOne(dto);
     return userId.insertedId;
   },
+
+  async deleteUser(id: string): Promise<boolean> {
+    const deleteResult = await usersCollection.deleteOne({
+      _id: new ObjectId(id),
+    });
+    return deleteResult.deletedCount === 1;
+  },
 };
