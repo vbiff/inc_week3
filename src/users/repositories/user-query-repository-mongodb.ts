@@ -38,17 +38,15 @@ export const userQueryRepositoryMongodb = {
     const filter: Filter<UserCreateDto> = {};
 
     if (searchLoginTerm) {
-      filter.$or = [];
-      filter.$or.push({ name: { $regex: searchLoginTerm, $options: "i" } });
+      filter.login = { $regex: searchLoginTerm, $options: "i" };
     }
 
     if (searchEmailTerm) {
-      filter.$or = [];
-      filter.$or.push({ name: { $regex: searchEmailTerm, $options: "i" } });
+      filter.email = { $regex: searchEmailTerm, $options: "i" };
     }
 
     const users = await usersCollection
-      .find({})
+      .find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(pageSize)
