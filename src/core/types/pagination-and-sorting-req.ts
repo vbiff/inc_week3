@@ -6,4 +6,6 @@ export type PaginationAndSortingReq = {
   sortBy: string;
   sortDirection: SortDirection;
   searchNameTerm: string;
+  searchLoginTerm: string;
+  searchEmailTerm: string;
 };

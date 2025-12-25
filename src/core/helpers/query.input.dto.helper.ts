@@ -18,5 +18,7 @@ export function queryInputDtoHelper(req: Request): PaginationAndSortingReq {
         ? SortDirection.ASC
         : DEFAULT_SORT_DIRECTION,
     searchNameTerm: String(req.query.searchNameTerm ?? ""),
+    searchLoginTerm: String(req.query.searchLoginTerm ?? ""),
+    searchEmailTerm: String(req.query.searchEmailTerm ?? ""),
   };
 }

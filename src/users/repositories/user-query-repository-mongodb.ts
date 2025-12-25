@@ -1,7 +1,7 @@
 import { client } from "../../db/mongo.db";
 import { UserCreateDto } from "../dto/input-dto/user-create-dto";
 import { UserView } from "../dto/output-dto/user-view";
-import { ObjectId, WithId } from "mongodb";
+import { Filter, ObjectId, WithId } from "mongodb";
 import { mapperUserMongoId } from "../mappers/mapper-user-mongoId";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 import { ResultUsersOutputDto } from "../dto/output-dto/result-users-output-dto";
@@ -25,8 +25,28 @@ export const userQueryRepositoryMongodb = {
   async getAllUsers(
     query: PaginationAndSortingReq,
   ): Promise<ResultUsersOutputDto> {
-    const { pageNumber, pageSize, sortBy, sortDirection } = query;
+    const {
+      pageNumber,
+      pageSize,
+      sortBy,
+      sortDirection,
+      searchLoginTerm,
+      searchEmailTerm,
+    } = query;
     const skip: number = (pageNumber - 1) * pageSize;
+
+    const filter: Filter<UserCreateDto> = {};
+
+    if (searchLoginTerm) {
+      filter.$or = [];
+      filter.$or.push({ name: { $regex: searchLoginTerm, $options: "i" } });
+    }
+
+    if (searchEmailTerm) {
+      filter.$or = [];
+      filter.$or.push({ name: { $regex: searchEmailTerm, $options: "i" } });
+    }
+
     const users = await usersCollection
       .find({})
       .sort({ [sortBy]: sortDirection })

@@ -5,6 +5,7 @@ const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
 const loginValidation = body("login")
   .isString()
+  .withMessage("Login is wrong")
   .trim()
   .notEmpty()
   .withMessage("Login can not be empty")
@@ -15,6 +16,7 @@ const loginValidation = body("login")
 
 const passwordValidation = body("password")
   .isString()
+  .withMessage("Password is wrong")
   .trim()
   .notEmpty()
   .withMessage("Password can not be empty")
