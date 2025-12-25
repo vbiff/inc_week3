@@ -34,13 +34,14 @@ export const userQueryRepositoryMongodb = {
     const skip: number = (pageNumber - 1) * pageSize;
 
     const filter: Filter<UserCreateDto> = {};
-    filter.$or = [];
 
     if (searchLoginTerm) {
+      filter.$or = [];
       filter.$or.push({ login: { $regex: searchLoginTerm, $options: "i" } });
     }
 
     if (searchEmailTerm) {
+      filter.$or = [];
       filter.$or.push({ email: { $regex: searchEmailTerm, $options: "i" } });
     }
 
