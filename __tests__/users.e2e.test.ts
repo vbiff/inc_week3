@@ -28,4 +28,10 @@ describe("Test for CRUD Users", () => {
       .send(newUser)
       .expect(HttpStatuses.CREATED_201);
   });
+
+  it("Should return all users", async () => {
+    const users = await request(app).get(USERS_PATH);
+
+    expect(users.body!.items.length).toBe(1);
+  });
 });
