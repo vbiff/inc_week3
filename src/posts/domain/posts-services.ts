@@ -1,6 +1,6 @@
-import { PostInputDTO } from "../dto/post-input-dto";
+import { PostInputDTO } from "../dto/input-dto/post-input-dto";
 import { postsRepository } from "../repositories/posts.mongodb.repositories";
-import { PostInputWithBlogIdDTO } from "../dto/post-input-with_blog-id-dto";
+import { PostInputWithBlogIdDTO } from "../dto/input-dto/post-input-with_blog-id-dto";
 import { ObjectId } from "mongodb";
 
 export const postsServices = {

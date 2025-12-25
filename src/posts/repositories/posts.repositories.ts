@@ -1,6 +1,6 @@
 import { db } from "../../db/in-memory.db";
-import { Post } from "../types/posts";
-import { PostInputDTO } from "../dto/post-input-dto";
+import { Post } from "../dto/output-dto/posts";
+import { PostInputDTO } from "../dto/input-dto/post-input-dto";
 
 export const postsRepository = {
   findAll(): Post[] {

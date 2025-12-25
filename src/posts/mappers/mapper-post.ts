@@ -1,6 +1,6 @@
-import { PostCreateDto } from "../dto/post-create-dto";
+import { PostCreateDto } from "../dto/input-dto/post-create-dto";
 import { WithId } from "mongodb";
-import { Post } from "../types/posts";
+import { Post } from "../dto/output-dto/posts";
 
 export function mapperPost(postWithObjectId: WithId<PostCreateDto>): Post {
   return {

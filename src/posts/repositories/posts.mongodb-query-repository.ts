@@ -1,11 +1,11 @@
-import { PostCreateDto } from "../dto/post-create-dto";
+import { PostCreateDto } from "../dto/input-dto/post-create-dto";
 import { Filter, ObjectId } from "mongodb";
 import { PaginationAndSortingReq } from "../../core/types/pagination-and-sorting-req";
 import { client } from "../../db/mongo.db";
-import { Post } from "../types/posts";
+import { Post } from "../dto/output-dto/posts";
 import { mapperPost } from "../mappers/mapper-post";
 import { mapperOutput } from "../../core/mappers/mapper-output";
-import { PostOutputDto } from "../types/post -output-dto";
+import { PostOutputDto } from "../dto/output-dto/post -output-dto";
 const postsCollection = client.db("blogger").collection<PostCreateDto>("posts");
 
 export const postsQueryRepositories = {

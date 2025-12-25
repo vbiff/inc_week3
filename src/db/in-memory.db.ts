@@ -1,8 +1,8 @@
 //db
-import { Blog } from "../blogs/types/blog";
-import { Post } from "../posts/types/posts";
+import { BlogView } from "../blogs/dto/output-dto/blog-view";
+import { Post } from "../posts/dto/output-dto/posts";
 
 export const db = {
-  blogs: <Blog[]>[],
+  blogs: <BlogView[]>[],
   posts: <Post[]>[],
 };

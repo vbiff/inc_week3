@@ -1,17 +1,17 @@
-import { Blog } from "../types/blog";
+import { BlogView } from "../dto/output-dto/blog-view";
 import { db } from "../../db/in-memory.db";
-import { blogInputDto } from "../dto/blog.input_dto";
+import { blogInputDto } from "../dto/input-dto/blog_input_dto";
 
 export const blogsRepository = {
-  async findAll(): Promise<Blog[]> {
+  async findAll(): Promise<BlogView[]> {
     return db.blogs;
   },
 
-  async findById(id: string): Promise<Blog | null> {
+  async findById(id: string): Promise<BlogView | null> {
     return db.blogs.find((blog) => blog.id === id) ?? null;
   },
 
-  async createBlog(inputBlog: blogInputDto): Promise<Blog> {
+  async createBlog(inputBlog: blogInputDto): Promise<BlogView> {
     const newBlog = {
       ...inputBlog,
       id: new Date().toISOString(),

@@ -1,7 +1,7 @@
-import { blogInputDto } from "../dto/blog.input_dto";
+import { BlogInputDto } from "../dto/input-dto/blog_input_dto";
 import { client } from "../../db/mongo.db";
 import { ObjectId } from "mongodb";
-import { blogCreateDto } from "../dto/blog-create-dto";
+import { blogCreateDto } from "../dto/input-dto/blog-create-dto";
 
 export const blogCollection = client
   .db("blogger")
@@ -13,7 +13,7 @@ export const blogsRepository = {
     return blogId.insertedId;
   },
 
-  async updateBlog(dto: blogInputDto, id: string): Promise<void | null> {
+  async updateBlog(dto: BlogInputDto, id: string): Promise<void | null> {
     const res = await blogCollection.updateOne(
       { _id: new ObjectId(id) },
       {

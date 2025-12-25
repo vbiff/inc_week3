@@ -1,7 +1,7 @@
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-repository";
-import { Post } from "../../types/posts";
+import { Post } from "../../dto/output-dto/posts";
 
 export async function getPostById(req: Request, res: Response) {
   const post: Post | null = await postsQueryRepositories.findByObjectId(

@@ -1,6 +1,6 @@
 import express from "express";
 import { setupApp } from "../src/setup-app";
-import { blogInputDto } from "../src/blogs/dto/blog.input_dto";
+import { blogInputDto } from "../src/blogs/dto/input-dto/blog_input_dto";
 import request from "supertest";
 import { BLOGS_PATH, POSTS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";

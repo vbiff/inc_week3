@@ -1,9 +1,9 @@
-import { blogInputDto } from "../dto/blog.input_dto";
+import { BlogInputDto } from "../dto/input-dto/blog_input_dto";
 import { blogsRepository } from "../repositories/blogs.mongodb.repositories";
 import { ObjectId } from "mongodb";
 
 export const blogsServices = {
-  async createBlog(inputBlog: blogInputDto): Promise<ObjectId | null> {
+  async createBlog(inputBlog: BlogInputDto): Promise<ObjectId | null> {
     const newBlog = {
       ...inputBlog,
       createdAt: new Date().toISOString(),
@@ -12,7 +12,7 @@ export const blogsServices = {
     return await blogsRepository.createBlog(newBlog);
   },
 
-  async updateBlog(dto: blogInputDto, id: string): Promise<void | null> {
+  async updateBlog(dto: BlogInputDto, id: string): Promise<void | null> {
     return await blogsRepository.updateBlog(dto, id);
   },
 

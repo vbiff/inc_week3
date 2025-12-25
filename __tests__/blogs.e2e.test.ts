@@ -2,7 +2,7 @@ import express from "express";
 import { setupApp } from "../src/setup-app";
 import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
-import { blogInputDto } from "../src/blogs/dto/blog.input_dto";
+import { BlogInputDto } from "../src/blogs/dto/input-dto/blog_input_dto";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import { BLOGS_PATH } from "../src/core/paths/paths";
 
@@ -22,7 +22,7 @@ describe("Test for CRUD blogs", () => {
 
   //post blog
   it("Should create a blog", async () => {
-    const newBlog: blogInputDto = {
+    const newBlog: BlogInputDto = {
       description: "description",
       name: "NAME",
       websiteUrl:
@@ -73,7 +73,7 @@ describe("Test for CRUD blogs", () => {
   });
   //update
   it("Should update blog with valid id", async () => {
-    const updateBlog: blogInputDto = {
+    const updateBlog: BlogInputDto = {
       description: "description22",
       name: "NAME22",
       websiteUrl: "https://example22.com/",
