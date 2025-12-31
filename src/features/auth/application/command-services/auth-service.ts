@@ -1,17 +1,67 @@
 import { AuthInputDTO } from "../queries/dto/auth-input-dto/auth-input-dto";
 import { userRepository } from "../../../users/repositories/user-repository-mongodb";
 import { bcryptService } from "../../helpers/bcrypt-service";
+import { Result } from "../../../../core/result/resultType";
+import { ResultStatus } from "../../../../core/result/resultCode";
+import { UserCreateDto } from "../../../users/application/queries/dto/input-dto/user-create-dto";
+import { WithId } from "mongodb";
+import { jwtService } from "../../helpers/jwt-service";
 
 export const authService = {
-  async login(input: AuthInputDTO): Promise<boolean> {
+  async login(
+    input: AuthInputDTO,
+  ): Promise<Result<{ accessToken: string } | null>> {
+    const result = await this.checkUserCredentials(input);
+    if (result.status !== ResultStatus.Success)
+      return {
+        status: ResultStatus.Unauthorized,
+        errorMessage: "Unauthorized",
+        extensions: [{ field: "loginOrEmail", message: "Wrong credentials" }],
+        data: null,
+      };
+    const accessToken = await jwtService.createToken(
+      result.data!._id.toString(),
+    );
+    return {
+      status: ResultStatus.Success,
+      data: { accessToken },
+      extensions: [],
+    };
+  },
+
+  async checkUserCredentials(
+    input: AuthInputDTO,
+  ): Promise<Result<WithId<UserCreateDto> | null>> {
     const { password, loginOrEmail } = input;
 
-    const user = await userRepository.findUserByLoginOrEmail(loginOrEmail);
+    const user: WithId<UserCreateDto> | null =
+      await userRepository.findUserByLoginOrEmail(loginOrEmail);
 
     if (!user) {
-      return false;
+      return {
+        status: ResultStatus.NotFound,
+        data: null,
+        errorMessage: "Not Found",
+        extensions: [{ field: "loginOrEmail", message: "Not Found" }],
+      };
     }
 
-    return await bcryptService.comparePassword(password, user.password);
+    const isPassCorrect = await bcryptService.comparePassword(
+      password,
+      user.password,
+    );
+    if (!isPassCorrect) {
+      return {
+        status: ResultStatus.NotFound,
+        data: null,
+        errorMessage: "Not Found",
+        extensions: [{ field: "loginOrEmail", message: "Not Found" }],
+      };
+    }
+    return {
+      status: ResultStatus.Success,
+      data: user,
+      extensions: [],
+    };
   },
 };
