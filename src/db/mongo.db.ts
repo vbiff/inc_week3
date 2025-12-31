@@ -4,9 +4,10 @@ import { UserCreateDto } from "../features/users/application/queries/dto/input-d
 import { PostCreateDto } from "../features/posts/application/command-services/dto/post-create-dto";
 import { blogCreateDto } from "../features/blogs/application/command-services/dto/blog-create-dto";
 import { CommentCreateDto } from "../features/comments/dto/input-dto/comment-create-dto";
+import { AppConfig } from "../core/config/config";
 dotenv.config();
 
-const mongoUri = process.env.MONGO_URL || "mongodb://localhost:27017";
+const mongoUri = AppConfig.MONGO_URL || "mongodb://localhost:27017";
 
 export const client = new MongoClient(mongoUri);
 
