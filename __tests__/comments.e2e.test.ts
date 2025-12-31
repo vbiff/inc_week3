@@ -3,11 +3,11 @@ import { setupApp } from "../src/setup-app";
 import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
 import { BlogInputDto } from "../src/features/blogs/application/queries/dto/input-dto/blog_input_dto";
-import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
+import { BLOGS_PATH, COMMENT_PATH, POSTS_PATH } from "../src/core/paths/paths";
 import { PostInputDTO } from "../src/features/posts/application/queries/dto/input-dto/post-input-dto";
-import { BLOGS_PATH, POSTS_PATH } from "../src/core/paths/paths";
+import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 
-describe("Test for CRUD posts", () => {
+describe("comments", () => {
   const app = express();
   setupApp(app);
 
@@ -121,22 +121,17 @@ describe("Test for CRUD posts", () => {
       .send(updatePost)
       .expect(HttpStatuses.NOT_FOUND_404);
   });
-  //delete
-  it("Should delete post by id", async () => {
-    await request(app)
-      .delete(`${POSTS_PATH}/${postId}`)
-      .set("Authorization", adminToken)
-      .expect(HttpStatuses.NO_CONTENT_204);
 
-    await request(app)
-      .get(`${POSTS_PATH}/${postId}`)
-      .expect(HttpStatuses.NOT_FOUND_404);
-  });
+  // COMMENTS!
+  it("Should create a comment for the postId", async () => {
+    const newComment = { content: "HELLO WORLD!" };
 
-  it("Shouldnt delete post by id", async () => {
-    await request(app)
-      .delete(`${POSTS_PATH}/${postId}`)
+    const result = await request(app)
+      .post(`${POSTS_PATH}/${postId}${COMMENT_PATH}`)
       .set("Authorization", adminToken)
-      .expect(HttpStatuses.NOT_FOUND_404);
+      .send(newComment)
+      .expect(HttpStatuses.CREATED_201);
+
+    console.log(result.body);
   });
 });

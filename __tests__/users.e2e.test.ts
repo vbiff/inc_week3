@@ -2,7 +2,7 @@ import express from "express";
 import { setupApp } from "../src/setup-app";
 import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
-import { UserInputDTO } from "../src/users/dto/input-dto/user-input-dto";
+import { UserInputDTO } from "../src/features/users/application/queries/dto/input-dto/user-input-dto";
 import { USERS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 

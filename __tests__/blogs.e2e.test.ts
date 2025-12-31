@@ -2,7 +2,7 @@ import express from "express";
 import { setupApp } from "../src/setup-app";
 import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
-import { BlogInputDto } from "../src/blogs/dto/input-dto/blog_input_dto";
+import { BlogInputDto } from "../src/features/blogs/application/queries/dto/input-dto/blog_input_dto";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import { BLOGS_PATH } from "../src/core/paths/paths";
 

@@ -1,8 +1,9 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-import { UserCreateDto } from "../users/dto/input-dto/user-create-dto";
-import { PostCreateDto } from "../posts/dto/input-dto/post-create-dto";
-import { blogCreateDto } from "../blogs/dto/input-dto/blog-create-dto";
+import { UserCreateDto } from "../features/users/application/queries/dto/input-dto/user-create-dto";
+import { PostCreateDto } from "../features/posts/application/command-services/dto/post-create-dto";
+import { blogCreateDto } from "../features/blogs/application/command-services/dto/blog-create-dto";
+import { CommentCreateDto } from "../features/comments/dto/input-dto/comment-create-dto";
 dotenv.config();
 
 const mongoUri = process.env.MONGO_URL || "mongodb://localhost:27017";
@@ -18,6 +19,9 @@ export const postsCollection = client
 export const blogCollection = client
   .db("blogger")
   .collection<blogCreateDto>("blogs");
+export const commmentsCollection = client
+  .db("blogger")
+  .collection<CommentCreateDto>("comments");
 
 export async function runDb(): Promise<void> {
   try {

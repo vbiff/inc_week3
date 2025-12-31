@@ -1,9 +1,9 @@
 import { Router, Request, Response } from "express";
 import { HttpStatuses } from "../../core/types/http-statuses";
 import { client } from "../../db/mongo.db";
-import { BlogView } from "../../blogs/dto/output-dto/blog-view";
-import { PostView } from "../../posts/dto/output-dto/posts-view";
-import { UserView } from "../../users/dto/output-dto/user-view";
+import { BlogView } from "../../features/blogs/application/queries/dto/output-dto/blog-view";
+import { PostView } from "../../features/posts/application/queries/dto/output-dto/posts-view";
+import { UserView } from "../../features/users/application/queries/dto/output-dto/user-view";
 
 export const testingRouter: Router = Router({});
 

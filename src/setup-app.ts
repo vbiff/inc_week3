@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import { testingRouter } from "./testing/routers/testing.router";
-import { blogRouter } from "./blogs/routers/blogs.router";
-import { postRouter } from "./posts/routers/posts.router";
+import { blogRouter } from "./features/blogs/routers/blogs.router";
+import { postRouter } from "./features/posts/routers/posts.router";
 import {
   AUTH_PATH,
   BLOGS_PATH,
@@ -9,8 +9,8 @@ import {
   TESTING_PATH,
   USERS_PATH,
 } from "./core/paths/paths";
-import { userRouter } from "./users/routers/users.router";
-import { authRouter } from "./auth/routers/auth.router";
+import { userRouter } from "./features/users/routers/users.router";
+import { authRouter } from "./features/auth/routers/auth.router";
 
 export const setupApp = (app: Express): void => {
   app.use(express.json());
