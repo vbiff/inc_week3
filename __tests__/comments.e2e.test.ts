@@ -156,6 +156,8 @@ describe("comments", () => {
   });
 
   // COMMENTS!
+
+  let commentId = "";
   it("Should create a comment for the postId", async () => {
     const newComment = { content: "HELLO WORLD!" };
 
@@ -164,6 +166,14 @@ describe("comments", () => {
       .set("Authorization", "Bearer " + token)
       .send(newComment)
       .expect(HttpStatuses.CREATED_201);
+
+    console.log(result.body);
+    commentId = result.body.id;
+  });
+  it("Should get comment by id", async () => {
+    const result = await request(app)
+      .get(`${COMMENT_PATH}/${commentId}`)
+      .expect(HttpStatuses.OK_200);
 
     console.log(result.body);
   });

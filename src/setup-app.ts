@@ -5,12 +5,14 @@ import { postRouter } from "./features/posts/routers/posts.router";
 import {
   AUTH_PATH,
   BLOGS_PATH,
+  COMMENT_PATH,
   POSTS_PATH,
   TESTING_PATH,
   USERS_PATH,
 } from "./core/paths/paths";
 import { userRouter } from "./features/users/routers/users.router";
 import { authRouter } from "./features/auth/routers/auth.router";
+import { commentsRouter } from "./features/comments/routers/comment-router";
 
 export const setupApp = (app: Express): void => {
   app.use(express.json());
@@ -24,4 +26,5 @@ export const setupApp = (app: Express): void => {
   app.use(POSTS_PATH, postRouter);
   app.use(USERS_PATH, userRouter);
   app.use(AUTH_PATH, authRouter);
+  app.use(COMMENT_PATH, commentsRouter);
 };
