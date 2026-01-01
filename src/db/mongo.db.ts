@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { UserCreateDto } from "../features/users/application/queries/dto/input-dto/user-create-dto";
 import { PostCreateDto } from "../features/posts/application/command-services/dto/post-create-dto";
 import { blogCreateDto } from "../features/blogs/application/command-services/dto/blog-create-dto";
-import { CommentCreateDto } from "../features/comments/dto/input-dto/comment-create-dto";
+import { CommentCreateDto } from "../features/comments/application/command-service/dto/comment-create-dto";
 import { AppConfig } from "../core/config/config";
 dotenv.config();
 

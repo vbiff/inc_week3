@@ -10,18 +10,20 @@ import { adminGuardMiddleware } from "../../../core/middlewares/auth/admin.guard
 import { queryValidation } from "../../../core/middlewares/validation/query-pagination-sorting.validation";
 import { createCommentHandler } from "./handlers/create-comment-by-postId";
 import { commentInputDtoValidation } from "../../comments/validation/comment-inputDto-validation";
+import { accessTokenGuardMiddleware } from "../../../core/middlewares/auth/access-token-guard";
 
 export const postRouter = Router();
 
-// post comment with postId
+// create comment with postId
 postRouter.post(
   "/:postId/comments",
+  accessTokenGuardMiddleware,
   commentInputDtoValidation,
   validationResultMiddleware,
   createCommentHandler,
 );
 
-//get all
+//get all posts
 postRouter.get(
   "/",
   queryValidation,
@@ -29,7 +31,7 @@ postRouter.get(
   getAllPostsHandler,
 );
 
-// create
+// create post
 postRouter.post(
   "/",
   adminGuardMiddleware,
@@ -38,10 +40,10 @@ postRouter.post(
   createPostHandler,
 );
 
-// get by id
+// get post by id
 postRouter.get("/:id", getPostById);
 
-// update
+// update post
 postRouter.put(
   "/:id",
   adminGuardMiddleware,

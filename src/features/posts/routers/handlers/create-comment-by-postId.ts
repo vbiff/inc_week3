@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { PostView } from "../../application/queries/dto/output-dto/posts-view";
 import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-repository";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
-import { commentService } from "../../../comments/application/comment-service";
+import { commentService } from "../../../comments/application/command-service/comment-service";
 import { commentsQueryRepository } from "../../../comments/repositories/commentsQueryRepository";
 
 export async function createCommentHandler(req: Request, res: Response) {

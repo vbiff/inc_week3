@@ -1,5 +1,5 @@
-import { CommentInputDto } from "../dto/input-dto/comment-input-dto";
-import { commentsRepository } from "../repositories/commentsRepository";
+import { CommentInputDto } from "../queries/dto/input-dto/comment-input-dto";
+import { commentsRepository } from "../../repositories/commentsRepository";
 
 export const commentService = {
   async createComment(

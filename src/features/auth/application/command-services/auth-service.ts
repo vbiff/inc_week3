@@ -14,9 +14,9 @@ export const authService = {
     const result = await this.checkUserCredentials(input);
     if (result.status !== ResultStatus.Success)
       return {
-        status: ResultStatus.Unauthorized,
-        errorMessage: "Unauthorized",
-        extensions: [{ field: "loginOrEmail", message: "Wrong credentials" }],
+        status: result.status,
+        errorMessage: result.errorMessage,
+        extensions: result.extensions,
         data: null,
       };
     const accessToken = await jwtService.createToken(
@@ -56,7 +56,7 @@ export const authService = {
         status: ResultStatus.Unauthorized,
         data: null,
         errorMessage: "Not Authorized",
-        extensions: [{ field: "loginOrEmail", message: "Not Found" }],
+        extensions: [{ field: "password", message: "Not correct" }],
       };
     }
     return {

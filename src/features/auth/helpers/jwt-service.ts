@@ -6,9 +6,9 @@ export const jwtService = {
     return jwt.sign({ id: userId }, AppConfig.SECRET, { expiresIn: "5m" });
   },
 
-  async verifyToken(token: string): Promise<{ userId: string } | null> {
+  async verifyToken(token: string): Promise<{ id: string } | null> {
     try {
-      return jwt.verify(token, AppConfig.SECRET) as { userId: string };
+      return jwt.verify(token, AppConfig.SECRET) as { id: string }; //WTF UserID and id????
     } catch (error) {
       console.error(error);
       return null;

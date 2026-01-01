@@ -1,6 +1,6 @@
 import express from "express";
 import { setupApp } from "../src/setup-app";
-import { blogInputDto } from "../src/features/blogs/application/queries/dto/input-dto/blog_input_dto";
+import { BlogInputDto } from "../src/features/blogs/application/queries/dto/input-dto/blog_input_dto";
 import request from "supertest";
 import { BLOGS_PATH, POSTS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
@@ -23,7 +23,7 @@ describe("InputValidation", () => {
 
   //post blog
   it("Should create a blog", async () => {
-    const newBlog: blogInputDto = {
+    const newBlog: BlogInputDto = {
       description: "description",
       name: "NAME",
       websiteUrl:
@@ -41,10 +41,10 @@ describe("InputValidation", () => {
     const blogs = await request(app)
       .get(BLOGS_PATH)
       .expect(HttpStatuses.OK_200);
+    console.log(blogs.body);
+    expect(blogs.body.items.length).toBe(1); //I have deleted everything before all
 
-    expect(blogs.body.length).toBe(1); //I have deleted everything before all
-
-    blogId = blogs.body[0].id;
+    blogId = blogs.body.items[0].id;
   });
 
   it("Should pass all validation on create", async () => {

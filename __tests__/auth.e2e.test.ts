@@ -17,6 +17,12 @@ describe("auth tests", () => {
       .delete("/testing/all-data")
       .expect(HttpStatuses.NO_CONTENT_204);
   });
+
+  afterAll(async () => {
+    await request(app)
+      .delete("/testing/all-data")
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
   //create new user
   it("Should create new user", async () => {
     const newUser: UserInputDTO = {
@@ -31,13 +37,22 @@ describe("auth tests", () => {
       .send(newUser)
       .expect(HttpStatuses.CREATED_201);
   });
-
+  let token = "";
   it("Should login new user", async () => {
     console.log("HERE");
     const result = await request(app)
       .post(AUTH_PATH + LOGIN_PATH)
       .send({ loginOrEmail: "test123@email.com", password: "123456" })
       .expect(HttpStatuses.OK_200);
+
+    token = result.body.accessToken;
+  });
+
+  it("Should return me", async () => {
+    const result = await request(app)
+      .get(AUTH_PATH + "/me")
+      .set("Authorization", "Bearer " + token);
+    expect(result.status).toBe(200);
 
     console.log(result.body);
   });
