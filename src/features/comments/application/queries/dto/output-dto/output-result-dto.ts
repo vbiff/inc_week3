@@ -1,4 +1,4 @@
-export type OutputResultDto = {
+export type CommentOutputResultDto = {
   id: string;
   content: string;
   commentatorInfo: CommentatorInfo;

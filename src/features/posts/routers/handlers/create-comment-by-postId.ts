@@ -4,6 +4,7 @@ import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-r
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { commentService } from "../../../comments/application/command-service/comment-service";
 import { commentsQueryRepository } from "../../../comments/repositories/commentsQueryRepository";
+import { userQueryRepositoryMongodb } from "../../../users/repositories/user-query-repository-mongodb";
 
 export async function createCommentHandler(req: Request, res: Response) {
   // 1 check if post exists with postId by query repo
@@ -20,8 +21,16 @@ export async function createCommentHandler(req: Request, res: Response) {
     req.body,
     post.id,
   );
+  //get user info
+  const userInfo = await userQueryRepositoryMongodb.findUserByIdForMe(
+    req.user!.id,
+  );
+
   // 3 get new comment from query repo
-  const newComment = await commentsQueryRepository.getCommentById(commentId);
+  const newComment = await commentsQueryRepository.getCommentById(
+    commentId,
+    userInfo!,
+  );
 
   if (!newComment) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);

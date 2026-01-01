@@ -9,6 +9,7 @@ export const commentService = {
     const newComment = {
       ...inputDto,
       postId: postId,
+      createdAt: new Date().toISOString(),
     };
 
     return await commentsRepository.createComment(newComment);
