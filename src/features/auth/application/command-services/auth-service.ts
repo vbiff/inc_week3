@@ -22,6 +22,7 @@ export const authService = {
     const accessToken = await jwtService.createToken(
       result.data!._id.toString(),
     );
+    console.log(accessToken);
     return {
       status: ResultStatus.Success,
       data: { accessToken },
@@ -39,9 +40,9 @@ export const authService = {
 
     if (!user) {
       return {
-        status: ResultStatus.NotFound,
+        status: ResultStatus.Unauthorized,
         data: null,
-        errorMessage: "Not Found",
+        errorMessage: "Not Authorized",
         extensions: [{ field: "loginOrEmail", message: "Not Found" }],
       };
     }
@@ -52,9 +53,9 @@ export const authService = {
     );
     if (!isPassCorrect) {
       return {
-        status: ResultStatus.NotFound,
+        status: ResultStatus.Unauthorized,
         data: null,
-        errorMessage: "Not Found",
+        errorMessage: "Not Authorized",
         extensions: [{ field: "loginOrEmail", message: "Not Found" }],
       };
     }

@@ -6,7 +6,7 @@ import { ResultUsersOutputDto } from "../../application/queries/dto/output-dto/r
 
 export async function getAllUsersHandler(req: Request, res: Response) {
   const queryInput: PaginationAndSortingReq = queryInputDtoHelper(req);
-  console.log("QUERY  ", queryInput);
+
   const Users: ResultUsersOutputDto =
     await userQueryRepositoryMongodb.getAllUsers(queryInput);
 
