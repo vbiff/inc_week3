@@ -13,5 +13,7 @@ export async function loginAuthHandler(req: Request, res: Response) {
       .send(authResult.extensions);
     return;
   }
-  res.status(HttpStatuses.OK_200).send(authResult.data?.accessToken);
+  res
+    .status(HttpStatuses.OK_200)
+    .send({ accessToken: authResult.data?.accessToken });
 }
