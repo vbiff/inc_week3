@@ -26,7 +26,8 @@ postRouter.post(
 // get comment for postId
 postRouter.get(
   "/:postId/comments/",
-  accessTokenGuardMiddleware,
+  queryValidation,
+  validationResultMiddleware,
   getCommentsForPostIdHandler,
 );
 
