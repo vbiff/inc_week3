@@ -186,6 +186,21 @@ describe("comments", () => {
     console.log(result.body);
   });
 
+  it("Should update a comment by id", async () => {
+    const content = { content: "new content" };
+    await request(app)
+      .put(`${COMMENT_PATH}/${commentId}`)
+      .set("Authorization", "Bearer " + token)
+      .send(content)
+      .expect(HttpStatuses.NO_CONTENT_204);
+
+    const result = await request(app)
+      .get(`${COMMENT_PATH}/${commentId}`)
+      .expect(HttpStatuses.OK_200);
+
+    expect(result.body.content).toBe("new content");
+  });
+
   it("Should not delete a comment by wrong id", async () => {
     await request(app)
       .delete(`${COMMENT_PATH}/63189b06003380064c4193be`)

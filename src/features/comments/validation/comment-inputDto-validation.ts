@@ -1,6 +1,7 @@
 import { body } from "express-validator";
 
 const contentValidation = body("content")
+  .exists()
   .trim()
   .notEmpty()
   .isString()
