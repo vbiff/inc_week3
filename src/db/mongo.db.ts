@@ -20,7 +20,7 @@ export const postsCollection = client
 export const blogCollection = client
   .db("blogger")
   .collection<blogCreateDto>("blogs");
-export const commmentsCollection = client
+export const commentsCollection = client
   .db("blogger")
   .collection<CommentCreateDto>("comments");
 

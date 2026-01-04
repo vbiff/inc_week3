@@ -11,6 +11,7 @@ import { queryValidation } from "../../../core/middlewares/validation/query-pagi
 import { createCommentHandler } from "./handlers/create-comment-by-postId";
 import { commentInputDtoValidation } from "../../comments/validation/comment-inputDto-validation";
 import { accessTokenGuardMiddleware } from "../../../core/middlewares/auth/access-token-guard";
+import { getCommentsForPostIdHandler } from "./handlers/get-comments-for-post-id-handler";
 
 export const postRouter = Router();
 
@@ -21,6 +22,12 @@ postRouter.post(
   commentInputDtoValidation,
   validationResultMiddleware,
   createCommentHandler,
+);
+// get comment for postId
+postRouter.get(
+  "/:postId/comments/",
+  accessTokenGuardMiddleware,
+  getCommentsForPostIdHandler,
 );
 
 //get all posts
