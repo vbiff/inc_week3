@@ -7,11 +7,12 @@ import { HttpStatuses } from "../../../../core/types/http-statuses";
 
 export async function deleteCommentByIdHandler(req: Request, res: Response) {
   const result: Result = await commentsRepository.deleteCommentById(
-    req.params.id,
+    req.params.commentId,
     req.user!.id,
   );
   if (result.status === ResultStatus.Success) {
     res.sendStatus(HttpStatuses.NO_CONTENT_204);
+    return;
   }
 
   res.sendStatus(resultCodeToHttpException(result.status));

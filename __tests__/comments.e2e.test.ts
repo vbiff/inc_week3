@@ -186,6 +186,13 @@ describe("comments", () => {
     console.log(result.body);
   });
 
+  it("Should not delete a comment by wrong id", async () => {
+    await request(app)
+      .delete(`${COMMENT_PATH}/63189b06003380064c4193be`)
+      .set("Authorization", "Bearer " + token)
+      .expect(HttpStatuses.NOT_FOUND_404);
+  });
+
   it("Should delete a comment by  id", async () => {
     await request(app)
       .delete(`${COMMENT_PATH}/${commentId}`)

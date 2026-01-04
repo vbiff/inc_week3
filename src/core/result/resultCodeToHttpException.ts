@@ -9,6 +9,8 @@ export const resultCodeToHttpException = (resultCode: ResultStatus): number => {
       return HttpStatuses.FORBIDDEN_403;
     case ResultStatus.Unauthorized:
       return HttpStatuses.UNAUTHORIZED_401;
+    case ResultStatus.NotFound:
+      return HttpStatuses.NOT_FOUND_404;
     default:
       return HttpStatuses.SERVERERROR_500;
   }
