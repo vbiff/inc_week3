@@ -185,4 +185,11 @@ describe("comments", () => {
 
     console.log(result.body);
   });
+
+  it("Should delete a comment by  id", async () => {
+    await request(app)
+      .delete(`${COMMENT_PATH}/${commentId}`)
+      .set("Authorization", "Bearer " + token)
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
 });
