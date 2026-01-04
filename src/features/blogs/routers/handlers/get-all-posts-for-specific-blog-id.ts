@@ -22,5 +22,5 @@ export async function getAllPostsForSpecificBlogIdHandler(
     queryInput,
   );
 
-  res.send(resultPosts);
+  res.status(HttpStatuses.OK_200).send(resultPosts);
 }

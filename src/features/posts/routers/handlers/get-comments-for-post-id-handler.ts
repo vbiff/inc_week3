@@ -11,7 +11,7 @@ export async function getCommentsForPostIdHandler(req: Request, res: Response) {
   //1 request to Query repo
   const result: ResultCommentsOutputDto | null =
     await commentsQueryRepository.getCommentsForPostId(
-      req.params.id,
+      req.params.postId,
       queryInput,
     );
 

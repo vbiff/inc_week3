@@ -177,4 +177,12 @@ describe("comments", () => {
 
     console.log(result.body);
   });
+
+  it("Should get a comments by post id", async () => {
+    const result = await request(app)
+      .get(`${POSTS_PATH}/${postId}${COMMENT_PATH}`)
+      .expect(HttpStatuses.OK_200);
+
+    console.log(result.body);
+  });
 });

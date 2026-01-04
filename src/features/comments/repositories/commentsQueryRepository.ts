@@ -36,13 +36,13 @@ export const commentsQueryRepository = {
     const filter = { postId: postId };
 
     const comments: WithId<CommentCreateDto>[] = await commentsCollection
-      .find({ filter })
+      .find(filter)
       .skip(skip)
       .limit(pageSize)
       .sort(sortBy, sortDirection)
       .toArray();
 
-    const totalCount = await commentsCollection.countDocuments({ filter });
+    const totalCount = await commentsCollection.countDocuments(filter);
 
     const mappedComments = comments.map((comment) =>
       mapperToCommentOutputResDto(comment),
