@@ -15,7 +15,7 @@
   "author": "Mikhail Bogovalov <mbseq@yandex.ru>",
   "license": "MIT",
   "dependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
+    "argon2": "^0.44.0",
     "bcrypt": "^6.0.0",
     "express": "^5.2.1",
     "express-validator": "^7.3.1",
@@ -23,6 +23,8 @@
     "mongodb": "^7.0.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/argon2": "^0.15.4",
     "@eslint/js": "^9.39.2",
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",

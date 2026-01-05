@@ -1,11 +1,12 @@
 import { AuthInputDTO } from "../queries/dto/auth-input-dto/auth-input-dto";
 import { userRepository } from "../../../users/repositories/user-repository-mongodb";
-import { bcryptService } from "../../helpers/bcrypt-service";
 import { Result } from "../../../../core/result/resultType";
 import { ResultStatus } from "../../../../core/result/resultCode";
 import { UserCreateDto } from "../../../users/application/queries/dto/input-dto/user-create-dto";
 import { WithId } from "mongodb";
 import { jwtService } from "../../helpers/jwt-service";
+import { argon2Service } from "../../helpers/argon2-service";
+import { userService } from "../../../users/application/command-services/user-service";
 
 export const authService = {
   async login(
@@ -47,7 +48,7 @@ export const authService = {
       };
     }
 
-    const isPassCorrect = await bcryptService.comparePassword(
+    const isPassCorrect = await argon2Service.comparePassword(
       password,
       user.password,
     );
@@ -59,6 +60,11 @@ export const authService = {
         extensions: [{ field: "password", message: "Not correct" }],
       };
     }
+    const newHash = await argon2Service.reHash(password, user.password);
+    if (newHash) {
+      await userService.updateUserHash(user._id.toString(), newHash);
+    }
+
     return {
       status: ResultStatus.Success,
       data: user,

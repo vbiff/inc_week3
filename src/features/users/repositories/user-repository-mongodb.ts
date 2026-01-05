@@ -22,4 +22,11 @@ export const userRepository = {
       $or: [{ login: loginOrEmail }, { email: loginOrEmail }],
     });
   },
+
+  async updateHash(userId: string, newHash: string): Promise<void> {
+    await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { password: newHash } },
+    );
+  },
 };

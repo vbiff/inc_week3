@@ -1,12 +1,12 @@
 import { ObjectId } from "mongodb";
 import { UserInputDTO } from "../queries/dto/input-dto/user-input-dto";
 import { userRepository } from "../../repositories/user-repository-mongodb";
-import { bcryptService } from "../../../auth/helpers/bcrypt-service";
+import { argon2Service } from "../../../auth/helpers/argon2-service";
 
 export const userService = {
   async createUser(dto: UserInputDTO): Promise<ObjectId | null> {
     const { password } = dto;
-    const passwordHash = await bcryptService.generateHash(password);
+    const passwordHash = await argon2Service.generateHash(password);
 
     const newUser = {
       ...dto,
@@ -15,5 +15,9 @@ export const userService = {
     };
 
     return await userRepository.createUser(newUser);
+  },
+
+  async updateUserHash(userId: string, newHash: string): Promise<void> {
+    await userRepository.updateHash(userId, newHash);
   },
 };
