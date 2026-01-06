@@ -1,12 +1,12 @@
-import { commentsRepository } from "../../repositories/commentsRepository";
 import { ResultStatus } from "../../../../core/result/resultCode";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { resultCodeToHttpException } from "../../../../core/result/resultCodeToHttpException";
 import { Request, Response } from "express";
 import { Result } from "../../../../core/result/resultType";
+import { commentService } from "../../application/command-service/comment-service";
 
 export async function updateCommentByIdHandler(req: Request, res: Response) {
-  const result: Result = await commentsRepository.updateCommentById(
+  const result: Result = await commentService.updateComment(
     req.params.commentId,
     req.body.content,
     req.user!.id,

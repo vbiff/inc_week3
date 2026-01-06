@@ -5,7 +5,6 @@ import { ResultCommentsOutputDto } from "../../posts/application/queries/dto/out
 import { PostCreateDto } from "../../posts/application/command-services/dto/post-create-dto";
 import { PaginationAndSortingReq } from "../../../core/types/pagination-and-sorting-req";
 import { getSkipNumber } from "../../../core/utils/skip";
-import { CommentCreateDto } from "../application/command-service/dto/comment-create-dto";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
 
 export const commentsQueryRepository = {
@@ -35,14 +34,16 @@ export const commentsQueryRepository = {
 
     const filter = { postId: postId };
 
-    const comments: WithId<CommentCreateDto>[] = await commentsCollection
-      .find(filter)
-      .skip(skip)
-      .limit(pageSize)
-      .sort(sortBy, sortDirection)
-      .toArray();
+    const [comments, totalCount] = await Promise.all([
+      commentsCollection
+        .find(filter)
+        .skip(skip)
+        .limit(pageSize)
+        .sort(sortBy, sortDirection)
+        .toArray(),
 
-    const totalCount = await commentsCollection.countDocuments(filter);
+      commentsCollection.countDocuments(filter),
+    ]);
 
     const mappedComments = comments.map((comment) =>
       mapperToCommentOutputResDto(comment),
