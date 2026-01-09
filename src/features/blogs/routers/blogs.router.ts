@@ -5,7 +5,7 @@ import { getBlogById } from "./handlers/get-by-id.handler";
 import { createBlogHandler } from "./handlers/create-blog.handler";
 import { updateBlogHandler } from "./handlers/update-blog.handler";
 import { deleteBlogHandler } from "./handlers/delete-blog.handler";
-import { validationResultMiddleware } from "../../../core/middlewares/validation/input-validation-result-middleware";
+import { validationResultMiddleware } from "../../../core/middlewares/validation/validation-result-middleware";
 import { blogInputDtoValidation } from "../validation/input-dto.validation-middleware";
 import { adminGuardMiddleware } from "../../../core/middlewares/auth/admin.guard-middleware";
 import { createPostForSpecificBlogIdHandler } from "./handlers/create-post-for-specific-id";

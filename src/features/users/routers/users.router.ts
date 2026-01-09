@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { createUserHandler } from "./handlers/create-user-handler";
 import { validationUserInputMiddleware } from "../validation/input-dto-validation-users-middleware";
-import { validationResultMiddleware } from "../../../core/middlewares/validation/input-validation-result-middleware";
+import { validationResultMiddleware } from "../../../core/middlewares/validation/validation-result-middleware";
 import { getUserHandler } from "./handlers/get-user-handler";
 import { getAllUsersHandler } from "./handlers/get-all-users-handler";
 import { adminGuardMiddleware } from "../../../core/middlewares/auth/admin.guard-middleware";

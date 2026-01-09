@@ -8,4 +8,4 @@ const passwordValidator = body("password")
   .isString()
   .withMessage("Invalid password");
 
-export const authValidator = [passwordValidator, loginOrEmailValidator];
+export const loginAuthValidator = [passwordValidator, loginOrEmailValidator];

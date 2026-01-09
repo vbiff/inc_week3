@@ -3,7 +3,7 @@ import { createPostHandler } from "./handlers/create-post.handler";
 import { getPostById } from "./handlers/get-post-by-id.handler";
 import { updatePostHandler } from "./handlers/update-post.handler";
 import { deletePostHandler } from "./handlers/delete-post.handler";
-import { validationResultMiddleware } from "../../../core/middlewares/validation/input-validation-result-middleware";
+import { validationResultMiddleware } from "../../../core/middlewares/validation/validation-result-middleware";
 import { getAllPostsHandler } from "./handlers/get-all-posts.handler";
 import { postInputDtoValidation } from "../validation/input-dto.validation-middleware";
 import { adminGuardMiddleware } from "../../../core/middlewares/auth/admin.guard-middleware";
