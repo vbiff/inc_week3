@@ -56,7 +56,7 @@ export const authService = {
       },
     };
 
-    await userRepository.createUser(newUser);
+    const userId = await userRepository.createUser(newUser);
 
     let isEmailSent = false;
     try {
@@ -69,7 +69,7 @@ export const authService = {
       console.error(error);
     }
     if (!isEmailSent) {
-      // await userRepository.deleteUser(userId!.toString());
+      await userRepository.deleteUser(userId!.toString());
       return {
         status: ResultStatus.Forbidden,
         errorMessage: "Email was not sent",
@@ -88,15 +88,15 @@ export const authService = {
   async resendRegistrationEmail(email: string): Promise<Result> {
     //check if login exists
     const user = await userRepository.findUserByLoginOrEmail(email);
-    if (!user) {
-      return {
-        status: ResultStatus.BadRequest,
-        errorMessage: "No user",
-        extensions: [{ field: "email", message: "User not exist" }],
-        data: null,
-      };
-    }
-    if (user.emailConfirmation.isConfirmed) {
+    // if (!user) {
+    //   return {
+    //     status: ResultStatus.BadRequest,
+    //     errorMessage: "No user",
+    //     extensions: [{ field: "email", message: "User not exist" }],
+    //     data: null,
+    //   };
+    // }
+    if (user?.emailConfirmation.isConfirmed) {
       return {
         status: ResultStatus.BadRequest,
         errorMessage: "Already confirmed",
@@ -108,14 +108,14 @@ export const authService = {
     try {
       isSent = await nodemailerService.sendEmail(
         email,
-        user.emailConfirmation.confirmationCode,
+        user!.emailConfirmation.confirmationCode,
         emailsOptions.registrationEmail,
       );
     } catch (error) {
       console.error(error);
     }
     if (!isSent) {
-      await userRepository.deleteUser(user._id!.toString());
+      await userRepository.deleteUser(user!._id!.toString());
       return {
         status: ResultStatus.Forbidden,
         errorMessage: "Email was not sent",
