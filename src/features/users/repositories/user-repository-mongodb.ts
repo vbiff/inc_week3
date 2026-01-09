@@ -30,6 +30,21 @@ export const userRepository = {
     );
   },
 
+  async findUserByConfirmationCode(
+    code: string,
+  ): Promise<WithId<UserCreateDto> | null> {
+    return await usersCollection.findOne({
+      "emailConfirmation.confirmationCode": code,
+    });
+  },
+
+  async makeRegistrationConfirmation(userId: string): Promise<void> {
+    await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { "emailConfirmation.isConfirmed": true } },
+    );
+  },
+
   async updateUserConfirmationCode(userId: string, code: string, date: Date) {
     await usersCollection.updateOne(
       { _id: new ObjectId(userId) },

@@ -14,6 +14,41 @@ import { nodemailerService } from "../../adapters/email-service/nodemailer-servi
 import { emailsOptions } from "../../adapters/email-service/emails-options";
 
 export const authService = {
+  //CONFIRMATION OF REGISTRATION
+  async confirmRegistration(code: string): Promise<Result> {
+    const user = await userRepository.findUserByConfirmationCode(code);
+    if (!user) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "No user",
+        extensions: [{ field: "code", message: "Code is incorrect" }],
+        data: null,
+      };
+    }
+    if (new Date() > user.emailConfirmation.expirationDate) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "Confirmation code is expired",
+        extensions: [{ field: "code", message: "Code is expired" }],
+        data: null,
+      };
+    }
+    if (user.emailConfirmation.isConfirmed) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "code has been applied",
+        extensions: [{ field: "code", message: "Code has been applied" }],
+        data: null,
+      };
+    }
+    await userRepository.makeRegistrationConfirmation(user._id.toString());
+    return {
+      status: ResultStatus.Success,
+      data: null,
+      extensions: [],
+    };
+  },
+
   //REGISTRATION
   async registerUser(
     registrationInputDto: RegistrationInputDto,
