@@ -56,7 +56,7 @@ export const authService = {
       },
     };
 
-    const userId = await userRepository.createUser(newUser);
+    await userRepository.createUser(newUser);
 
     let isEmailSent = false;
     try {
@@ -69,7 +69,7 @@ export const authService = {
       console.error(error);
     }
     if (!isEmailSent) {
-      await userRepository.deleteUser(userId!.toString());
+      // await userRepository.deleteUser(userId!.toString());
       return {
         status: ResultStatus.Forbidden,
         errorMessage: "Email was not sent",
@@ -83,6 +83,7 @@ export const authService = {
       extensions: [],
     };
   },
+
   //RESEND EMAIL CONFIRMATION
   async resendRegistrationEmail(email: string): Promise<Result> {
     //check if login exists
@@ -128,6 +129,7 @@ export const authService = {
       extensions: [],
     };
   },
+
   // LOGIN
   async login(
     input: AuthInputDTO,
