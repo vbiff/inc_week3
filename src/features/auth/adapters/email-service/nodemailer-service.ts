@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { AppConfig } from "../../../../core/config/config";
 
 export const nodemailerService = {
   async sendEmail(
@@ -9,8 +10,8 @@ export const nodemailerService = {
     const transporter = nodemailer.createTransport({
       service: "Yandex",
       auth: {
-        user: "m.bog.inc@yandex.com",
-        pass: "hobpecwqlrldokpn",
+        user: AppConfig.EMAIL_LOGIN,
+        pass: AppConfig.EMAIL_PASSWORD,
       },
     });
 

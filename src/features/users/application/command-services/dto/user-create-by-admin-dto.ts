@@ -1,4 +1,4 @@
-export type UserCreateDto = {
+export type UserCreateByAdminDto = {
   login: string;
   password: string;
   email: string;

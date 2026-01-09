@@ -7,6 +7,8 @@ import { meAuthHandler } from "./handlers/me-auth-handler";
 import { registrationAuthValidator } from "../validation/registartion-input-validation";
 import { validationResultMiddleware } from "../../../core/middlewares/validation/validation-result-middleware";
 import { registrationAuthHandler } from "./handlers/registration-auth-handler";
+import { registrationEmailResendingAuthValidator } from "../validation/registration-email-resending-validation";
+import { registrationEmailResendingHandler } from "./handlers/registration-email-resending-handler";
 
 export const authRouter = Router();
 
@@ -19,4 +21,11 @@ authRouter.post(
   registrationAuthValidator,
   validationResultMiddleware,
   registrationAuthHandler,
+);
+
+authRouter.post(
+  "/registration-email-resending",
+  registrationEmailResendingAuthValidator,
+  validationResultMiddleware,
+  registrationEmailResendingHandler,
 );

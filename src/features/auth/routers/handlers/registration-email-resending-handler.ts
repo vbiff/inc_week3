@@ -4,11 +4,11 @@ import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { ResultStatus } from "../../../../core/result/resultCode";
 import { resultCodeToHttpException } from "../../../../core/result/resultCodeToHttpException";
 
-export async function registrationAuthHandler(
+export async function registrationEmailResendingHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const result = await authService.registerUser(req.body);
+  const result = await authService.resendRegistrationEmail(req.body);
 
   if (result.status !== ResultStatus.Success) {
     res

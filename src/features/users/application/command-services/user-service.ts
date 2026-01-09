@@ -12,6 +12,11 @@ export const userService = {
       ...dto,
       password: passwordHash,
       createdAt: new Date().toISOString(),
+      emailConfirmation: {
+        confirmationCode: `no code`,
+        expirationDate: new Date(),
+        isConfirmed: true,
+      },
     };
 
     return await userRepository.createUser(newUser);

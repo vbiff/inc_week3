@@ -1,9 +1,9 @@
 import { WithId } from "mongodb";
-import { UserCreateDto } from "../../users/application/queries/dto/input-dto/user-create-dto";
+import { UserCreateByAdminDto } from "../../users/application/command-services/dto/user-create-by-admin-dto";
 import { AuthMeDto } from "../application/queries/dto/auth-output-dto/auth-me-dto";
 
 export const mapperToAuthMeDto = (
-  rawUser: WithId<UserCreateDto>,
+  rawUser: WithId<UserCreateByAdminDto>,
 ): AuthMeDto => {
   return {
     email: rawUser.email,

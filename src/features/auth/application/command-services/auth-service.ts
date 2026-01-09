@@ -2,7 +2,7 @@ import { AuthInputDTO } from "../queries/dto/auth-input-dto/auth-input-dto";
 import { userRepository } from "../../../users/repositories/user-repository-mongodb";
 import { Result } from "../../../../core/result/resultType";
 import { ResultStatus } from "../../../../core/result/resultCode";
-import { UserCreateDto } from "../../../users/application/queries/dto/input-dto/user-create-dto";
+import { UserCreateByAdminDto } from "../../../users/application/command-services/dto/user-create-by-admin-dto";
 import { WithId } from "mongodb";
 import { jwtService } from "../../adapters/jwt-service";
 import { argon2Service } from "../../adapters/argon2-service";
@@ -83,7 +83,51 @@ export const authService = {
       extensions: [],
     };
   },
-
+  //RESEND EMAIL CONFIRMATION
+  async resendRegistrationEmail(email: string): Promise<Result> {
+    //check if login exists
+    const user = await userRepository.findUserByLoginOrEmail(email);
+    if (!user) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "No user",
+        extensions: [{ field: "email", message: "User not exist" }],
+        data: null,
+      };
+    }
+    if (user.emailConfirmation.isConfirmed) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "Already confirmed",
+        extensions: [{ field: "email", message: "Email already confirmed" }],
+        data: null,
+      };
+    }
+    let isSent = false;
+    try {
+      isSent = await nodemailerService.sendEmail(
+        email,
+        user.emailConfirmation.confirmationCode,
+        emailsOptions.registrationEmail,
+      );
+    } catch (error) {
+      console.error(error);
+    }
+    if (!isSent) {
+      await userRepository.deleteUser(user._id!.toString());
+      return {
+        status: ResultStatus.Forbidden,
+        errorMessage: "Email was not sent",
+        extensions: [{ field: "email", message: "Email was not sent" }],
+        data: null,
+      };
+    }
+    return {
+      status: ResultStatus.Success,
+      data: null,
+      extensions: [],
+    };
+  },
   // LOGIN
   async login(
     input: AuthInputDTO,
@@ -109,10 +153,10 @@ export const authService = {
 
   async checkUserCredentials(
     input: AuthInputDTO,
-  ): Promise<Result<WithId<UserCreateDto> | null>> {
+  ): Promise<Result<WithId<UserCreateByAdminDto> | null>> {
     const { password, loginOrEmail } = input;
 
-    const user: WithId<UserCreateDto> | null =
+    const user: WithId<UserCreateByAdminDto> | null =
       await userRepository.findUserByLoginOrEmail(loginOrEmail);
 
     if (!user) {

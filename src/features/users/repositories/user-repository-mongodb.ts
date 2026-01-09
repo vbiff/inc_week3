@@ -1,6 +1,6 @@
 import { ObjectId, WithId } from "mongodb";
 import { usersCollection } from "../../../db/mongo.db";
-import { UserCreateDto } from "../application/queries/dto/input-dto/user-create-dto";
+import { UserCreateDto } from "../application/command-services/dto/user-create-dto";
 
 export const userRepository = {
   async createUser(dto: UserCreateDto): Promise<ObjectId | null> {

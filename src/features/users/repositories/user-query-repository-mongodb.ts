@@ -1,4 +1,4 @@
-import { UserCreateDto } from "../application/queries/dto/input-dto/user-create-dto";
+import { UserCreateByAdminDto } from "../application/command-services/dto/user-create-by-admin-dto";
 import { UserView } from "../application/queries/dto/output-dto/user-view";
 import { Filter, ObjectId, WithId } from "mongodb";
 import { mapperUserMongoId } from "../mappers/mapper-user-mongoId";
@@ -11,11 +11,10 @@ import { AuthMeDto } from "../../auth/application/queries/dto/auth-output-dto/au
 
 export const userQueryRepositoryMongodb = {
   async findUserById(id: string): Promise<UserView | null> {
-    const rawUser: WithId<UserCreateDto> | null = await usersCollection.findOne(
-      {
+    const rawUser: WithId<UserCreateByAdminDto> | null =
+      await usersCollection.findOne({
         _id: new ObjectId(id),
-      },
-    );
+      });
     if (!rawUser) {
       return null;
     }
@@ -23,11 +22,10 @@ export const userQueryRepositoryMongodb = {
   },
 
   async findUserByIdForMe(id: string): Promise<AuthMeDto | null> {
-    const rawUser: WithId<UserCreateDto> | null = await usersCollection.findOne(
-      {
+    const rawUser: WithId<UserCreateByAdminDto> | null =
+      await usersCollection.findOne({
         _id: new ObjectId(id),
-      },
-    );
+      });
     if (!rawUser) {
       return null;
     }
@@ -47,7 +45,7 @@ export const userQueryRepositoryMongodb = {
     } = query;
     const skip: number = (pageNumber - 1) * pageSize;
 
-    const filter: Filter<UserCreateDto> = {};
+    const filter: Filter<UserCreateByAdminDto> = {};
 
     if (searchLoginTerm || searchEmailTerm) {
       filter.$or = [];
