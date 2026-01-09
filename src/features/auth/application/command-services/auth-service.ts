@@ -88,15 +88,15 @@ export const authService = {
   async resendRegistrationEmail(email: string): Promise<Result> {
     //check if login exists
     const user = await userRepository.findUserByLoginOrEmail(email);
-    // if (!user) {
-    //   return {
-    //     status: ResultStatus.BadRequest,
-    //     errorMessage: "No user",
-    //     extensions: [{ field: "email", message: "User not exist" }],
-    //     data: null,
-    //   };
-    // }
-    if (user?.emailConfirmation.isConfirmed) {
+    if (!user) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "No user",
+        extensions: [{ field: "email", message: "User not exist" }],
+        data: null,
+      };
+    }
+    if (user.emailConfirmation.isConfirmed) {
       return {
         status: ResultStatus.BadRequest,
         errorMessage: "Already confirmed",
@@ -104,18 +104,30 @@ export const authService = {
         data: null,
       };
     }
+    // recreate confirmation code and date
+    const newCode = randomUUID();
+    const newDate = add(new Date(), {
+      hours: 1,
+      minutes: 1,
+    });
+    await userRepository.updateUserConfirmationCode(
+      user._id.toString(),
+      newCode,
+      newDate,
+    );
+
     let isSent = false;
     try {
       isSent = await nodemailerService.sendEmail(
         email,
-        user!.emailConfirmation.confirmationCode,
+        newCode,
         emailsOptions.registrationEmail,
       );
     } catch (error) {
       console.error(error);
     }
     if (!isSent) {
-      await userRepository.deleteUser(user!._id!.toString());
+      await userRepository.deleteUser(user._id!.toString());
       return {
         status: ResultStatus.Forbidden,
         errorMessage: "Email was not sent",

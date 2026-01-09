@@ -8,7 +8,8 @@ export async function registrationEmailResendingHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const result = await authService.resendRegistrationEmail(req.body);
+  const email = req.body.email;
+  const result = await authService.resendRegistrationEmail(email);
 
   if (result.status !== ResultStatus.Success) {
     res

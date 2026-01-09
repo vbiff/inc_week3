@@ -29,4 +29,16 @@ export const userRepository = {
       { $set: { password: newHash } },
     );
   },
+
+  async updateUserConfirmationCode(userId: string, code: string, date: Date) {
+    await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $set: {
+          ["emailConfirmation.confirmationCode"]: code,
+          "emailConfirmation.expirationDate": date,
+        },
+      },
+    );
+  },
 };
