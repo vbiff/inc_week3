@@ -11,7 +11,9 @@ export async function registrationAuthHandler(
   const result = await authService.registerUser(req.body);
 
   if (result.status !== ResultStatus.Success) {
-    res.sendStatus(resultCodeToHttpException(result.status));
+    res
+      .status(resultCodeToHttpException(result.status))
+      .send(result.extensions);
     return;
   }
 
