@@ -1,10 +1,9 @@
-import { ObjectId } from "mongodb";
 import { UserInputDTO } from "../queries/dto/input-dto/user-input-dto";
 import { userRepository } from "../../repositories/user-repository-mongodb";
 import { argon2Service } from "../../../auth/adapters/argon2-service";
 
 export const userService = {
-  async createUser(dto: UserInputDTO): Promise<ObjectId | null> {
+  async createUser(dto: UserInputDTO): Promise<string | null> {
     const { password } = dto;
     const passwordHash = await argon2Service.generateHash(password);
 

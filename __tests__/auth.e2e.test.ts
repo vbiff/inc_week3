@@ -16,6 +16,8 @@ describe("auth tests", () => {
     await request(app)
       .delete("/testing/all-data")
       .expect(HttpStatuses.NO_CONTENT_204);
+
+    //sendEmail -> mockSendEmail
   });
 
   afterAll(async () => {
@@ -56,4 +58,11 @@ describe("auth tests", () => {
 
     console.log(result.body);
   });
+
+  // it("Should register user", async () => {
+  //    await request(app)
+  //     .post(AUTH_PATH + "/register")
+  //     .set("Authorization", adminToken)
+  //     .send({});
+  // });
 });

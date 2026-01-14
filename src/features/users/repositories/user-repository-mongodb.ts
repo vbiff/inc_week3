@@ -3,9 +3,9 @@ import { usersCollection } from "../../../db/mongo.db";
 import { UserCreateDto } from "../application/command-services/dto/user-create-dto";
 
 export const userRepository = {
-  async createUser(dto: UserCreateDto): Promise<ObjectId | null> {
+  async createUser(dto: UserCreateDto): Promise<string | null> {
     const userId = await usersCollection.insertOne(dto);
-    return userId.insertedId;
+    return userId.insertedId.toString();
   },
 
   async deleteUser(id: string): Promise<boolean> {

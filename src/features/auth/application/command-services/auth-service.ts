@@ -56,24 +56,35 @@ export const authService = {
     const { login, password, email } = registrationInputDto;
 
     //check if login exists
-    const isUserLoginExist = await userRepository.findUserByLoginOrEmail(login);
-    if (isUserLoginExist) {
-      return {
-        status: ResultStatus.BadRequest,
-        errorMessage: "The login is busy",
-        extensions: [{ field: "login", message: "The login is busy" }],
-        data: null,
-      };
-    }
-    //check if login exists
-    const isUserEmailExist = await userRepository.findUserByLoginOrEmail(email);
-    if (isUserEmailExist) {
-      return {
-        status: ResultStatus.BadRequest,
-        errorMessage: "The email is busy",
-        extensions: [{ field: "email", message: "The email is busy" }],
-        data: null,
-      };
+    try {
+      const isUserLoginExist = userRepository.findUserByLoginOrEmail(login);
+
+      //check if login exists
+      const isUserEmailExist = userRepository.findUserByLoginOrEmail(email);
+
+      const [isLoginExist, isEmailExist] = await Promise.all([
+        isUserLoginExist,
+        isUserEmailExist,
+      ]);
+
+      if (isLoginExist) {
+        return {
+          status: ResultStatus.BadRequest,
+          errorMessage: "The login is busy",
+          extensions: [{ field: "login", message: "The login is busy" }],
+          data: null,
+        };
+      }
+      if (isEmailExist) {
+        return {
+          status: ResultStatus.BadRequest,
+          errorMessage: "The email is busy",
+          extensions: [{ field: "email", message: "The email is busy" }],
+          data: null,
+        };
+      }
+    } catch (e) {
+      console.error(e);
     }
     const passwordHash = await argon2Service.generateHash(password);
 
@@ -93,25 +104,22 @@ export const authService = {
 
     const userId = await userRepository.createUser(newUser);
 
-    let isEmailSent = false;
-    try {
-      isEmailSent = await nodemailerService.sendEmail(
+    nodemailerService
+      .sendEmail(
         newUser.email,
         newUser.emailConfirmation.confirmationCode,
         emailsOptions.registrationEmail,
-      );
-    } catch (error) {
-      console.error(error);
-    }
-    if (!isEmailSent) {
-      await userRepository.deleteUser(userId!.toString());
-      return {
-        status: ResultStatus.Forbidden,
-        errorMessage: "Email was not sent",
-        extensions: [{ field: "email", message: "Email was not sent" }],
-        data: null,
-      };
-    }
+      )
+      .catch(async (error) => {
+        console.error(error);
+        await userRepository.deleteUser(userId!);
+        return {
+          status: ResultStatus.Forbidden,
+          errorMessage: "Email was not sent",
+          extensions: [{ field: "email", message: "Email was not sent" }],
+          data: null,
+        };
+      });
     return {
       status: ResultStatus.Success,
       data: null,
