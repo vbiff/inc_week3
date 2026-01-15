@@ -159,7 +159,7 @@ export const authService = {
       newDate,
     );
 
-    nodemailerService
+    await nodemailerService
       .sendEmail(email, newCode, emailsOptions.registrationEmail)
       .catch(async (error) => {
         console.error(error);
