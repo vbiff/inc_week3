@@ -6,7 +6,7 @@ export const nodemailerService = {
     email: string,
     code: string,
     template: (code: string) => string,
-  ): Promise<boolean> {
+  ): Promise<void> {
     const transporter = nodemailer.createTransport({
       service: "Yandex",
       auth: {
@@ -22,6 +22,5 @@ export const nodemailerService = {
       html: template(code),
     });
     console.log(info);
-    return !!info;
   },
 };

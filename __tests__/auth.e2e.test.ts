@@ -5,12 +5,15 @@ import { setupApp } from "../src/setup-app";
 import { UserInputDTO } from "../src/features/users/application/queries/dto/input-dto/user-input-dto";
 import { AUTH_PATH, LOGIN_PATH, USERS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
+import { nodemailerService } from "../src/features/auth/adapters/email-service/nodemailer-service";
 
 describe("auth tests", () => {
   const app = express();
   setupApp(app);
 
   const adminToken = generateBasicAuthToken();
+
+  jest.spyOn(nodemailerService, "sendEmail").mockResolvedValue(true);
 
   beforeAll(async () => {
     await request(app)
@@ -25,6 +28,7 @@ describe("auth tests", () => {
       .delete("/testing/all-data")
       .expect(HttpStatuses.NO_CONTENT_204);
   });
+
   //create new user
   it("Should create new user", async () => {
     const newUser: UserInputDTO = {
@@ -41,7 +45,6 @@ describe("auth tests", () => {
   });
   let token = "";
   it("Should login new user", async () => {
-    console.log("HERE");
     const result = await request(app)
       .post(AUTH_PATH + LOGIN_PATH)
       .send({ loginOrEmail: "test123@email.com", password: "123456" })
@@ -55,14 +58,20 @@ describe("auth tests", () => {
       .get(AUTH_PATH + "/me")
       .set("Authorization", "Bearer " + token);
     expect(result.status).toBe(200);
-
-    console.log(result.body);
   });
 
-  // it("Should register user", async () => {
-  //    await request(app)
-  //     .post(AUTH_PATH + "/register")
-  //     .set("Authorization", adminToken)
-  //     .send({});
-  // });
+  it("Should register user", async () => {
+    const response = await request(app)
+      .post(AUTH_PATH + "/registration")
+      .send({
+        password: "123456",
+        email: "mikhail.bogovalov@gmail.com",
+        login: "test",
+      });
+
+    console.log(response.body, "!!!!!!");
+
+    expect(response.status).toEqual(204);
+    expect(nodemailerService.sendEmail).toHaveBeenCalled();
+  });
 });

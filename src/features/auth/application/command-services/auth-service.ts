@@ -104,7 +104,7 @@ export const authService = {
 
     const userId = await userRepository.createUser(newUser);
 
-    nodemailerService
+    await nodemailerService
       .sendEmail(
         newUser.email,
         newUser.emailConfirmation.confirmationCode,
@@ -159,25 +159,19 @@ export const authService = {
       newDate,
     );
 
-    let isSent = false;
-    try {
-      isSent = await nodemailerService.sendEmail(
-        email,
-        newCode,
-        emailsOptions.registrationEmail,
-      );
-    } catch (error) {
-      console.error(error);
-    }
-    if (!isSent) {
-      await userRepository.deleteUser(user._id!.toString());
-      return {
-        status: ResultStatus.Forbidden,
-        errorMessage: "Email was not sent",
-        extensions: [{ field: "email", message: "Email was not sent" }],
-        data: null,
-      };
-    }
+    nodemailerService
+      .sendEmail(email, newCode, emailsOptions.registrationEmail)
+      .catch(async (error) => {
+        console.error(error);
+        await userRepository.deleteUser(user._id!.toString());
+        return {
+          status: ResultStatus.Forbidden,
+          errorMessage: "Email was not sent",
+          extensions: [{ field: "email", message: "Email was not sent" }],
+          data: null,
+        };
+      });
+
     return {
       status: ResultStatus.Success,
       data: null,
