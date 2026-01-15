@@ -13,14 +13,17 @@ describe("auth tests", () => {
 
   const adminToken = generateBasicAuthToken();
 
-  jest.spyOn(nodemailerService, "sendEmail").mockResolvedValue(true);
-
   beforeAll(async () => {
     await request(app)
       .delete("/testing/all-data")
       .expect(HttpStatuses.NO_CONTENT_204);
 
     //sendEmail -> mockSendEmail
+  });
+
+  afterEach(() => {
+    // restore the spy created with spyOn
+    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -61,6 +64,8 @@ describe("auth tests", () => {
   });
 
   it("Should register user", async () => {
+    jest.spyOn(nodemailerService, "sendEmail").mockResolvedValue();
+
     const response = await request(app)
       .post(AUTH_PATH + "/registration")
       .send({
