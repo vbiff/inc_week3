@@ -12,7 +12,7 @@ export async function refreshTokenHandler(req: Request, res: Response) {
   const refreshTokenResult =
     await authService.refreshToken(currentRefreshToken);
 
-  if (!refreshTokenResult) {
+  if (!refreshTokenResult.data) {
     res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
   }
 

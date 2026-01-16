@@ -23,7 +23,7 @@ export const jwtService = {
 
   async verifyRefreshToken(token: string): Promise<{ id: string } | null> {
     try {
-      return jwt.verify(token, AppConfig.REFRESH_SECRET) as { id: string }; //WTF UserID and id????
+      return jwt.verify(token, AppConfig.REFRESH_SECRET) as { id: string };
     } catch (error) {
       console.error(error);
       return null;
