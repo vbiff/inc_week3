@@ -10,12 +10,15 @@ import { registrationAuthHandler } from "./handlers/registration-auth-handler";
 import { registrationEmailResendingAuthValidator } from "../validation/registration-email-resending-validation";
 import { registrationEmailResendingHandler } from "./handlers/registration-email-resending-handler";
 import { registrationConfirmationHandler } from "./handlers/registration-confirmation-handler";
+import { refreshTokenHandler } from "./handlers/refresh-token-handler";
 
 export const authRouter = Router();
 
 authRouter.post(LOGIN_PATH, loginAuthValidator, loginAuthHandler);
 
 authRouter.get("/me", accessTokenGuardMiddleware, meAuthHandler);
+
+authRouter.post("refresh-token", refreshTokenHandler);
 
 authRouter.post(
   "/registration",

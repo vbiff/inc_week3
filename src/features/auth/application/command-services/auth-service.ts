@@ -191,17 +191,24 @@ export const authService = {
         extensions: result.extensions,
         data: null,
       };
-    const access = jwtService.createAccessToken(result.data!._id.toString());
 
-    const refresh = jwtService.createRefreshToken(result.data!._id.toString());
-
-    const [accessToken, refreshToken] = await Promise.all([access, refresh]);
+    const { accessToken, refreshToken } =
+      await this.createAccessAndRefreshTokens(result.data!._id.toString());
 
     return {
       status: ResultStatus.Success,
       data: { accessToken, refreshToken },
       extensions: [],
     };
+  },
+
+  async createAccessAndRefreshTokens(userId: string) {
+    const access = jwtService.createAccessToken(userId);
+
+    const refresh = jwtService.createRefreshToken(userId);
+
+    const [accessToken, refreshToken] = await Promise.all([access, refresh]);
+    return { accessToken, refreshToken };
   },
 
   async checkUserCredentials(
@@ -242,6 +249,36 @@ export const authService = {
       status: ResultStatus.Success,
       data: user,
       extensions: [],
+    };
+  },
+
+  async refreshToken(
+    currentRefreshToken: string,
+  ): Promise<Result<{ accessToken: string; refreshToken: string } | null>> {
+    // 1 verify the token
+    const verifyTokenResult =
+      await jwtService.verifyRefreshToken(currentRefreshToken);
+    if (!verifyTokenResult) {
+      return {
+        status: ResultStatus.Unauthorized,
+        errorMessage: "",
+        extensions: [],
+        data: null,
+      };
+    }
+    //2 check black list
+    //const checkBlackList = await authRepository.checkTokenInBlackList(currentRefreshToken);
+    // create new tokens
+    const { accessToken, refreshToken } =
+      await this.createAccessAndRefreshTokens(verifyTokenResult.id);
+    // put old refreshToken to black list
+    // await authRepository.addTokenToBlackList(currentRefreshToken);
+    // send new tokens
+    return {
+      status: ResultStatus.Success,
+      errorMessage: "",
+      extensions: [],
+      data: { accessToken, refreshToken },
     };
   },
 };

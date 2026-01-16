@@ -12,9 +12,18 @@ export const jwtService = {
     });
   },
 
-  async verifyToken(token: string): Promise<{ id: string } | null> {
+  async verifyAccessToken(token: string): Promise<{ id: string } | null> {
     try {
       return jwt.verify(token, AppConfig.SECRET) as { id: string }; //WTF UserID and id????
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  },
+
+  async verifyRefreshToken(token: string): Promise<{ id: string } | null> {
+    try {
+      return jwt.verify(token, AppConfig.REFRESH_SECRET) as { id: string }; //WTF UserID and id????
     } catch (error) {
       console.error(error);
       return null;
