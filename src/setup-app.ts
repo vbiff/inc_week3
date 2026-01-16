@@ -13,9 +13,12 @@ import {
 import { userRouter } from "./features/users/routers/users.router";
 import { authRouter } from "./features/auth/routers/auth.router";
 import { commentsRouter } from "./features/comments/routers/comment-router";
+import cookieParser from "cookie-parser";
 
 export const setupApp = (app: Express): void => {
   app.use(express.json());
+
+  app.use(cookieParser());
 
   app.get("/", (req, res) => {
     res.status(200).send("Welcome!!!");

@@ -14,6 +14,10 @@ export async function loginAuthHandler(req: Request, res: Response) {
     return;
   }
   res
+    .cookie("refreshToken", authResult.data?.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    })
     .status(HttpStatuses.OK_200)
     .send({ accessToken: authResult.data?.accessToken });
 }
