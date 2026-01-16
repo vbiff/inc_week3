@@ -8,4 +8,5 @@ export const AppConfig = {
   PASSWORD_PEPPER: process.env.PASSWORD_PEPPER as string,
   EMAIL_LOGIN: process.env.EMAIL_LOGIN as string,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD as string,
+  REFRESH_SECRET: process.env.REFRESH_SECRET as string,
 };

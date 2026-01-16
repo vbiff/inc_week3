@@ -182,7 +182,7 @@ export const authService = {
   // LOGIN
   async login(
     input: AuthInputDTO,
-  ): Promise<Result<{ accessToken: string } | null>> {
+  ): Promise<Result<{ accessToken: string; refreshToken: string } | null>> {
     const result = await this.checkUserCredentials(input);
     if (result.status !== ResultStatus.Success)
       return {
@@ -191,13 +191,15 @@ export const authService = {
         extensions: result.extensions,
         data: null,
       };
-    const accessToken = await jwtService.createToken(
-      result.data!._id.toString(),
-    );
+    const access = jwtService.createAccessToken(result.data!._id.toString());
+
+    const refresh = jwtService.createRefreshToken(result.data!._id.toString());
+
+    const [accessToken, refreshToken] = await Promise.all([access, refresh]);
 
     return {
       status: ResultStatus.Success,
-      data: { accessToken },
+      data: { accessToken, refreshToken },
       extensions: [],
     };
   },

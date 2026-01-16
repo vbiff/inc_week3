@@ -15,7 +15,6 @@
   "author": "Mikhail Bogovalov <mbseq@yandex.ru>",
   "license": "MIT",
   "dependencies": {
-    "@types/nodemailer": "^7.0.4",
     "argon2": "^0.44.0",
     "bcrypt": "^6.0.0",
     "date-fns": "^4.1.0",
@@ -26,6 +25,7 @@
     "nodemailer": "^7.0.12"
   },
   "devDependencies": {
+    "@types/nodemailer": "^7.0.4",
     "@eslint/js": "^9.39.2",
     "@types/argon2": "^0.15.4",
     "@types/bcrypt": "^6.0.0",
