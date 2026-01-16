@@ -11,6 +11,8 @@ import { registrationEmailResendingAuthValidator } from "../validation/registrat
 import { registrationEmailResendingHandler } from "./handlers/registration-email-resending-handler";
 import { registrationConfirmationHandler } from "./handlers/registration-confirmation-handler";
 import { refreshTokenHandler } from "./handlers/refresh-token-handler";
+import { validateCookie } from "../validation/cookie-validator";
+import { logoutHandler } from "./handlers/logout-handler";
 
 export const authRouter = Router();
 
@@ -18,7 +20,14 @@ authRouter.post(LOGIN_PATH, loginAuthValidator, loginAuthHandler);
 
 authRouter.get("/me", accessTokenGuardMiddleware, meAuthHandler);
 
-authRouter.post("/refresh-token", refreshTokenHandler);
+authRouter.post("/refresh-token", validateCookie, refreshTokenHandler);
+
+authRouter.post(
+  "/logout",
+  validateCookie,
+  accessTokenGuardMiddleware,
+  logoutHandler,
+);
 
 authRouter.post(
   "/registration",

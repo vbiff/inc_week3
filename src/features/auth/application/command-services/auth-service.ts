@@ -203,6 +203,24 @@ export const authService = {
     };
   },
 
+  //LOGOUT
+
+  async logout(refreshToken: string): Promise<boolean> {
+    //1 verify access token - MIDDLEWARE
+    //2 verify refreshToken
+    const verifyTokenResult = await jwtService.verifyRefreshToken(refreshToken);
+    if (!verifyTokenResult) {
+      return false;
+    }
+    //invalidate refreshToken
+    try {
+      await authRepository.addTokenToBlackList(refreshToken);
+    } catch (error) {
+      console.error(error);
+    }
+    return true;
+  },
+
   async createAccessAndRefreshTokens(userId: string) {
     const access = jwtService.createAccessToken(userId);
 

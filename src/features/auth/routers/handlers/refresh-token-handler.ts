@@ -6,10 +6,6 @@ import { ResultStatus } from "../../../../core/result/resultCode";
 export async function refreshTokenHandler(req: Request, res: Response) {
   const currentRefreshToken: string = req.cookies.refreshToken;
 
-  if (!currentRefreshToken) {
-    res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
-  }
-
   const refreshTokensResult =
     await authService.refreshTokens(currentRefreshToken);
 
