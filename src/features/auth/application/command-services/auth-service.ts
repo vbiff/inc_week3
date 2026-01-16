@@ -252,7 +252,7 @@ export const authService = {
     };
   },
 
-  async refreshToken(
+  async refreshTokens(
     currentRefreshToken: string,
   ): Promise<Result<{ accessToken: string; refreshToken: string } | null>> {
     // 1 verify the token
@@ -268,11 +268,13 @@ export const authService = {
     }
     //2 check black list
     //const checkBlackList = await authRepository.checkTokenInBlackList(currentRefreshToken);
+
     // create new tokens
     const { accessToken, refreshToken } =
       await this.createAccessAndRefreshTokens(verifyTokenResult.id);
     // put old refreshToken to black list
     // await authRepository.addTokenToBlackList(currentRefreshToken);
+
     // send new tokens
     return {
       status: ResultStatus.Success,

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { authService } from "../../application/command-services/auth-service";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
+import { ResultStatus } from "../../../../core/result/resultCode";
 
 export async function refreshTokenHandler(req: Request, res: Response) {
   const currentRefreshToken: string = req.cookies.refreshToken;
@@ -9,18 +10,18 @@ export async function refreshTokenHandler(req: Request, res: Response) {
     res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
   }
 
-  const refreshTokenResult =
-    await authService.refreshToken(currentRefreshToken);
+  const refreshTokensResult =
+    await authService.refreshTokens(currentRefreshToken);
 
-  if (!refreshTokenResult.data) {
+  if (refreshTokensResult.status !== ResultStatus.Success) {
     res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
   }
 
   res
-    .cookie("refreshToken", refreshTokenResult.data?.refreshToken, {
+    .cookie("refreshToken", refreshTokensResult.data!.refreshToken, {
       httpOnly: true,
       secure: true,
     })
     .status(HttpStatuses.OK_200)
-    .send(refreshTokenResult.data?.accessToken);
+    .send(refreshTokensResult.data!.accessToken);
 }
