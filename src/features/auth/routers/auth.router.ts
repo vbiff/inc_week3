@@ -18,7 +18,7 @@ authRouter.post(LOGIN_PATH, loginAuthValidator, loginAuthHandler);
 
 authRouter.get("/me", accessTokenGuardMiddleware, meAuthHandler);
 
-authRouter.post("refresh-token", refreshTokenHandler);
+authRouter.post("/refresh-token", refreshTokenHandler);
 
 authRouter.post(
   "/registration",
