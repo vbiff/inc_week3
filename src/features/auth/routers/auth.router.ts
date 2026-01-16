@@ -22,12 +22,7 @@ authRouter.get("/me", accessTokenGuardMiddleware, meAuthHandler);
 
 authRouter.post("/refresh-token", validateCookie, refreshTokenHandler);
 
-authRouter.post(
-  "/logout",
-  validateCookie,
-  accessTokenGuardMiddleware,
-  logoutHandler,
-);
+authRouter.post("/logout", validateCookie, logoutHandler);
 
 authRouter.post(
   "/registration",
