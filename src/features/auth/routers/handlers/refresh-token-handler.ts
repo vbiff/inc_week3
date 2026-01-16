@@ -23,5 +23,5 @@ export async function refreshTokenHandler(req: Request, res: Response) {
       secure: true,
     })
     .status(HttpStatuses.OK_200)
-    .send(refreshTokensResult.data!.accessToken);
+    .send({ accessToken: refreshTokensResult.data!.accessToken });
 }
