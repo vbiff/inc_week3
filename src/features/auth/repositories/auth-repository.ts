@@ -3,9 +3,13 @@ import { refreshTokensCollection } from "../../../db/mongo.db";
 export const authRepository = {
   async isTokenInBlackList(token: string): Promise<boolean> {
     try {
-      await refreshTokensCollection.findOne({
+      const result = await refreshTokensCollection.findOne({
         refreshToken: token,
       });
+
+      if (!result) {
+        return false;
+      }
       return true;
     } catch (err) {
       console.error(err);
