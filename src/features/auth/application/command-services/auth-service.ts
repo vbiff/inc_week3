@@ -212,6 +212,12 @@ export const authService = {
     if (!verifyTokenResult) {
       return false;
     }
+    //2 check black list
+    const isTokenInBlackList =
+      await authRepository.isTokenInBlackList(refreshToken);
+    if (isTokenInBlackList) {
+      return false;
+    }
     //invalidate refreshToken
     try {
       await authRepository.addTokenToBlackList(refreshToken);
