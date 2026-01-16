@@ -12,6 +12,7 @@ import { randomUUID } from "node:crypto";
 import { add } from "date-fns/add";
 import { nodemailerService } from "../../adapters/email-service/nodemailer-service";
 import { emailsOptions } from "../../adapters/email-service/emails-options";
+import { authRepository } from "../../repositories/auth-repository";
 
 export const authService = {
   //CONFIRMATION OF REGISTRATION
@@ -267,13 +268,22 @@ export const authService = {
       };
     }
     //2 check black list
-    //const checkBlackList = await authRepository.checkTokenInBlackList(currentRefreshToken);
-
+    const isTokenInBlackList =
+      await authRepository.isTokenInBlackList(currentRefreshToken);
+    if (isTokenInBlackList) {
+      return {
+        status: ResultStatus.Unauthorized,
+        errorMessage: "",
+        extensions: [],
+        data: null,
+      };
+    }
     // create new tokens
     const { accessToken, refreshToken } =
       await this.createAccessAndRefreshTokens(verifyTokenResult.id);
+
     // put old refreshToken to black list
-    // await authRepository.addTokenToBlackList(currentRefreshToken);
+    await authRepository.addTokenToBlackList(currentRefreshToken);
 
     // send new tokens
     return {

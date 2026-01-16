@@ -5,6 +5,7 @@ import { blogCreateDto } from "../features/blogs/application/command-services/dt
 import { CommentCreateDto } from "../features/comments/application/command-service/dto/comment-create-dto";
 import { AppConfig } from "../core/config/config";
 import { UserCreateDto } from "../features/users/application/command-services/dto/user-create-dto";
+import { RefreshTokenDTO } from "../features/auth/application/command-services/dto/refresh-token-dto";
 dotenv.config();
 
 const mongoUri = AppConfig.MONGO_URL || "mongodb://localhost:27017";
@@ -23,6 +24,9 @@ export const blogCollection = client
 export const commentsCollection = client
   .db("blogger")
   .collection<CommentCreateDto>("comments");
+export const refreshTokensCollection = client
+  .db("blogger")
+  .collection<RefreshTokenDTO>("refreshTokens");
 
 export async function runDb(): Promise<void> {
   try {
