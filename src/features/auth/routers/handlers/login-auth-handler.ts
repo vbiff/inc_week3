@@ -17,6 +17,8 @@ export async function loginAuthHandler(req: Request, res: Response) {
     .cookie("refreshToken", authResult.data?.refreshToken, {
       httpOnly: true,
       secure: true,
+      expires: new Date(Date.now() + 900000),
+      path: "/auth/refresh-token",
     })
     .status(HttpStatuses.OK_200)
     .send({ accessToken: authResult.data?.accessToken });

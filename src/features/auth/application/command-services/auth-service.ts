@@ -206,8 +206,7 @@ export const authService = {
   //LOGOUT
 
   async logout(refreshToken: string): Promise<boolean> {
-    //1 verify access token - MIDDLEWARE
-    //2 verify refreshToken
+    //1 verify refreshToken
     const verifyTokenResult = await jwtService.verifyRefreshToken(refreshToken);
     if (!verifyTokenResult) {
       return false;

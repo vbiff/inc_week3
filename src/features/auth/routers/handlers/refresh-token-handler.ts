@@ -17,6 +17,8 @@ export async function refreshTokenHandler(req: Request, res: Response) {
     .cookie("refreshToken", refreshTokensResult.data!.refreshToken, {
       httpOnly: true,
       secure: true,
+      expires: new Date(Date.now() + 900000),
+      path: "/auth/refresh-token",
     })
     .status(HttpStatuses.OK_200)
     .send({ accessToken: refreshTokensResult.data!.accessToken });
