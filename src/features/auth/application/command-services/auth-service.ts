@@ -206,17 +206,6 @@ export const authService = {
   //LOGOUT
 
   async logout(refreshToken: string): Promise<boolean> {
-    //1 verify refreshToken
-    const verifyTokenResult = await jwtService.verifyRefreshToken(refreshToken);
-    if (!verifyTokenResult) {
-      return false;
-    }
-    //2 check black list
-    const isTokenInBlackList =
-      await authRepository.isTokenInBlackList(refreshToken);
-    if (isTokenInBlackList) {
-      return false;
-    }
     //invalidate refreshToken
     try {
       await authRepository.addTokenToBlackList(refreshToken);
@@ -278,32 +267,11 @@ export const authService = {
 
   async refreshTokens(
     currentRefreshToken: string,
+    userId: string,
   ): Promise<Result<{ accessToken: string; refreshToken: string } | null>> {
-    // 1 verify the token
-    const verifyTokenResult =
-      await jwtService.verifyRefreshToken(currentRefreshToken);
-    if (!verifyTokenResult) {
-      return {
-        status: ResultStatus.Unauthorized,
-        errorMessage: "",
-        extensions: [],
-        data: null,
-      };
-    }
-    //2 check black list
-    const isTokenInBlackList =
-      await authRepository.isTokenInBlackList(currentRefreshToken);
-    if (isTokenInBlackList) {
-      return {
-        status: ResultStatus.Unauthorized,
-        errorMessage: "",
-        extensions: [],
-        data: null,
-      };
-    }
     // create new tokens
     const { accessToken, refreshToken } =
-      await this.createAccessAndRefreshTokens(verifyTokenResult.id);
+      await this.createAccessAndRefreshTokens(userId);
 
     // put old refreshToken to black list
     await authRepository.addTokenToBlackList(currentRefreshToken);

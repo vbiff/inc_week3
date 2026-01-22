@@ -24,7 +24,7 @@ export const accessTokenGuardMiddleware = async (
     res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
   }
   const { id } = payload!;
-  console.log(payload);
+
   req.user = { id: id };
 
   next();

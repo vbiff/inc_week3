@@ -5,9 +5,12 @@ import { ResultStatus } from "../../../../core/result/resultCode";
 
 export async function refreshTokenHandler(req: Request, res: Response) {
   const currentRefreshToken: string = req.cookies.refreshToken;
+  const userId = req.user!.id;
 
-  const refreshTokensResult =
-    await authService.refreshTokens(currentRefreshToken);
+  const refreshTokensResult = await authService.refreshTokens(
+    currentRefreshToken,
+    userId,
+  );
 
   if (refreshTokensResult.status !== ResultStatus.Success) {
     res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
