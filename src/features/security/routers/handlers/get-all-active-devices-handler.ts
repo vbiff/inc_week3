@@ -6,7 +6,7 @@ export async function getAllActiveDevicesHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const allActiveDevices = deviceRepository.findAllDevicesByUserId(
+  const allActiveDevices = await deviceRepository.findAllDevicesByUserId(
     req.user!.id,
   );
 
