@@ -7,7 +7,7 @@ import { mapperOutput } from "../../../core/mappers/mapper-output";
 import { OutputDtoBlogs } from "../application/queries/dto/output-dto/output-dto-blogs";
 import { blogCollection } from "../../../db/mongo.db";
 
-export const blogsQueryRepository = {
+export class BlogsQueryRepository {
   async findAll(query: PaginationAndSortingReq): Promise<OutputDtoBlogs> {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
@@ -38,11 +38,11 @@ export const blogsQueryRepository = {
       pageSize: pageSize,
       totalCount: totalCount,
     });
-  },
+  }
 
   async findByObjectId(id: string): Promise<BlogView | null> {
     const blog = await blogCollection.findOne({ _id: new ObjectId(id) });
     if (!blog) return null;
     return mapBlogs(blog);
-  },
-};
+  }
+}

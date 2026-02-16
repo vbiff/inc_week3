@@ -8,4 +8,8 @@ export type UserCreateDto = {
   };
   login: string;
   email: string;
+  passwordRecovery: {
+    recoveryCode: string | null;
+    expirationDate: Date | null;
+  };
 };

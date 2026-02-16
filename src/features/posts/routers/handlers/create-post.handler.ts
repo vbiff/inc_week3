@@ -1,8 +1,6 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { postsServices } from "../../application/command-services/posts-services";
-import { blogsQueryRepository } from "../../../blogs/repositories/blogs.query-mongodb.repositories";
-import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-repository";
+import { postsService, blogsQueryRepository, postsQueryRepository } from "../../../../composition-root";
 import { BlogView } from "../../../blogs/application/queries/dto/output-dto/blog-view";
 
 export async function createPostHandler(req: Request, res: Response) {
@@ -13,13 +11,13 @@ export async function createPostHandler(req: Request, res: Response) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
   }
 
-  const newPostId = await postsServices.createPost(req.body, blog!.name);
+  const newPostId = await postsService.createPost(req.body, blog!.name);
 
   if (!newPostId) {
     return;
   }
 
-  const mappedPost = await postsQueryRepositories.findByObjectId(
+  const mappedPost = await postsQueryRepository.findByObjectId(
     newPostId.toString(),
   );
 

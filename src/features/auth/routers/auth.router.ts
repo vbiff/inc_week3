@@ -15,6 +15,10 @@ import { validateCookie } from "../validation/cookie-validator";
 import { logoutHandler } from "./handlers/logout-handler";
 import { refreshTokenGuardMiddleware } from "../../../core/middlewares/auth/refresh-token-guard";
 import { rateLimitMiddleware } from "../../../core/middlewares/rate-limit/rate-limit-middleware";
+import { passwordRecoveryValidator } from "../validation/password-recovery-validator";
+import { passwordRecoveryHandler } from "./handlers/password-recovery-handler";
+import { newPasswordInputValidator } from "../validation/new-password-validator";
+import { newPasswordHandler } from "./handlers/new-password-handler";
 
 export const authRouter = Router();
 
@@ -62,4 +66,20 @@ authRouter.post(
   "/registration-confirmation",
   rateLimitMiddleware,
   registrationConfirmationHandler,
+);
+
+authRouter.post(
+  "/password-recovery",
+  rateLimitMiddleware,
+  passwordRecoveryValidator,
+  validationResultMiddleware,
+  passwordRecoveryHandler,
+);
+
+authRouter.post(
+  "/new-password",
+  rateLimitMiddleware,
+  newPasswordInputValidator,
+  validationResultMiddleware,
+  newPasswordHandler,
 );
