@@ -32,5 +32,5 @@ export const setupApp = (app: Express): void => {
   app.use(USERS_PATH, userRouter);
   app.use(AUTH_PATH, authRouter);
   app.use(COMMENT_PATH, commentsRouter);
-  app.use(" /security/devices", securityRouter);
+  app.use("/security/devices", securityRouter);
 };

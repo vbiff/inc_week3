@@ -12,7 +12,6 @@ import { randomUUID } from "node:crypto";
 import { add } from "date-fns/add";
 import { nodemailerService } from "../../adapters/email-service/nodemailer-service";
 import { emailsOptions } from "../../adapters/email-service/emails-options";
-import { authRepository } from "../../repositories/auth-repository";
 import { deviceRepository } from "../../../security/repository/device-repository";
 
 export const authService = {
