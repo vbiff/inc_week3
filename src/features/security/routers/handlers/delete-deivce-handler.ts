@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { deviceRepository } from "../../repository/device-repository";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 
-export async function getAllActiveDevicesHandler(
+export async function deleteDeivceHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
