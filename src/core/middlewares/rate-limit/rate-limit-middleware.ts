@@ -18,7 +18,7 @@ export const rateLimitMiddleware = async (
     date: { $gte: new Date(Date.now() - 10000) },
   });
 
-  if (counts >= 5) {
+  if (counts > 5) {
     res.sendStatus(HttpStatuses.TOO_MANY_REQUESTS_429);
     return;
   }
