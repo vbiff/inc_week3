@@ -18,7 +18,12 @@ import { rateLimitMiddleware } from "../../../core/middlewares/rate-limit/rate-l
 
 export const authRouter = Router();
 
-authRouter.post(LOGIN_PATH, loginAuthValidator, loginAuthHandler);
+authRouter.post(
+  LOGIN_PATH,
+  loginAuthValidator,
+  rateLimitMiddleware,
+  loginAuthHandler,
+);
 
 authRouter.get("/me", accessTokenGuardMiddleware, meAuthHandler);
 

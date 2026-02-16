@@ -15,10 +15,10 @@ export const rateLimitMiddleware = async (
   const counts = await rateLimitCollection.countDocuments({
     ip: ip,
     url: url,
-    date: new Date(Date.now() - 10000),
+    date: { $gte: new Date(Date.now() - 10000) },
   });
 
-  if (counts > 5) {
+  if (counts >= 5) {
     res.sendStatus(HttpStatuses.TOO_MANY_REQUESTS_429);
     return;
   }
