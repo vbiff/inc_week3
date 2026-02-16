@@ -13,6 +13,7 @@ import { add } from "date-fns/add";
 import { nodemailerService } from "../../adapters/email-service/nodemailer-service";
 import { emailsOptions } from "../../adapters/email-service/emails-options";
 import { authRepository } from "../../repositories/auth-repository";
+import { deviceRepository } from "../../../security/repository/device-repository";
 
 export const authService = {
   //CONFIRMATION OF REGISTRATION
@@ -57,36 +58,34 @@ export const authService = {
     const { login, password, email } = registrationInputDto;
 
     //check if login exists
-    try {
-      const isUserLoginExist = userRepository.findUserByLoginOrEmail(login);
 
-      //check if login exists
-      const isUserEmailExist = userRepository.findUserByLoginOrEmail(email);
+    const isUserLoginExist = userRepository.findUserByLoginOrEmail(login);
 
-      const [isLoginExist, isEmailExist] = await Promise.all([
-        isUserLoginExist,
-        isUserEmailExist,
-      ]);
+    //check if login exists
+    const isUserEmailExist = userRepository.findUserByLoginOrEmail(email);
 
-      if (isLoginExist) {
-        return {
-          status: ResultStatus.BadRequest,
-          errorMessage: "The login is busy",
-          extensions: [{ field: "login", message: "The login is busy" }],
-          data: null,
-        };
-      }
-      if (isEmailExist) {
-        return {
-          status: ResultStatus.BadRequest,
-          errorMessage: "The email is busy",
-          extensions: [{ field: "email", message: "The email is busy" }],
-          data: null,
-        };
-      }
-    } catch (e) {
-      console.error(e);
+    const [isLoginExist, isEmailExist] = await Promise.all([
+      isUserLoginExist,
+      isUserEmailExist,
+    ]);
+
+    if (isLoginExist) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "The login is busy",
+        extensions: [{ field: "login", message: "The login is busy" }],
+        data: null,
+      };
     }
+    if (isEmailExist) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "The email is busy",
+        extensions: [{ field: "email", message: "The email is busy" }],
+        data: null,
+      };
+    }
+
     const passwordHash = await argon2Service.generateHash(password);
 
     const newUser = {
@@ -115,7 +114,7 @@ export const authService = {
         console.error(error);
         await userRepository.deleteUser(userId!);
         return {
-          status: ResultStatus.Forbidden,
+          status: ResultStatus.Forbidden, // 500!!!!
           errorMessage: "Email was not sent",
           extensions: [{ field: "email", message: "Email was not sent" }],
           data: null,
@@ -183,6 +182,8 @@ export const authService = {
   // LOGIN
   async login(
     input: AuthInputDTO,
+    title: string,
+    ip: string,
   ): Promise<Result<{ accessToken: string; refreshToken: string } | null>> {
     const result = await this.checkUserCredentials(input);
     if (result.status !== ResultStatus.Success)
@@ -193,8 +194,32 @@ export const authService = {
         data: null,
       };
 
+    const deviceId = randomUUID();
+    const userId = result.data!._id.toString();
+
     const { accessToken, refreshToken } =
-      await this.createAccessAndRefreshTokens(result.data!._id.toString());
+      await this.createAccessAndRefreshTokens(userId, deviceId);
+
+    const decodeToken = await jwtService.verifyRefreshToken(refreshToken);
+
+    if (!decodeToken) {
+      return {
+        status: ResultStatus.BadRequest,
+        data: null,
+        extensions: [],
+      };
+    }
+
+    const { iat, exp } = decodeToken;
+
+    await deviceRepository.createDevice({
+      userId,
+      deviceId,
+      title,
+      ip,
+      iat,
+      exp,
+    });
 
     return {
       status: ResultStatus.Success,
@@ -205,20 +230,21 @@ export const authService = {
 
   //LOGOUT
 
-  async logout(refreshToken: string): Promise<boolean> {
+  async logout(deviceId: string): Promise<boolean> {
     //invalidate refreshToken
     try {
-      await authRepository.addTokenToBlackList(refreshToken);
+      await deviceRepository.deleteDevice(deviceId);
     } catch (error) {
       console.error(error);
     }
     return true;
   },
 
-  async createAccessAndRefreshTokens(userId: string) {
+  async createAccessAndRefreshTokens(userId: string, deviceId: string) {
     const access = jwtService.createAccessToken(userId);
 
-    const refresh = jwtService.createRefreshToken(userId);
+    //
+    const refresh = jwtService.createRefreshToken(userId, deviceId);
 
     const [accessToken, refreshToken] = await Promise.all([access, refresh]);
     return { accessToken, refreshToken };
@@ -268,13 +294,26 @@ export const authService = {
   async refreshTokens(
     currentRefreshToken: string,
     userId: string,
+    deviceId: string,
   ): Promise<Result<{ accessToken: string; refreshToken: string } | null>> {
     // create new tokens
-    const { accessToken, refreshToken } =
-      await this.createAccessAndRefreshTokens(userId);
 
-    // put old refreshToken to black list
-    await authRepository.addTokenToBlackList(currentRefreshToken);
+    const { accessToken, refreshToken } =
+      await this.createAccessAndRefreshTokens(userId, deviceId);
+
+    const decodeToken = await jwtService.verifyRefreshToken(refreshToken);
+
+    if (!decodeToken) {
+      return {
+        status: ResultStatus.BadRequest,
+        data: null,
+        extensions: [],
+      };
+    }
+
+    const { iat, exp } = decodeToken;
+    //update device repo
+    await deviceRepository.updateDevice(deviceId, iat, exp);
 
     // send new tokens
     return {

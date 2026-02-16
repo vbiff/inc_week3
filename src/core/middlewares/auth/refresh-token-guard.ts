@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { HttpStatuses } from "../../types/http-statuses";
 import { jwtService } from "../../../features/auth/adapters/jwt-service";
-import { authRepository } from "../../../features/auth/repositories/auth-repository";
+import { deviceRepository } from "../../../features/security/repository/device-repository";
 
 export const refreshTokenGuardMiddleware = async (
   req: Request,
@@ -11,24 +11,30 @@ export const refreshTokenGuardMiddleware = async (
   const currentRefreshToken: string = req.cookies.refreshToken;
   if (!currentRefreshToken) {
     res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
+    return;
   }
 
-  //2 check black list
-  const isTokenInBlackList =
-    await authRepository.isTokenInBlackList(currentRefreshToken);
-  if (isTokenInBlackList) {
-    res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
-  }
-  // 1 verify the token
+  // 1 verify the token LOGIC TO SERVICE validateRefreshTokenService
   const verifyTokenResult =
     await jwtService.verifyRefreshToken(currentRefreshToken);
   if (!verifyTokenResult) {
     res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
+    return;
   }
 
-  const { id } = verifyTokenResult!;
+  //2 check device
+  const isDeviceFound = await deviceRepository.findDeviceByIdAndIat(
+    verifyTokenResult!.deviceId,
+    verifyTokenResult!.iat,
+  );
+  if (!isDeviceFound) {
+    res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
+    return;
+  }
 
-  req.user = { id: id };
+  const { id, deviceId } = verifyTokenResult!;
+
+  req.user = { id, deviceId };
 
   next();
 };

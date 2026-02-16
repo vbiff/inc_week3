@@ -14,8 +14,10 @@ import { userRouter } from "./features/users/routers/users.router";
 import { authRouter } from "./features/auth/routers/auth.router";
 import { commentsRouter } from "./features/comments/routers/comment-router";
 import cookieParser from "cookie-parser";
+import { securityRouter } from "./features/security/routers/security.router";
 
 export const setupApp = (app: Express): void => {
+  app.set("trust proxy", true);
   app.use(express.json());
 
   app.use(cookieParser());
@@ -30,4 +32,5 @@ export const setupApp = (app: Express): void => {
   app.use(USERS_PATH, userRouter);
   app.use(AUTH_PATH, authRouter);
   app.use(COMMENT_PATH, commentsRouter);
+  app.use(" /security/devices", securityRouter);
 };

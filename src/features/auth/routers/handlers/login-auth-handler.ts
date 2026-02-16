@@ -5,21 +5,28 @@ import { ResultStatus } from "../../../../core/result/resultCode";
 import { resultCodeToHttpException } from "../../../../core/result/resultCodeToHttpException";
 
 export async function loginAuthHandler(req: Request, res: Response) {
-  const authResult = await authService.login(req.body);
+  try {
+    const title = req.headers["user-agent"] || "Unknown device";
+    const ip = req.ip || "Unknown ip";
+    const authResult = await authService.login(req.body, title, ip);
 
-  if (authResult.status !== ResultStatus.Success) {
+    if (authResult.status !== ResultStatus.Success) {
+      res
+        .status(resultCodeToHttpException(authResult.status))
+        .send(authResult.extensions);
+      return;
+    }
     res
-      .status(resultCodeToHttpException(authResult.status))
-      .send(authResult.extensions);
-    return;
+      .cookie("refreshToken", authResult.data?.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        expires: new Date(Date.now() + 900000),
+        path: "/",
+      })
+      .status(HttpStatuses.OK_200)
+      .send({ accessToken: authResult.data?.accessToken });
+  } catch (e) {
+    console.error(e);
+    res.sendStatus(HttpStatuses.SERVERERROR_500);
   }
-  res
-    .cookie("refreshToken", authResult.data?.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      expires: new Date(Date.now() + 900000),
-      path: "/auth/refresh-token",
-    })
-    .status(HttpStatuses.OK_200)
-    .send({ accessToken: authResult.data?.accessToken });
 }

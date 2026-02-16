@@ -5,6 +5,7 @@ import { BlogView } from "../../features/blogs/application/queries/dto/output-dt
 import { PostView } from "../../features/posts/application/queries/dto/output-dto/posts-view";
 import { UserView } from "../../features/users/application/queries/dto/output-dto/user-view";
 import { CommentCreateDto } from "../../features/comments/application/command-service/dto/comment-create-dto";
+import { DeviceDTO } from "../../features/security/application/dto/device-dto";
 
 export const testingRouter: Router = Router({});
 
@@ -16,5 +17,6 @@ testingRouter.delete("/all-data", async (req: Request, res: Response) => {
     .db("blogger")
     .collection<CommentCreateDto>("comments")
     .deleteMany({});
+  await client.db("blogger").collection<DeviceDTO>("devices").deleteMany({});
   res.sendStatus(HttpStatuses.NO_CONTENT_204);
 });

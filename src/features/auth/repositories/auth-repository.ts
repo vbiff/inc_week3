@@ -21,6 +21,7 @@ export const authRepository = {
     try {
       await refreshTokensCollection.insertOne({
         refreshToken: token,
+        expiresAt: new Date(Date.now() + 60000),
       });
       return true;
     } catch (e) {

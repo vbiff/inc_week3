@@ -25,7 +25,7 @@ export const accessTokenGuardMiddleware = async (
   }
   const { id } = payload!;
 
-  req.user = { id: id };
+  req.user = { id: id, deviceId: "" };
 
   next();
 };

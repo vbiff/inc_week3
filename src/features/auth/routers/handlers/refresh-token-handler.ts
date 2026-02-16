@@ -4,25 +4,31 @@ import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { ResultStatus } from "../../../../core/result/resultCode";
 
 export async function refreshTokenHandler(req: Request, res: Response) {
-  const currentRefreshToken: string = req.cookies.refreshToken;
-  const userId = req.user!.id;
+  try {
+    const currentRefreshToken: string = req.cookies.refreshToken;
+    const userId = req.user!.id;
 
-  const refreshTokensResult = await authService.refreshTokens(
-    currentRefreshToken,
-    userId,
-  );
+    const refreshTokensResult = await authService.refreshTokens(
+      currentRefreshToken,
+      userId,
+      req.user!.deviceId,
+    );
 
-  if (refreshTokensResult.status !== ResultStatus.Success) {
-    res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
+    if (refreshTokensResult.status !== ResultStatus.Success) {
+      res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
+    }
+
+    res
+      .cookie("refreshToken", refreshTokensResult.data!.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        expires: new Date(Date.now() + 900000),
+        path: "/auth/refresh-token",
+      })
+      .status(HttpStatuses.OK_200)
+      .send({ accessToken: refreshTokensResult.data!.accessToken });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(HttpStatuses.SERVERERROR_500);
   }
-
-  res
-    .cookie("refreshToken", refreshTokensResult.data!.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      expires: new Date(Date.now() + 900000),
-      path: "/auth/refresh-token",
-    })
-    .status(HttpStatuses.OK_200)
-    .send({ accessToken: refreshTokensResult.data!.accessToken });
 }
