@@ -32,7 +32,6 @@ authRouter.post(
 authRouter.post(
   "/logout",
   validateCookie,
-  rateLimitMiddleware,
   refreshTokenGuardMiddleware,
   logoutHandler,
 );

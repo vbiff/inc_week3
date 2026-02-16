@@ -6,9 +6,7 @@ export async function logoutHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const refreshToken = req.cookies.refreshToken;
-
-  const result = await authService.logout(refreshToken);
+  const result = await authService.logout(req.user!.deviceId);
 
   if (!result) {
     res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
