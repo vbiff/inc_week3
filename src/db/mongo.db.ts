@@ -31,6 +31,9 @@ export const refreshTokensCollection = client
 export const devicesCollection = client
   .db("blogger")
   .collection<DeviceDTO>("devices");
+export const rateLimitCollection = client
+  .db("blogger")
+  .collection<{ ip: string; url: string; date: Date }>("rateLimit");
 
 export async function runDb(): Promise<void> {
   try {
