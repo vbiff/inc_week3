@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { deviceRepository } from "../../repository/device-repository";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
+import { deviceViewMapper } from "../../mappers/device-view-mapper";
 
 export async function getAllActiveDevicesHandler(
   req: Request,
@@ -15,5 +16,7 @@ export async function getAllActiveDevicesHandler(
     return;
   }
 
-  res.status(HttpStatuses.OK_200).send(allActiveDevices);
+  const result = allActiveDevices.map((d) => deviceViewMapper(d));
+
+  res.status(HttpStatuses.OK_200).send(result);
 }

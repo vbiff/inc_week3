@@ -1,7 +1,6 @@
 import { DeviceDTO } from "../application/dto/device-dto";
-import { WithId } from "mongodb";
 
-export const deviceViewMapper = (rawDevice: WithId<DeviceDTO>) => {
+export const deviceViewMapper = (rawDevice: DeviceDTO) => {
   return {
     ip: rawDevice.ip,
     title: rawDevice.title,
