@@ -14,6 +14,7 @@ import { refreshTokenHandler } from "./handlers/refresh-token-handler";
 import { validateCookie } from "../validation/cookie-validator";
 import { logoutHandler } from "./handlers/logout-handler";
 import { refreshTokenGuardMiddleware } from "../../../core/middlewares/auth/refresh-token-guard";
+import { rateLimitMiddleware } from "../../../core/middlewares/rate-limit/rate-limit-middleware";
 
 export const authRouter = Router();
 
@@ -31,6 +32,7 @@ authRouter.post(
 authRouter.post(
   "/logout",
   validateCookie,
+  rateLimitMiddleware,
   refreshTokenGuardMiddleware,
   logoutHandler,
 );
@@ -38,6 +40,7 @@ authRouter.post(
 authRouter.post(
   "/registration",
   registrationAuthValidator,
+  rateLimitMiddleware,
   validationResultMiddleware,
   registrationAuthHandler,
 );
@@ -45,8 +48,13 @@ authRouter.post(
 authRouter.post(
   "/registration-email-resending",
   registrationEmailResendingAuthValidator,
+  rateLimitMiddleware,
   validationResultMiddleware,
   registrationEmailResendingHandler,
 );
 
-authRouter.post("/registration-confirmation", registrationConfirmationHandler);
+authRouter.post(
+  "/registration-confirmation",
+  rateLimitMiddleware,
+  registrationConfirmationHandler,
+);

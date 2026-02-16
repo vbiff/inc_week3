@@ -18,5 +18,9 @@ testingRouter.delete("/all-data", async (req: Request, res: Response) => {
     .collection<CommentCreateDto>("comments")
     .deleteMany({});
   await client.db("blogger").collection<DeviceDTO>("devices").deleteMany({});
+  await client
+    .db("blogger")
+    .collection<{ ip: string; url: string; date: Date }>("rateLimit")
+    .deleteMany({});
   res.sendStatus(HttpStatuses.NO_CONTENT_204);
 });
