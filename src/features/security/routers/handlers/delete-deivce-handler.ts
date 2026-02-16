@@ -6,7 +6,7 @@ export async function deleteDeivceHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const device = await deviceRepository.findDeviceById(req.user!.deviceId);
+  const device = await deviceRepository.findDeviceById(req.params.deviceId);
 
   if (!device) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);
@@ -18,7 +18,7 @@ export async function deleteDeivceHandler(
     return;
   }
 
-  await deviceRepository.deleteDevice(req.user!.id);
+  await deviceRepository.deleteDevice(req.params.deviceId);
 
   res.sendStatus(HttpStatuses.NO_CONTENT_204);
 }
