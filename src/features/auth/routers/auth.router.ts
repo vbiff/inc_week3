@@ -20,8 +20,8 @@ export const authRouter = Router();
 
 authRouter.post(
   LOGIN_PATH,
-  loginAuthValidator,
   rateLimitMiddleware,
+  loginAuthValidator,
   loginAuthHandler,
 );
 
@@ -43,16 +43,17 @@ authRouter.post(
 
 authRouter.post(
   "/registration",
-  registrationAuthValidator,
   rateLimitMiddleware,
+  registrationAuthValidator,
+
   validationResultMiddleware,
   registrationAuthHandler,
 );
 
 authRouter.post(
   "/registration-email-resending",
-  registrationEmailResendingAuthValidator,
   rateLimitMiddleware,
+  registrationEmailResendingAuthValidator,
   validationResultMiddleware,
   registrationEmailResendingHandler,
 );
