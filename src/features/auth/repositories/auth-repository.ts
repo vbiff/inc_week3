@@ -1,6 +1,6 @@
 import { refreshTokensCollection } from "../../../db/mongo.db";
 
-export class AuthRepository {
+export const authRepository = {
   async isTokenInBlackList(token: string): Promise<boolean> {
     try {
       const result = await refreshTokensCollection.findOne({
@@ -15,7 +15,7 @@ export class AuthRepository {
       console.error(err);
       return false;
     }
-  }
+  },
 
   async addTokenToBlackList(token: string): Promise<boolean> {
     try {
@@ -28,5 +28,5 @@ export class AuthRepository {
       console.error(e);
       return false;
     }
-  }
-}
+  },
+};

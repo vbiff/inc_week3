@@ -3,7 +3,7 @@ import * as argon2 from "argon2";
 
 const pepper: string = AppConfig.PASSWORD_PEPPER;
 
-export class Argon2Service {
+export const argon2Service = {
   async generateHash(password: string) {
     return await argon2.hash(password + pepper, {
       type: argon2.argon2id,
@@ -11,11 +11,10 @@ export class Argon2Service {
       timeCost: 3,
       parallelism: 2,
     });
-  }
-
+  },
   async comparePassword(password: string, hash: string): Promise<boolean> {
     return await argon2.verify(hash, password + pepper);
-  }
+  },
 
   async reHash(password: string, hash: string): Promise<string | null> {
     let newHash = null;
@@ -34,5 +33,5 @@ export class Argon2Service {
       });
     }
     return newHash;
-  }
-}
+  },
+};

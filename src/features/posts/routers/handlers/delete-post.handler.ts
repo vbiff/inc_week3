@@ -1,10 +1,10 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { createErrorMessage } from "../../../../core/utils/error.utils";
 import { Response, Request } from "express";
-import { postsService } from "../../../../composition-root";
+import { postsServices } from "../../application/command-services/posts-services";
 
 export async function deletePostHandler(req: Request, res: Response) {
-  const isDeleted = await postsService.deletePost(req.params.id);
+  const isDeleted = await postsServices.deletePost(req.params.id);
   if (!isDeleted) {
     res
       .status(HttpStatuses.NOT_FOUND_404)

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { HttpStatuses } from "../../types/http-statuses";
-import { jwtService, deviceRepository } from "../../../composition-root";
+import { jwtService } from "../../../features/auth/adapters/jwt-service";
+import { deviceRepository } from "../../../features/security/repository/device-repository";
 
 export const refreshTokenGuardMiddleware = async (
   req: Request,

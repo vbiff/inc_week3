@@ -8,7 +8,7 @@ import { mapperOutput } from "../../../core/mappers/mapper-output";
 import { ResultPostOutputDto } from "../application/queries/dto/output-dto/result-post-output-dto";
 import { getSkipNumber } from "../../../core/utils/skip";
 
-export class PostsQueryRepository {
+export const postsQueryRepositories = {
   async findAll(query: PaginationAndSortingReq): Promise<ResultPostOutputDto> {
     const { pageNumber, pageSize, sortBy, sortDirection } = query;
     const skip: number = getSkipNumber(pageNumber, pageSize);
@@ -29,7 +29,7 @@ export class PostsQueryRepository {
       pageSize: pageSize,
       totalCount: totalCount,
     });
-  }
+  },
 
   async findByObjectId(id: string): Promise<PostView | null> {
     const Post = await postsCollection.findOne({ _id: new ObjectId(id) });
@@ -37,12 +37,13 @@ export class PostsQueryRepository {
       return null;
     }
     return mapperPost(Post);
-  }
+  },
 
   async findAllPostsByBlogId(
     blogId: string,
     queryInput: PaginationAndSortingReq,
   ): Promise<ResultPostOutputDto> {
+    //findBlogsCount blogCollection.countDocument()
     const { pageNumber, pageSize, sortBy, sortDirection } = queryInput;
     const skip: number = getSkipNumber(pageNumber, pageSize);
 
@@ -65,5 +66,5 @@ export class PostsQueryRepository {
       pageSize: queryInput.pageSize,
       totalCount: totalCount,
     });
-  }
-}
+  },
+};

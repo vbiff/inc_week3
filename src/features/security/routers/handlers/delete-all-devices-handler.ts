@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { deviceRepository } from "../../../../composition-root";
+import { deviceRepository } from "../../repository/device-repository";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 
 export async function deleteAllDevicesHandler(

@@ -1,16 +1,11 @@
 import { UserInputDTO } from "../queries/dto/input-dto/user-input-dto";
-import { UserRepository } from "../../repositories/user-repository-mongodb";
-import { Argon2Service } from "../../../auth/adapters/argon2-service";
+import { userRepository } from "../../repositories/user-repository-mongodb";
+import { argon2Service } from "../../../auth/adapters/argon2-service";
 
-export class UserService {
-  constructor(
-    private userRepository: UserRepository,
-    private argon2Service: Argon2Service,
-  ) {}
-
+export const userService = {
   async createUser(dto: UserInputDTO): Promise<string | null> {
     const { password } = dto;
-    const passwordHash = await this.argon2Service.generateHash(password);
+    const passwordHash = await argon2Service.generateHash(password);
 
     const newUser = {
       ...dto,
@@ -21,16 +16,12 @@ export class UserService {
         expirationDate: new Date(),
         isConfirmed: true,
       },
-      passwordRecovery: {
-        recoveryCode: null,
-        expirationDate: null,
-      },
     };
 
-    return await this.userRepository.createUser(newUser);
-  }
+    return await userRepository.createUser(newUser);
+  },
 
   async updateUserHash(userId: string, newHash: string): Promise<void> {
-    await this.userRepository.updateHash(userId, newHash);
-  }
-}
+    await userRepository.updateHash(userId, newHash);
+  },
+};

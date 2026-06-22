@@ -3,7 +3,7 @@ import { Result } from "../../../../core/result/resultType";
 import { resultCodeToHttpException } from "../../../../core/result/resultCodeToHttpException";
 import { ResultStatus } from "../../../../core/result/resultCode";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
-import { commentService } from "../../../../composition-root";
+import { commentService } from "../../application/command-service/comment-service";
 
 export async function deleteCommentByIdHandler(req: Request, res: Response) {
   const result: Result = await commentService.deleteComment(

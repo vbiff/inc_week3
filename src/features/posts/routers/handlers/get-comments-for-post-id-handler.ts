@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { commentsQueryRepository } from "../../../../composition-root";
+import { commentsQueryRepository } from "../../../comments/repositories/commentsQueryRepository";
 import { ResultCommentsOutputDto } from "../../application/queries/dto/output-dto/result-comments-output-dto";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { PaginationAndSortingReq } from "../../../../core/types/pagination-and-sorting-req";

@@ -1,13 +1,15 @@
 import { PostInputDTO } from "../application/queries/dto/input-dto/post-input-dto";
 import { blogCollection, postsCollection } from "../../../db/mongo.db";
+
 import { ObjectId } from "mongodb";
+
 import { PostCreateDto } from "../application/command-services/dto/post-create-dto";
 
-export class PostsRepository {
+export const postsRepository = {
   async createPost(inputPost: PostCreateDto): Promise<ObjectId> {
     const postId = await postsCollection.insertOne(inputPost);
     return postId.insertedId;
-  }
+  },
 
   async updatePost(dto: PostInputDTO, id: string): Promise<void | null> {
     console.log(dto.blogId);
@@ -36,10 +38,10 @@ export class PostsRepository {
       return;
     }
     return null;
-  }
+  },
 
   async deletePost(id: string): Promise<boolean> {
     const result = await postsCollection.deleteOne({ _id: new ObjectId(id) });
     return result.deletedCount === 1;
-  }
-}
+  },
+};

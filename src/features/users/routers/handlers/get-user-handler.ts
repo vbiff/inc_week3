@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { userQueryRepository } from "../../../../composition-root";
+import { userQueryRepositoryMongodb } from "../../repositories/user-query-repository-mongodb";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 
 export async function getUserHandler(req: Request, res: Response) {
-  const user = await userQueryRepository.findUserById(req.params.id);
+  const user = await userQueryRepositoryMongodb.findUserById(req.params.id);
 
   if (!user) {
     res.sendStatus(HttpStatuses.NOT_FOUND_404);

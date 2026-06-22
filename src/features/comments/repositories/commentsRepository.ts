@@ -4,11 +4,11 @@ import { Result } from "../../../core/result/resultType";
 import { ObjectId } from "mongodb";
 import { ResultStatus } from "../../../core/result/resultCode";
 
-export class CommentsRepository {
+export const commentsRepository = {
   async createComment(newComment: CommentCreateDto): Promise<string> {
     const commentId = await commentsCollection.insertOne(newComment);
     return commentId.insertedId.toString();
-  }
+  },
 
   async deleteCommentById(commentId: string, userId: string): Promise<Result> {
     const comment = await commentsCollection.findOne({
@@ -39,7 +39,7 @@ export class CommentsRepository {
       extensions: [],
       data: null,
     };
-  }
+  },
 
   async updateCommentById(
     commentId: string,
@@ -77,5 +77,5 @@ export class CommentsRepository {
       extensions: [],
       data: null,
     };
-  }
-}
+  },
+};

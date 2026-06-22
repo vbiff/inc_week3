@@ -1,11 +1,9 @@
 import { CommentInputDto } from "../queries/dto/input-dto/comment-input-dto";
-import { CommentsRepository } from "../../repositories/commentsRepository";
+import { commentsRepository } from "../../repositories/commentsRepository";
 import { AuthMeDto } from "../../../auth/application/queries/dto/auth-output-dto/auth-me-dto";
 import { Result } from "../../../../core/result/resultType";
 
-export class CommentService {
-  constructor(private commentsRepository: CommentsRepository) {}
-
+export const commentService = {
   async createComment(
     inputDto: CommentInputDto,
     postId: string,
@@ -21,22 +19,21 @@ export class CommentService {
       createdAt: new Date().toISOString(),
     };
 
-    return await this.commentsRepository.createComment(newComment);
-  }
-
+    return await commentsRepository.createComment(newComment);
+  },
   async deleteComment(commentId: string, userId: string): Promise<Result> {
-    return await this.commentsRepository.deleteCommentById(commentId, userId);
-  }
+    return await commentsRepository.deleteCommentById(commentId, userId);
+  },
 
   async updateComment(
     commentId: string,
     content: string,
     userId: string,
   ): Promise<Result> {
-    return await this.commentsRepository.updateCommentById(
+    return await commentsRepository.updateCommentById(
       commentId,
       content,
       userId,
     );
-  }
-}
+  },
+};

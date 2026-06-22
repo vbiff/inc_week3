@@ -7,7 +7,7 @@ import { PaginationAndSortingReq } from "../../../core/types/pagination-and-sort
 import { getSkipNumber } from "../../../core/utils/skip";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
 
-export class CommentsQueryRepository {
+export const commentsQueryRepository = {
   async getCommentById(id: string) {
     const comment = await commentsCollection.findOne({
       _id: new ObjectId(id),
@@ -16,7 +16,7 @@ export class CommentsQueryRepository {
       return null;
     }
     return mapperToCommentOutputResDto(comment);
-  }
+  },
 
   async getCommentsForPostId(
     postId: string,
@@ -55,5 +55,5 @@ export class CommentsQueryRepository {
       pageSize: queryInput.pageSize,
       totalCount: totalCount,
     });
-  }
-}
+  },
+};

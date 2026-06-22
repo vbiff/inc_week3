@@ -1,4 +1,4 @@
-import { commentsQueryRepository } from "../../../../composition-root";
+import { commentsQueryRepository } from "../../repositories/commentsQueryRepository";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
 

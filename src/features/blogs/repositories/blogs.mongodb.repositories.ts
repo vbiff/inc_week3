@@ -3,11 +3,11 @@ import { blogCollection } from "../../../db/mongo.db";
 import { ObjectId } from "mongodb";
 import { blogCreateDto } from "../application/command-services/dto/blog-create-dto";
 
-export class BlogsRepository {
+export const blogsRepository = {
   async createBlog(inputBlog: blogCreateDto): Promise<string> {
     const blogId = await blogCollection.insertOne(inputBlog);
     return blogId.insertedId.toString();
-  }
+  },
 
   async updateBlog(dto: BlogInputDto, id: string): Promise<void | null> {
     const res = await blogCollection.updateOne(
@@ -24,10 +24,10 @@ export class BlogsRepository {
       return null;
     }
     return;
-  }
+  },
 
   async deleteBlog(id: string): Promise<boolean> {
     const result = await blogCollection.deleteOne({ _id: new ObjectId(id) });
     return result.deletedCount === 1;
-  }
-}
+  },
+};

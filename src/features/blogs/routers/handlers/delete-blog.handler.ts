@@ -1,10 +1,10 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { createErrorMessage } from "../../../../core/utils/error.utils";
 import { Response, Request } from "express";
-import { blogsService } from "../../../../composition-root";
+import { blogsServices } from "../../application/command-services/blogs-services";
 
 export async function deleteBlogHandler(req: Request, res: Response) {
-  const blog = await blogsService.deleteBlog(req.params.id);
+  const blog = await blogsServices.deleteBlog(req.params.id);
   if (!blog) {
     res
       .status(HttpStatuses.NOT_FOUND_404)

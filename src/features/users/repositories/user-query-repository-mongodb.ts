@@ -9,7 +9,7 @@ import { usersCollection } from "../../../db/mongo.db";
 import { mapperToAuthMeDto } from "../../auth/mappers/mapper-to-auth-me-dto";
 import { AuthMeDto } from "../../auth/application/queries/dto/auth-output-dto/auth-me-dto";
 
-export class UserQueryRepository {
+export const userQueryRepositoryMongodb = {
   async findUserById(id: string): Promise<UserView | null> {
     const rawUser: WithId<UserCreateByAdminDto> | null =
       await usersCollection.findOne({
@@ -19,7 +19,7 @@ export class UserQueryRepository {
       return null;
     }
     return mapperUserMongoId(rawUser);
-  }
+  },
 
   async findUserByIdForMe(id: string): Promise<AuthMeDto | null> {
     const rawUser: WithId<UserCreateByAdminDto> | null =
@@ -30,7 +30,7 @@ export class UserQueryRepository {
       return null;
     }
     return mapperToAuthMeDto(rawUser);
-  }
+  },
 
   async getAllUsers(
     query: PaginationAndSortingReq,
@@ -75,5 +75,5 @@ export class UserQueryRepository {
       pageSize: pageSize,
       totalCount: totalCount,
     });
-  }
-}
+  },
+};

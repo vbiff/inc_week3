@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { userRepository } from "../../../../composition-root";
+import { userRepository } from "../../repositories/user-repository-mongodb";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 
 export async function deleteUserHandler(req: Request, res: Response) {

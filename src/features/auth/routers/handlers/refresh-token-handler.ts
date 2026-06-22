@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { authService } from "../../../../composition-root";
+import { authService } from "../../application/command-services/auth-service";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { ResultStatus } from "../../../../core/result/resultCode";
 
