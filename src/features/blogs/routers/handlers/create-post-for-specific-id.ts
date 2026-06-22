@@ -1,9 +1,7 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { postsServices } from "../../../posts/application/command-services/posts-services";
+import { postsService, blogsQueryRepository, postsQueryRepository } from "../../../../composition-root";
 import { ObjectId } from "mongodb";
-import { blogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
-import { postsQueryRepositories } from "../../../posts/repositories/posts.mongodb-query-repository";
 
 export async function createPostForSpecificBlogIdHandler(
   req: Request,
@@ -17,13 +15,13 @@ export async function createPostForSpecificBlogIdHandler(
   }
 
   const newPostId: ObjectId | null =
-    await postsServices.createPostForSpecificBlogId(
+    await postsService.createPostForSpecificBlogId(
       req.body,
       req.params.blogId,
       blog.name,
     );
 
-  const newPost = await postsQueryRepositories.findByObjectId(
+  const newPost = await postsQueryRepository.findByObjectId(
     newPostId!.toString(),
   );
 

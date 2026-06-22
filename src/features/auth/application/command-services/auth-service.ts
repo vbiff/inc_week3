@@ -1,23 +1,32 @@
 import { AuthInputDTO } from "../queries/dto/auth-input-dto/auth-input-dto";
-import { userRepository } from "../../../users/repositories/user-repository-mongodb";
 import { Result } from "../../../../core/result/resultType";
 import { ResultStatus } from "../../../../core/result/resultCode";
 import { UserCreateByAdminDto } from "../../../users/application/command-services/dto/user-create-by-admin-dto";
 import { WithId } from "mongodb";
-import { jwtService } from "../../adapters/jwt-service";
-import { argon2Service } from "../../adapters/argon2-service";
-import { userService } from "../../../users/application/command-services/user-service";
 import { RegistrationInputDto } from "./dto/registration-input-dto";
 import { randomUUID } from "node:crypto";
 import { add } from "date-fns/add";
-import { nodemailerService } from "../../adapters/email-service/nodemailer-service";
 import { emailsOptions } from "../../adapters/email-service/emails-options";
-import { deviceRepository } from "../../../security/repository/device-repository";
+import { UserRepository } from "../../../users/repositories/user-repository-mongodb";
+import { JwtService } from "../../adapters/jwt-service";
+import { Argon2Service } from "../../adapters/argon2-service";
+import { NodemailerService } from "../../adapters/email-service/nodemailer-service";
+import { DeviceRepository } from "../../../security/repository/device-repository";
+import { UserService } from "../../../users/application/command-services/user-service";
 
-export const authService = {
+export class AuthService {
+  constructor(
+    private userRepository: UserRepository,
+    private jwtService: JwtService,
+    private argon2Service: Argon2Service,
+    private nodemailerService: NodemailerService,
+    private deviceRepository: DeviceRepository,
+    private userService: UserService,
+  ) {}
+
   //CONFIRMATION OF REGISTRATION
   async confirmRegistration(code: string): Promise<Result> {
-    const user = await userRepository.findUserByConfirmationCode(code);
+    const user = await this.userRepository.findUserByConfirmationCode(code);
     if (!user) {
       return {
         status: ResultStatus.BadRequest,
@@ -42,13 +51,15 @@ export const authService = {
         data: null,
       };
     }
-    await userRepository.makeRegistrationConfirmation(user._id.toString());
+    await this.userRepository.makeRegistrationConfirmation(
+      user._id.toString(),
+    );
     return {
       status: ResultStatus.Success,
       data: null,
       extensions: [],
     };
-  },
+  }
 
   //REGISTRATION
   async registerUser(
@@ -56,12 +67,10 @@ export const authService = {
   ): Promise<Result> {
     const { login, password, email } = registrationInputDto;
 
-    //check if login exists
-
-    const isUserLoginExist = userRepository.findUserByLoginOrEmail(login);
-
-    //check if login exists
-    const isUserEmailExist = userRepository.findUserByLoginOrEmail(email);
+    const isUserLoginExist =
+      this.userRepository.findUserByLoginOrEmail(login);
+    const isUserEmailExist =
+      this.userRepository.findUserByLoginOrEmail(email);
 
     const [isLoginExist, isEmailExist] = await Promise.all([
       isUserLoginExist,
@@ -85,7 +94,7 @@ export const authService = {
       };
     }
 
-    const passwordHash = await argon2Service.generateHash(password);
+    const passwordHash = await this.argon2Service.generateHash(password);
 
     const newUser = {
       ...registrationInputDto,
@@ -99,11 +108,15 @@ export const authService = {
         }),
         isConfirmed: false,
       },
+      passwordRecovery: {
+        recoveryCode: null,
+        expirationDate: null,
+      },
     };
 
-    const userId = await userRepository.createUser(newUser);
+    const userId = await this.userRepository.createUser(newUser);
 
-    nodemailerService
+    this.nodemailerService
       .sendEmail(
         newUser.email,
         newUser.emailConfirmation.confirmationCode,
@@ -111,25 +124,18 @@ export const authService = {
       )
       .catch(async (error) => {
         console.error(error);
-        await userRepository.deleteUser(userId!);
-        return {
-          status: ResultStatus.Forbidden, // 500!!!!
-          errorMessage: "Email was not sent",
-          extensions: [{ field: "email", message: "Email was not sent" }],
-          data: null,
-        };
+        await this.userRepository.deleteUser(userId!);
       });
     return {
       status: ResultStatus.Success,
       data: null,
       extensions: [],
     };
-  },
+  }
 
   //RESEND EMAIL CONFIRMATION
   async resendRegistrationEmail(email: string): Promise<Result> {
-    //check if login exists
-    const user = await userRepository.findUserByLoginOrEmail(email);
+    const user = await this.userRepository.findUserByLoginOrEmail(email);
     if (!user) {
       return {
         status: ResultStatus.BadRequest,
@@ -146,29 +152,22 @@ export const authService = {
         data: null,
       };
     }
-    // recreate confirmation code and date
     const newCode = randomUUID();
     const newDate = add(new Date(), {
       hours: 1,
       minutes: 1,
     });
-    await userRepository.updateUserConfirmationCode(
+    await this.userRepository.updateUserConfirmationCode(
       user._id.toString(),
       newCode,
       newDate,
     );
 
-    nodemailerService
+    this.nodemailerService
       .sendEmail(email, newCode, emailsOptions.registrationEmail)
       .catch(async (error) => {
         console.error(error);
-        await userRepository.deleteUser(user._id!.toString());
-        return {
-          status: ResultStatus.Forbidden,
-          errorMessage: "Email was not sent",
-          extensions: [{ field: "email", message: "Email was not sent" }],
-          data: null,
-        };
+        await this.userRepository.deleteUser(user._id!.toString());
       });
 
     return {
@@ -176,7 +175,7 @@ export const authService = {
       data: null,
       extensions: [],
     };
-  },
+  }
 
   // LOGIN
   async login(
@@ -199,7 +198,7 @@ export const authService = {
     const { accessToken, refreshToken } =
       await this.createAccessAndRefreshTokens(userId, deviceId);
 
-    const decodeToken = await jwtService.verifyRefreshToken(refreshToken);
+    const decodeToken = await this.jwtService.verifyRefreshToken(refreshToken);
 
     if (!decodeToken) {
       return {
@@ -211,7 +210,7 @@ export const authService = {
 
     const { iat, exp } = decodeToken;
 
-    await deviceRepository.createDevice({
+    await this.deviceRepository.createDevice({
       userId,
       deviceId,
       title,
@@ -225,29 +224,25 @@ export const authService = {
       data: { accessToken, refreshToken },
       extensions: [],
     };
-  },
+  }
 
   //LOGOUT
-
   async logout(deviceId: string): Promise<boolean> {
-    //invalidate refreshToken
     try {
-      await deviceRepository.deleteDevice(deviceId);
+      await this.deviceRepository.deleteDevice(deviceId);
     } catch (error) {
       console.error(error);
     }
     return true;
-  },
+  }
 
   async createAccessAndRefreshTokens(userId: string, deviceId: string) {
-    const access = jwtService.createAccessToken(userId);
-
-    //
-    const refresh = jwtService.createRefreshToken(userId, deviceId);
+    const access = this.jwtService.createAccessToken(userId);
+    const refresh = this.jwtService.createRefreshToken(userId, deviceId);
 
     const [accessToken, refreshToken] = await Promise.all([access, refresh]);
     return { accessToken, refreshToken };
-  },
+  }
 
   async checkUserCredentials(
     input: AuthInputDTO,
@@ -255,7 +250,7 @@ export const authService = {
     const { password, loginOrEmail } = input;
 
     const user: WithId<UserCreateByAdminDto> | null =
-      await userRepository.findUserByLoginOrEmail(loginOrEmail);
+      await this.userRepository.findUserByLoginOrEmail(loginOrEmail);
 
     if (!user) {
       return {
@@ -266,7 +261,7 @@ export const authService = {
       };
     }
 
-    const isPassCorrect = await argon2Service.comparePassword(
+    const isPassCorrect = await this.argon2Service.comparePassword(
       password,
       user.password,
     );
@@ -278,9 +273,9 @@ export const authService = {
         extensions: [{ field: "password", message: "Not correct" }],
       };
     }
-    const newHash = await argon2Service.reHash(password, user.password);
+    const newHash = await this.argon2Service.reHash(password, user.password);
     if (newHash) {
-      await userService.updateUserHash(user._id.toString(), newHash);
+      await this.userService.updateUserHash(user._id.toString(), newHash);
     }
 
     return {
@@ -288,19 +283,96 @@ export const authService = {
       data: user,
       extensions: [],
     };
-  },
+  }
+
+  //PASSWORD RECOVERY
+  async passwordRecovery(email: string): Promise<Result> {
+    const user = await this.userRepository.findUserByLoginOrEmail(email);
+    if (!user) {
+      return {
+        status: ResultStatus.Success,
+        data: null,
+        extensions: [],
+      };
+    }
+
+    const recoveryCode = randomUUID();
+    const expirationDate = add(new Date(), {
+      hours: 1,
+      minutes: 1,
+    });
+
+    await this.userRepository.updatePasswordRecoveryCode(
+      user._id.toString(),
+      recoveryCode,
+      expirationDate,
+    );
+
+    this.nodemailerService
+      .sendEmail(email, recoveryCode, emailsOptions.passwordRecoveryEmail)
+      .catch((error) => {
+        console.error(error);
+      });
+
+    return {
+      status: ResultStatus.Success,
+      data: null,
+      extensions: [],
+    };
+  }
+
+  //NEW PASSWORD
+  async newPassword(
+    recoveryCode: string,
+    newPassword: string,
+  ): Promise<Result> {
+    const user =
+      await this.userRepository.findUserByRecoveryCode(recoveryCode);
+    if (!user) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "Incorrect recovery code",
+        extensions: [
+          { field: "recoveryCode", message: "Incorrect recovery code" },
+        ],
+        data: null,
+      };
+    }
+
+    if (
+      !user.passwordRecovery.expirationDate ||
+      new Date() > user.passwordRecovery.expirationDate
+    ) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "Recovery code is expired",
+        extensions: [
+          { field: "recoveryCode", message: "Recovery code is expired" },
+        ],
+        data: null,
+      };
+    }
+
+    const passwordHash = await this.argon2Service.generateHash(newPassword);
+    await this.userRepository.updateHash(user._id.toString(), passwordHash);
+
+    return {
+      status: ResultStatus.Success,
+      data: null,
+      extensions: [],
+    };
+  }
 
   async refreshTokens(
     currentRefreshToken: string,
     userId: string,
     deviceId: string,
   ): Promise<Result<{ accessToken: string; refreshToken: string } | null>> {
-    // create new tokens
-
     const { accessToken, refreshToken } =
       await this.createAccessAndRefreshTokens(userId, deviceId);
 
-    const decodeToken = await jwtService.verifyRefreshToken(refreshToken);
+    const decodeToken =
+      await this.jwtService.verifyRefreshToken(refreshToken);
 
     if (!decodeToken) {
       return {
@@ -311,15 +383,13 @@ export const authService = {
     }
 
     const { iat, exp } = decodeToken;
-    //update device repo
-    await deviceRepository.updateDevice(deviceId, iat, exp);
+    await this.deviceRepository.updateDevice(deviceId, iat, exp);
 
-    // send new tokens
     return {
       status: ResultStatus.Success,
       errorMessage: "",
       extensions: [],
       data: { accessToken, refreshToken },
     };
-  },
-};
+  }
+}

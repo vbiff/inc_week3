@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
-import { authService } from "../../application/command-services/auth-service";
+import { authService } from "../../../../composition-root";
 import { ResultStatus } from "../../../../core/result/resultCode";
 import { resultCodeToHttpException } from "../../../../core/result/resultCodeToHttpException";
 

@@ -1,14 +1,11 @@
 import { Request, Response } from "express";
 import { PostView } from "../../application/queries/dto/output-dto/posts-view";
-import { postsQueryRepositories } from "../../repositories/posts.mongodb-query-repository";
+import { postsQueryRepository, commentService, commentsQueryRepository, userQueryRepository } from "../../../../composition-root";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
-import { commentService } from "../../../comments/application/command-service/comment-service";
-import { commentsQueryRepository } from "../../../comments/repositories/commentsQueryRepository";
-import { userQueryRepositoryMongodb } from "../../../users/repositories/user-query-repository-mongodb";
 
 export async function createCommentHandler(req: Request, res: Response) {
   // 1 check if post exists with postId by query repo
-  const post: PostView | null = await postsQueryRepositories.findByObjectId(
+  const post: PostView | null = await postsQueryRepository.findByObjectId(
     req.params.postId,
   );
 
@@ -17,7 +14,7 @@ export async function createCommentHandler(req: Request, res: Response) {
     return;
   }
   //get user info
-  const userInfo = await userQueryRepositoryMongodb.findUserByIdForMe(
+  const userInfo = await userQueryRepository.findUserByIdForMe(
     req.user!.id,
   );
 

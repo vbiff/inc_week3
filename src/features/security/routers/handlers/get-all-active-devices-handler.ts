@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { deviceRepository } from "../../repository/device-repository";
+import { deviceRepository } from "../../../../composition-root";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { deviceViewMapper } from "../../mappers/device-view-mapper";
 
