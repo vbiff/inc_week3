@@ -3,6 +3,7 @@ import { setupApp } from "../src/setup-app";
 import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
 import { UserInputDTO } from "../src/features/users/application/queries/dto/input-dto/user-input-dto";
+import { client, runDb } from "../src/db/mongo.db";
 import { USERS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 
@@ -13,9 +14,14 @@ describe("Test for CRUD Users", () => {
   const adminToken = generateBasicAuthToken();
 
   beforeAll(async () => {
+    await runDb();
     await request(app)
       .delete("/testing/all-data")
       .expect(HttpStatuses.NO_CONTENT_204);
+  });
+
+  afterAll(async () => {
+    await client.close();
   });
 
   //create new user

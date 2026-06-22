@@ -2,6 +2,7 @@ import express from "express";
 import { setupApp } from "../src/setup-app";
 import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
+import { client, runDb } from "../src/db/mongo.db";
 import { BlogInputDto } from "../src/features/blogs/application/queries/dto/input-dto/blog_input_dto";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import { BLOGS_PATH } from "../src/core/paths/paths";
@@ -13,9 +14,14 @@ describe("Test for CRUD blogs", () => {
   const adminToken = generateBasicAuthToken();
 
   beforeAll(async () => {
+    await runDb();
     await request(app)
       .delete("/testing/all-data")
       .expect(HttpStatuses.NO_CONTENT_204);
+  });
+
+  afterAll(async () => {
+    await client.close();
   });
 
   let blogId = "";
