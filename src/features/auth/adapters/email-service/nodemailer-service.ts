@@ -24,3 +24,5 @@ export class NodemailerService {
     console.log(info);
   }
 }
+
+export const nodemailerService = new NodemailerService();

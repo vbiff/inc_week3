@@ -1,7 +1,7 @@
 import { JwtService } from "./features/auth/adapters/jwt-service";
 import { Argon2Service } from "./features/auth/adapters/argon2-service";
 import { BcryptService } from "./features/auth/adapters/bcrypt-service";
-import { NodemailerService } from "./features/auth/adapters/email-service/nodemailer-service";
+import { nodemailerService } from "./features/auth/adapters/email-service/nodemailer-service";
 
 import { UserRepository } from "./features/users/repositories/user-repository-mongodb";
 import { UserQueryRepository } from "./features/users/repositories/user-query-repository-mongodb";
@@ -24,7 +24,7 @@ import { AuthService } from "./features/auth/application/command-services/auth-s
 export const jwtService = new JwtService();
 export const argon2Service = new Argon2Service();
 export const bcryptService = new BcryptService();
-export const nodemailerService = new NodemailerService();
+export { nodemailerService };
 
 // Repositories
 export const userRepository = new UserRepository();
