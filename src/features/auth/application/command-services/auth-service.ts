@@ -308,7 +308,7 @@ export class AuthService {
       expirationDate,
     );
 
-    this.nodemailerService
+    await this.nodemailerService
       .sendEmail(email, recoveryCode, emailsOptions.passwordRecoveryEmail)
       .catch((error) => {
         console.error(error);
