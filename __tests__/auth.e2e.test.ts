@@ -6,7 +6,7 @@ import { client, runDb } from "../src/db/mongo.db";
 import { UserInputDTO } from "../src/features/users/application/queries/dto/input-dto/user-input-dto";
 import { AUTH_PATH, LOGIN_PATH, USERS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
-import { nodemailerService } from "../src/features/auth/adapters/email-service/nodemailer-service";
+import { nodemailerService } from "../src/composition-root";
 
 describe("auth tests", () => {
   const app = express();

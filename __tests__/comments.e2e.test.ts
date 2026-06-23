@@ -165,7 +165,7 @@ describe("comments", () => {
 
   let commentId = "";
   it("Should create a comment for the postId", async () => {
-    const newComment = { content: "HELLO WORLD!" };
+    const newComment = { content: "Hello World everyone!!" };
 
     const result = await request(app)
       .post(`${POSTS_PATH}/${postId}${COMMENT_PATH}`)
@@ -193,7 +193,7 @@ describe("comments", () => {
   });
 
   it("Should update a comment by id", async () => {
-    const content = { content: "new content" };
+    const content = { content: "new updated content!!" };
     await request(app)
       .put(`${COMMENT_PATH}/${commentId}`)
       .set("Authorization", "Bearer " + token)
@@ -204,7 +204,7 @@ describe("comments", () => {
       .get(`${COMMENT_PATH}/${commentId}`)
       .expect(HttpStatuses.OK_200);
 
-    expect(result.body.content).toBe("new content");
+    expect(result.body.content).toBe("new updated content!!");
   });
 
   it("Should not delete a comment by wrong id", async () => {
