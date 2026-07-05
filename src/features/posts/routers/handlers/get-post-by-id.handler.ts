@@ -1,11 +1,10 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { PostView } from "../../application/queries/dto/output-dto/posts-view";
 import { PostsQueryRepository } from "../../repositories/posts.mongodb-query-repository";
 
-const postsQueryRepository =
-  ioc.getInstance<PostsQueryRepository>(PostsQueryRepository);
+const postsQueryRepository = container.get(PostsQueryRepository);
 
 export async function getPostById(req: Request, res: Response) {
   const post: PostView | null = await postsQueryRepository.findByObjectId(

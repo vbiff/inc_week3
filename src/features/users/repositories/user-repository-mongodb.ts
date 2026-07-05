@@ -1,7 +1,9 @@
 import { ObjectId, WithId } from "mongodb";
 import { usersCollection } from "../../../db/mongo.db";
 import { UserCreateDto } from "../application/command-services/dto/user-create-dto";
+import { injectable } from "inversify";
 
+@injectable()
 export class UserRepository {
   async createUser(dto: UserCreateDto): Promise<string | null> {
     const userId = await usersCollection.insertOne(dto);

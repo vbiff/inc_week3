@@ -8,7 +8,9 @@ import { mapperOutput } from "../../../core/mappers/mapper-output";
 import { usersCollection } from "../../../db/mongo.db";
 import { mapperToAuthMeDto } from "../../auth/mappers/mapper-to-auth-me-dto";
 import { AuthMeDto } from "../../auth/application/queries/dto/auth-output-dto/auth-me-dto";
+import { injectable } from "inversify";
 
+@injectable()
 export class UserQueryRepository {
   async findUserById(id: string): Promise<UserView | null> {
     const rawUser: WithId<UserCreateByAdminDto> | null =

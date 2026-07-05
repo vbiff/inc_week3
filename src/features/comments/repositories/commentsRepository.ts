@@ -3,7 +3,9 @@ import { CommentCreateDto } from "../application/command-service/dto/comment-cre
 import { Result } from "../../../core/result/resultType";
 import { ObjectId } from "mongodb";
 import { ResultStatus } from "../../../core/result/resultCode";
+import { injectable } from "inversify";
 
+@injectable()
 export class CommentsRepository {
   async createComment(newComment: CommentCreateDto): Promise<string> {
     const commentId = await commentsCollection.insertOne(newComment);

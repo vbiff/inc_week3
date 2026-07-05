@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { UserQueryRepository } from "../../../users/repositories/user-query-repository-mongodb";
 
-const userQueryRepository =
-  ioc.getInstance<UserQueryRepository>(UserQueryRepository);
+const userQueryRepository = container.get(UserQueryRepository);
 
 export const meAuthHandler = async (req: Request, res: Response) => {
   const userId = req.user!.id;

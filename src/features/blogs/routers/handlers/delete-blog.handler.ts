@@ -1,10 +1,10 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { createErrorMessage } from "../../../../core/utils/error.utils";
 import { Response, Request } from "express";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { BlogsService } from "../../application/command-services/blogs-services";
 
-const blogsService = ioc.getInstance<BlogsService>(BlogsService);
+const blogsService = container.get(BlogsService);
 
 export async function deleteBlogHandler(req: Request, res: Response) {
   const blog = await blogsService.deleteBlog(req.params.id);

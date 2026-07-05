@@ -2,9 +2,13 @@ import { CommentInputDto } from "../queries/dto/input-dto/comment-input-dto";
 import { CommentsRepository } from "../../repositories/commentsRepository";
 import { AuthMeDto } from "../../../auth/application/queries/dto/auth-output-dto/auth-me-dto";
 import { Result } from "../../../../core/result/resultType";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class CommentService {
-  constructor(private commentsRepository: CommentsRepository) {}
+  constructor(
+    @inject(CommentsRepository) private commentsRepository: CommentsRepository,
+  ) {}
 
   async createComment(
     inputDto: CommentInputDto,

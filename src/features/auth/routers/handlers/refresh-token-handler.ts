@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { AuthService } from "../../application/command-services/auth-service";
 
-const authService = ioc.getInstance<AuthService>(AuthService);
+const authService = container.get(AuthService);
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { ResultStatus } from "../../../../core/result/resultCode";
 

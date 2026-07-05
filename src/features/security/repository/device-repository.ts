@@ -1,6 +1,8 @@
 import { DeviceDTO } from "../application/dto/device-dto";
 import { devicesCollection } from "../../../db/mongo.db";
+import { injectable } from "inversify";
 
+@injectable()
 export class DeviceRepository {
   async findDeviceByIdAndIat(
     deviceId: string,

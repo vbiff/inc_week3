@@ -1,15 +1,13 @@
 import { Request, Response } from "express";
 import { PaginationAndSortingReq } from "../../../../core/types/pagination-and-sorting-req";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { PostsQueryRepository } from "../../../posts/repositories/posts.mongodb-query-repository";
 import { BlogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { queryInputDtoHelper } from "../../../../core/helpers/query.input.dto.helper";
 
-const postsQueryRepository =
-  ioc.getInstance<PostsQueryRepository>(PostsQueryRepository);
-const blogsQueryRepository =
-  ioc.getInstance<BlogsQueryRepository>(BlogsQueryRepository);
+const postsQueryRepository = container.get(PostsQueryRepository);
+const blogsQueryRepository = container.get(BlogsQueryRepository);
 
 export async function getAllPostsForSpecificBlogIdHandler(
   req: Request,

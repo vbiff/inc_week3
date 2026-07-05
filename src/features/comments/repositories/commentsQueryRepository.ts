@@ -6,7 +6,9 @@ import { PostCreateDto } from "../../posts/application/command-services/dto/post
 import { PaginationAndSortingReq } from "../../../core/types/pagination-and-sorting-req";
 import { getSkipNumber } from "../../../core/utils/skip";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
+import { injectable } from "inversify";
 
+@injectable()
 export class CommentsQueryRepository {
   async getCommentById(id: string) {
     const comment = await commentsCollection.findOne({

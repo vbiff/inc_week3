@@ -1,9 +1,9 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { PostsService } from "../../application/command-services/posts-services";
 
-const postsService = ioc.getInstance<PostsService>(PostsService);
+const postsService = container.get(PostsService);
 
 export async function updatePostHandler(req: Request, res: Response) {
   const result = await postsService.updatePost(req.body, req.params.id);

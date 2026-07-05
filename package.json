@@ -21,9 +21,12 @@
     "date-fns": "^4.1.0",
     "express": "^5.2.1",
     "express-validator": "^7.3.1",
+    "inversify": "^6.2.2",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.0.0",
-    "nodemailer": "^7.0.12"
+    "mongoose": "^9.7.3",
+    "nodemailer": "^7.0.12",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

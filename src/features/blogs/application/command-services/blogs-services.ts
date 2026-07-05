@@ -1,8 +1,12 @@
 import { BlogInputDto } from "../queries/dto/input-dto/blog_input_dto";
 import { BlogsRepository } from "../../repositories/blogs.mongodb.repositories";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class BlogsService {
-  constructor(private blogsRepository: BlogsRepository) {}
+  constructor(
+    @inject(BlogsRepository) private blogsRepository: BlogsRepository,
+  ) {}
 
   async createBlog(inputBlog: BlogInputDto): Promise<string | null> {
     const newBlog = {

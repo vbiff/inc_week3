@@ -2,9 +2,13 @@ import { PostInputDTO } from "../queries/dto/input-dto/post-input-dto";
 import { PostsRepository } from "../../repositories/posts.mongodb.repositories";
 import { PostInputWithBlogIdDTO } from "../queries/dto/input-dto/post-input-with_blog-id-dto";
 import { ObjectId } from "mongodb";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class PostsService {
-  constructor(private postsRepository: PostsRepository) {}
+  constructor(
+    @inject(PostsRepository) private postsRepository: PostsRepository,
+  ) {}
 
   async createPost(
     inputPost: PostInputDTO,

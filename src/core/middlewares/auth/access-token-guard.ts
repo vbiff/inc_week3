@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { HttpStatuses } from "../../types/http-statuses";
-import { ioc } from "../../../composition-root";
+import { container } from "../../../composition-root";
 import { JwtService } from "../../../features/auth/adapters/jwt-service";
 
-const jwtService = ioc.getInstance<JwtService>(JwtService);
+const jwtService = container.get(JwtService);
 
 export const accessTokenGuardMiddleware = async (
   req: Request,

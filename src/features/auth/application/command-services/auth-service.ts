@@ -13,15 +13,17 @@ import { Argon2Service } from "../../adapters/argon2-service";
 import { NodemailerService } from "../../adapters/email-service/nodemailer-service";
 import { DeviceRepository } from "../../../security/repository/device-repository";
 import { UserService } from "../../../users/application/command-services/user-service";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class AuthService {
   constructor(
-    private userRepository: UserRepository,
-    private jwtService: JwtService,
-    private argon2Service: Argon2Service,
-    private nodemailerService: NodemailerService,
-    private deviceRepository: DeviceRepository,
-    private userService: UserService,
+    @inject(UserRepository) private userRepository: UserRepository,
+    @inject(JwtService) private jwtService: JwtService,
+    @inject(Argon2Service) private argon2Service: Argon2Service,
+    @inject(NodemailerService) private nodemailerService: NodemailerService,
+    @inject(DeviceRepository) private deviceRepository: DeviceRepository,
+    @inject(UserService) private userService: UserService,
   ) {}
 
   //CONFIRMATION OF REGISTRATION
@@ -51,9 +53,7 @@ export class AuthService {
         data: null,
       };
     }
-    await this.userRepository.makeRegistrationConfirmation(
-      user._id.toString(),
-    );
+    await this.userRepository.makeRegistrationConfirmation(user._id.toString());
     return {
       status: ResultStatus.Success,
       data: null,
@@ -67,10 +67,8 @@ export class AuthService {
   ): Promise<Result> {
     const { login, password, email } = registrationInputDto;
 
-    const isUserLoginExist =
-      this.userRepository.findUserByLoginOrEmail(login);
-    const isUserEmailExist =
-      this.userRepository.findUserByLoginOrEmail(email);
+    const isUserLoginExist = this.userRepository.findUserByLoginOrEmail(login);
+    const isUserEmailExist = this.userRepository.findUserByLoginOrEmail(email);
 
     const [isLoginExist, isEmailExist] = await Promise.all([
       isUserLoginExist,
@@ -326,8 +324,7 @@ export class AuthService {
     recoveryCode: string,
     newPassword: string,
   ): Promise<Result> {
-    const user =
-      await this.userRepository.findUserByRecoveryCode(recoveryCode);
+    const user = await this.userRepository.findUserByRecoveryCode(recoveryCode);
     if (!user) {
       return {
         status: ResultStatus.BadRequest,
@@ -371,8 +368,7 @@ export class AuthService {
     const { accessToken, refreshToken } =
       await this.createAccessAndRefreshTokens(userId, deviceId);
 
-    const decodeToken =
-      await this.jwtService.verifyRefreshToken(refreshToken);
+    const decodeToken = await this.jwtService.verifyRefreshToken(refreshToken);
 
     if (!decodeToken) {
       return {

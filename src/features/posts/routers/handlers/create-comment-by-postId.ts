@@ -1,20 +1,16 @@
 import { Request, Response } from "express";
 import { PostView } from "../../application/queries/dto/output-dto/posts-view";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { PostsQueryRepository } from "../../repositories/posts.mongodb-query-repository";
 import { CommentService } from "../../../comments/application/command-service/comment-service";
 import { CommentsQueryRepository } from "../../../comments/repositories/commentsQueryRepository";
 import { UserQueryRepository } from "../../../users/repositories/user-query-repository-mongodb";
 
-const postsQueryRepository =
-  ioc.getInstance<PostsQueryRepository>(PostsQueryRepository);
-const commentService = ioc.getInstance<CommentService>(CommentService);
-const commentsQueryRepository = ioc.getInstance<CommentsQueryRepository>(
-  CommentsQueryRepository,
-);
-const userQueryRepository =
-  ioc.getInstance<UserQueryRepository>(UserQueryRepository);
+const postsQueryRepository = container.get(PostsQueryRepository);
+const commentService = container.get(CommentService);
+const commentsQueryRepository = container.get(CommentsQueryRepository);
+const userQueryRepository = container.get(UserQueryRepository);
 
 export async function createCommentHandler(req: Request, res: Response) {
   // 1 check if post exists with postId by query repo
@@ -27,9 +23,7 @@ export async function createCommentHandler(req: Request, res: Response) {
     return;
   }
   //get user info
-  const userInfo = await userQueryRepository.findUserByIdForMe(
-    req.user!.id,
-  );
+  const userInfo = await userQueryRepository.findUserByIdForMe(req.user!.id);
 
   // 2 create new comment
   const commentId: string = await commentService.createComment(

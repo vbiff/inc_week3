@@ -7,7 +7,9 @@ import { mapperPost } from "../mappers/mapper-post";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
 import { ResultPostOutputDto } from "../application/queries/dto/output-dto/result-post-output-dto";
 import { getSkipNumber } from "../../../core/utils/skip";
+import { injectable } from "inversify";
 
+@injectable()
 export class PostsQueryRepository {
   async findAll(query: PaginationAndSortingReq): Promise<ResultPostOutputDto> {
     const { pageNumber, pageSize, sortBy, sortDirection } = query;

@@ -1,8 +1,10 @@
 import { AppConfig } from "../../../core/config/config";
 import * as argon2 from "argon2";
+import { injectable } from "inversify";
 
 const pepper: string = AppConfig.PASSWORD_PEPPER;
 
+@injectable()
 export class Argon2Service {
   async generateHash(password: string) {
     return await argon2.hash(password + pepper, {

@@ -6,7 +6,9 @@ import { mapBlogs } from "../mappers/mapper-blogs-output";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
 import { OutputDtoBlogs } from "../application/queries/dto/output-dto/output-dto-blogs";
 import { blogCollection } from "../../../db/mongo.db";
+import { injectable } from "inversify";
 
+@injectable()
 export class BlogsQueryRepository {
   async findAll(query: PaginationAndSortingReq): Promise<OutputDtoBlogs> {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =

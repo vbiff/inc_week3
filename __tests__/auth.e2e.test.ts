@@ -6,10 +6,10 @@ import { client, runDb } from "../src/db/mongo.db";
 import { UserInputDTO } from "../src/features/users/application/queries/dto/input-dto/user-input-dto";
 import { AUTH_PATH, LOGIN_PATH, USERS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
-import { ioc } from "../src/composition-root";
+import { container } from "../src/composition-root";
 import { NodemailerService } from "../src/features/auth/adapters/email-service/nodemailer-service";
 
-const nodemailerService = ioc.getInstance<NodemailerService>(NodemailerService);
+const nodemailerService = container.get(NodemailerService);
 
 describe("auth tests", () => {
   const app = express();

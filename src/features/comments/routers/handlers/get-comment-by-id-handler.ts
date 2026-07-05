@@ -1,11 +1,9 @@
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
 import { CommentsQueryRepository } from "../../repositories/commentsQueryRepository";
 
-const commentsQueryRepository = ioc.getInstance<CommentsQueryRepository>(
-  CommentsQueryRepository,
-);
+const commentsQueryRepository = container.get(CommentsQueryRepository);
 
 export async function getCommentByIdHandler(req: Request, res: Response) {
   const comment = await commentsQueryRepository.getCommentById(req.params.id);

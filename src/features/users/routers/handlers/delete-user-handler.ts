@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { UserRepository } from "../../repositories/user-repository-mongodb";
 
-const userRepository = ioc.getInstance<UserRepository>(UserRepository);
+const userRepository = container.get(UserRepository);
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 
 export async function deleteUserHandler(req: Request, res: Response) {

@@ -3,10 +3,10 @@ import { Result } from "../../../../core/result/resultType";
 import { resultCodeToHttpException } from "../../../../core/result/resultCodeToHttpException";
 import { ResultStatus } from "../../../../core/result/resultCode";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { CommentService } from "../../application/command-service/comment-service";
 
-const commentService = ioc.getInstance<CommentService>(CommentService);
+const commentService = container.get(CommentService);
 
 export async function deleteCommentByIdHandler(req: Request, res: Response) {
   const result: Result = await commentService.deleteComment(

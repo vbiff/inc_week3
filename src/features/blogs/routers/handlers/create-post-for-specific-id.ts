@@ -1,16 +1,14 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { ioc } from "../../../../composition-root";
+import { container } from "../../../../composition-root";
 import { ObjectId } from "mongodb";
 import { PostsService } from "../../../posts/application/command-services/posts-services";
 import { BlogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
 import { PostsQueryRepository } from "../../../posts/repositories/posts.mongodb-query-repository";
 
-const postsService = ioc.getInstance<PostsService>(PostsService);
-const blogsQueryRepository =
-  ioc.getInstance<BlogsQueryRepository>(BlogsQueryRepository);
-const postsQueryRepository =
-  ioc.getInstance<PostsQueryRepository>(PostsQueryRepository);
+const postsService = container.get(PostsService);
+const blogsQueryRepository = container.get(BlogsQueryRepository);
+const postsQueryRepository = container.get(PostsQueryRepository);
 
 export async function createPostForSpecificBlogIdHandler(
   req: Request,

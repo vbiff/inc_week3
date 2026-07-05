@@ -2,7 +2,9 @@ import { BlogInputDto } from "../application/queries/dto/input-dto/blog_input_dt
 import { blogCollection } from "../../../db/mongo.db";
 import { ObjectId } from "mongodb";
 import { blogCreateDto } from "../application/command-services/dto/blog-create-dto";
+import { injectable } from "inversify";
 
+@injectable()
 export class BlogsRepository {
   async createBlog(inputBlog: blogCreateDto): Promise<string> {
     const blogId = await blogCollection.insertOne(inputBlog);

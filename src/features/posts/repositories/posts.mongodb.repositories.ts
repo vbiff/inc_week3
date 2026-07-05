@@ -2,7 +2,9 @@ import { PostInputDTO } from "../application/queries/dto/input-dto/post-input-dt
 import { blogCollection, postsCollection } from "../../../db/mongo.db";
 import { ObjectId } from "mongodb";
 import { PostCreateDto } from "../application/command-services/dto/post-create-dto";
+import { injectable } from "inversify";
 
+@injectable()
 export class PostsRepository {
   async createPost(inputPost: PostCreateDto): Promise<ObjectId> {
     const postId = await postsCollection.insertOne(inputPost);

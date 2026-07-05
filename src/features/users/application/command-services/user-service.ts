@@ -1,11 +1,13 @@
 import { UserInputDTO } from "../queries/dto/input-dto/user-input-dto";
 import { UserRepository } from "../../repositories/user-repository-mongodb";
 import { Argon2Service } from "../../../auth/adapters/argon2-service";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class UserService {
   constructor(
-    private userRepository: UserRepository,
-    private argon2Service: Argon2Service,
+    @inject(UserRepository) private userRepository: UserRepository,
+    @inject(Argon2Service) private argon2Service: Argon2Service,
   ) {}
 
   async createUser(dto: UserInputDTO): Promise<string | null> {
