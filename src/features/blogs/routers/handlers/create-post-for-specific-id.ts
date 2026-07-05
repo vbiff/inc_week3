@@ -1,7 +1,16 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { postsService, blogsQueryRepository, postsQueryRepository } from "../../../../composition-root";
+import { ioc } from "../../../../composition-root";
 import { ObjectId } from "mongodb";
+import { PostsService } from "../../../posts/application/command-services/posts-services";
+import { BlogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
+import { PostsQueryRepository } from "../../../posts/repositories/posts.mongodb-query-repository";
+
+const postsService = ioc.getInstance<PostsService>(PostsService);
+const blogsQueryRepository =
+  ioc.getInstance<BlogsQueryRepository>(BlogsQueryRepository);
+const postsQueryRepository =
+  ioc.getInstance<PostsQueryRepository>(PostsQueryRepository);
 
 export async function createPostForSpecificBlogIdHandler(
   req: Request,

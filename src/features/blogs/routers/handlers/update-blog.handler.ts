@@ -1,6 +1,9 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { blogsService } from "../../../../composition-root";
+import { ioc } from "../../../../composition-root";
+import { BlogsService } from "../../application/command-services/blogs-services";
+
+const blogsService = ioc.getInstance<BlogsService>(BlogsService);
 
 export async function updateBlogHandler(req: Request, res: Response) {
   const blog = await blogsService.updateBlog(req.body, req.params.id);

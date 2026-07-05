@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { HttpStatuses } from "../../types/http-statuses";
-import { jwtService, deviceRepository } from "../../../composition-root";
+import { ioc } from "../../../composition-root";
+import { JwtService } from "../../../features/auth/adapters/jwt-service";
+import { DeviceRepository } from "../../../features/security/repository/device-repository";
+
+const jwtService = ioc.getInstance<JwtService>(JwtService);
+const deviceRepository = ioc.getInstance<DeviceRepository>(DeviceRepository);
 
 export const refreshTokenGuardMiddleware = async (
   req: Request,

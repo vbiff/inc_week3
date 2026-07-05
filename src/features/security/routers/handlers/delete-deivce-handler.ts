@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { deviceRepository } from "../../../../composition-root";
+import { ioc } from "../../../../composition-root";
+import { DeviceRepository } from "../../repository/device-repository";
+
+const deviceRepository = ioc.getInstance<DeviceRepository>(DeviceRepository);
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 
 export async function deleteDeivceHandler(

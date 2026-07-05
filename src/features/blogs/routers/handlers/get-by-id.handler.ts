@@ -1,6 +1,10 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { blogsQueryRepository } from "../../../../composition-root";
+import { ioc } from "../../../../composition-root";
+import { BlogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
+
+const blogsQueryRepository =
+  ioc.getInstance<BlogsQueryRepository>(BlogsQueryRepository);
 
 export async function getBlogById(req: Request, res: Response) {
   const blog = await blogsQueryRepository.findByObjectId(req.params.id);

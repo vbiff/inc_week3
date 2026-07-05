@@ -1,7 +1,20 @@
 import { Request, Response } from "express";
 import { PostView } from "../../application/queries/dto/output-dto/posts-view";
-import { postsQueryRepository, commentService, commentsQueryRepository, userQueryRepository } from "../../../../composition-root";
+import { ioc } from "../../../../composition-root";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
+import { PostsQueryRepository } from "../../repositories/posts.mongodb-query-repository";
+import { CommentService } from "../../../comments/application/command-service/comment-service";
+import { CommentsQueryRepository } from "../../../comments/repositories/commentsQueryRepository";
+import { UserQueryRepository } from "../../../users/repositories/user-query-repository-mongodb";
+
+const postsQueryRepository =
+  ioc.getInstance<PostsQueryRepository>(PostsQueryRepository);
+const commentService = ioc.getInstance<CommentService>(CommentService);
+const commentsQueryRepository = ioc.getInstance<CommentsQueryRepository>(
+  CommentsQueryRepository,
+);
+const userQueryRepository =
+  ioc.getInstance<UserQueryRepository>(UserQueryRepository);
 
 export async function createCommentHandler(req: Request, res: Response) {
   // 1 check if post exists with postId by query repo

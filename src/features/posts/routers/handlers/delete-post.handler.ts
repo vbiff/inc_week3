@@ -1,7 +1,10 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { createErrorMessage } from "../../../../core/utils/error.utils";
 import { Response, Request } from "express";
-import { postsService } from "../../../../composition-root";
+import { ioc } from "../../../../composition-root";
+import { PostsService } from "../../application/command-services/posts-services";
+
+const postsService = ioc.getInstance<PostsService>(PostsService);
 
 export async function deletePostHandler(req: Request, res: Response) {
   const isDeleted = await postsService.deletePost(req.params.id);
