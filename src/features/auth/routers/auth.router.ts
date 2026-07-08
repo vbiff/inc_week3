@@ -1,24 +1,39 @@
 import { Router } from "express";
-import { loginAuthHandler } from "./handlers/login-auth-handler";
+import { LoginAuthHandler } from "./handlers/login-auth-handler";
 import { loginAuthValidator } from "../validation/login-input-auth-validator";
 import { LOGIN_PATH } from "../../../core/paths/paths";
 import { accessTokenGuardMiddleware } from "../../../core/middlewares/auth/access-token-guard";
-import { meAuthHandler } from "./handlers/me-auth-handler";
+import { MeAuthHandler } from "./handlers/me-auth-handler";
 import { registrationAuthValidator } from "../validation/registartion-input-validation";
 import { validationResultMiddleware } from "../../../core/middlewares/validation/validation-result-middleware";
-import { registrationAuthHandler } from "./handlers/registration-auth-handler";
+import { RegistrationAuthHandler } from "./handlers/registration-auth-handler";
 import { registrationEmailResendingAuthValidator } from "../validation/registration-email-resending-validation";
-import { registrationEmailResendingHandler } from "./handlers/registration-email-resending-handler";
-import { registrationConfirmationHandler } from "./handlers/registration-confirmation-handler";
-import { refreshTokenHandler } from "./handlers/refresh-token-handler";
+import { RegistrationEmailResendingHandler } from "./handlers/registration-email-resending-handler";
+import { RegistrationConfirmationHandler } from "./handlers/registration-confirmation-handler";
+import { RefreshTokenHandler } from "./handlers/refresh-token-handler";
 import { validateCookie } from "../validation/cookie-validator";
-import { logoutHandler } from "./handlers/logout-handler";
+import { LogoutHandler } from "./handlers/logout-handler";
 import { refreshTokenGuardMiddleware } from "../../../core/middlewares/auth/refresh-token-guard";
 import { rateLimitMiddleware } from "../../../core/middlewares/rate-limit/rate-limit-middleware";
 import { passwordRecoveryValidator } from "../validation/password-recovery-validator";
-import { passwordRecoveryHandler } from "./handlers/password-recovery-handler";
+import { PasswordRecoveryHandler } from "./handlers/password-recovery-handler";
 import { newPasswordInputValidator } from "../validation/new-password-validator";
-import { newPasswordHandler } from "./handlers/new-password-handler";
+import { NewPasswordHandler } from "./handlers/new-password-handler";
+import { container } from "../../../composition-root";
+
+const loginAuthHandler = container.get(LoginAuthHandler);
+const meAuthHandler = container.get(MeAuthHandler);
+const registrationAuthHandler = container.get(RegistrationAuthHandler);
+const registrationEmailResendingHandler = container.get(
+  RegistrationEmailResendingHandler,
+);
+const registrationConfirmationHandler = container.get(
+  RegistrationConfirmationHandler,
+);
+const refreshTokenHandler = container.get(RefreshTokenHandler);
+const logoutHandler = container.get(LogoutHandler);
+const passwordRecoveryHandler = container.get(PasswordRecoveryHandler);
+const newPasswordHandler = container.get(NewPasswordHandler);
 
 export const authRouter = Router();
 
@@ -26,23 +41,27 @@ authRouter.post(
   LOGIN_PATH,
   rateLimitMiddleware,
   loginAuthValidator,
-  loginAuthHandler,
+  loginAuthHandler.loginAuthHandler,
 );
 
-authRouter.get("/me", accessTokenGuardMiddleware, meAuthHandler);
+authRouter.get(
+  "/me",
+  accessTokenGuardMiddleware,
+  meAuthHandler.meAuthHandler,
+);
 
 authRouter.post(
   "/refresh-token",
   validateCookie,
   refreshTokenGuardMiddleware,
-  refreshTokenHandler,
+  refreshTokenHandler.refreshTokenHandler,
 );
 
 authRouter.post(
   "/logout",
   validateCookie,
   refreshTokenGuardMiddleware,
-  logoutHandler,
+  logoutHandler.logoutHandler,
 );
 
 authRouter.post(
@@ -51,7 +70,7 @@ authRouter.post(
   registrationAuthValidator,
 
   validationResultMiddleware,
-  registrationAuthHandler,
+  registrationAuthHandler.registrationAuthHandler,
 );
 
 authRouter.post(
@@ -59,13 +78,13 @@ authRouter.post(
   rateLimitMiddleware,
   registrationEmailResendingAuthValidator,
   validationResultMiddleware,
-  registrationEmailResendingHandler,
+  registrationEmailResendingHandler.registrationEmailResendingHandler,
 );
 
 authRouter.post(
   "/registration-confirmation",
   rateLimitMiddleware,
-  registrationConfirmationHandler,
+  registrationConfirmationHandler.registrationConfirmationHandler,
 );
 
 authRouter.post(
@@ -73,7 +92,7 @@ authRouter.post(
   rateLimitMiddleware,
   passwordRecoveryValidator,
   validationResultMiddleware,
-  passwordRecoveryHandler,
+  passwordRecoveryHandler.passwordRecoveryHandler,
 );
 
 authRouter.post(
@@ -81,5 +100,5 @@ authRouter.post(
   rateLimitMiddleware,
   newPasswordInputValidator,
   validationResultMiddleware,
-  newPasswordHandler,
+  newPasswordHandler.newPasswordHandler,
 );

@@ -1,17 +1,21 @@
 import { Request, Response } from "express";
 import { HttpStatuses } from "../../../../core/types/http-statuses";
-import { container } from "../../../../composition-root";
 import { UserQueryRepository } from "../../../users/repositories/user-query-repository-mongodb";
+import { inject, injectable } from "inversify";
 
-const userQueryRepository = container.get(UserQueryRepository);
+@injectable()
+export class MeAuthHandler {
+  constructor(
+    @inject(UserQueryRepository) private userQueryRepository: UserQueryRepository,
+  ) {}
+  meAuthHandler = async (req: Request, res: Response) => {
+    const userId = req.user!.id;
 
-export const meAuthHandler = async (req: Request, res: Response) => {
-  const userId = req.user!.id;
+    if (!userId) {
+      res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
+    }
+    const me = await this.userQueryRepository.findUserByIdForMe(userId);
 
-  if (!userId) {
-    res.sendStatus(HttpStatuses.UNAUTHORIZED_401);
-  }
-  const me = await userQueryRepository.findUserByIdForMe(userId);
-
-  res.status(HttpStatuses.OK_200).send(me);
-};
+    res.status(HttpStatuses.OK_200).send(me);
+  };
+}

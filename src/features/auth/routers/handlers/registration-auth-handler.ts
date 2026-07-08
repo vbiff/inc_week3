@@ -1,24 +1,26 @@
 import { Request, Response } from "express";
-import { container } from "../../../../composition-root";
 import { AuthService } from "../../application/command-services/auth-service";
-
-const authService = container.get(AuthService);
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { ResultStatus } from "../../../../core/result/resultCode";
 import { resultCodeToHttpException } from "../../../../core/result/resultCodeToHttpException";
+import { inject, injectable } from "inversify";
 
-export async function registrationAuthHandler(
-  req: Request,
-  res: Response,
-): Promise<void> {
-  const result = await authService.registerUser(req.body);
+@injectable()
+export class RegistrationAuthHandler {
+  constructor(@inject(AuthService) private authService: AuthService) {}
+  registrationAuthHandler = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    const result = await this.authService.registerUser(req.body);
 
-  if (result.status !== ResultStatus.Success) {
-    res
-      .status(resultCodeToHttpException(result.status))
-      .send({ errorsMessages: result.extensions });
-    return;
-  }
+    if (result.status !== ResultStatus.Success) {
+      res
+        .status(resultCodeToHttpException(result.status))
+        .send({ errorsMessages: result.extensions });
+      return;
+    }
 
-  res.sendStatus(HttpStatuses.NO_CONTENT_204);
+    res.sendStatus(HttpStatuses.NO_CONTENT_204);
+  };
 }

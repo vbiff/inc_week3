@@ -1,16 +1,19 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { container } from "../../../../composition-root";
 import { PostsService } from "../../application/command-services/posts-services";
+import { inject, injectable } from "inversify";
 
-const postsService = container.get(PostsService);
+@injectable()
+export class UpdatePostHandler {
+  constructor(@inject(PostsService) private postsService: PostsService) {}
 
-export async function updatePostHandler(req: Request, res: Response) {
-  const result = await postsService.updatePost(req.body, req.params.id);
-  if (result === null) {
-    res.sendStatus(HttpStatuses.NOT_FOUND_404);
-    return;
-  }
+  updatePostHandler = async (req: Request, res: Response) => {
+    const result = await this.postsService.updatePost(req.body, req.params.id);
+    if (result === null) {
+      res.sendStatus(HttpStatuses.NOT_FOUND_404);
+      return;
+    }
 
-  res.sendStatus(HttpStatuses.NO_CONTENT_204);
+    res.sendStatus(HttpStatuses.NO_CONTENT_204);
+  };
 }

@@ -1,15 +1,20 @@
 import { Request, Response } from "express";
 import { PaginationAndSortingReq } from "../../../../core/types/pagination-and-sorting-req";
-import { container } from "../../../../composition-root";
 import { queryInputDtoHelper } from "../../../../core/helpers/query.input.dto.helper";
 import { BlogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
+import { inject, injectable } from "inversify";
 
-const blogsQueryRepository = container.get(BlogsQueryRepository);
+@injectable()
+export class GetAllBlogsHandler {
+  constructor(
+    @inject(BlogsQueryRepository) private blogsQueryRepository: BlogsQueryRepository,
+  ) {}
 
-export async function getAllBlogsHandler(req: Request, res: Response) {
-  const queryInput: PaginationAndSortingReq = queryInputDtoHelper(req);
+  getAllBlogsHandler = async (req: Request, res: Response) => {
+    const queryInput: PaginationAndSortingReq = queryInputDtoHelper(req);
 
-  const blogs = await blogsQueryRepository.findAll(queryInput);
+    const blogs = await this.blogsQueryRepository.findAll(queryInput);
 
-  res.send(blogs);
+    res.send(blogs);
+  };
 }

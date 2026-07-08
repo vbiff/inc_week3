@@ -1,25 +1,30 @@
 import { Request, Response } from "express";
-import { container } from "../../../../composition-root";
+import { inject, injectable } from "inversify";
 import { DeviceRepository } from "../../repository/device-repository";
-
-const deviceRepository = container.get(DeviceRepository);
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { deviceViewMapper } from "../../mappers/device-view-mapper";
 
-export async function getAllActiveDevicesHandler(
-  req: Request,
-  res: Response,
-): Promise<void> {
-  const allActiveDevices = await deviceRepository.findAllDevicesByUserId(
-    req.user!.id,
-  );
+@injectable()
+export class GetAllActiveDevicesHandler {
+  constructor(
+    @inject(DeviceRepository) private deviceRepository: DeviceRepository,
+  ) {}
 
-  if (!allActiveDevices) {
-    res.sendStatus(HttpStatuses.NOT_FOUND_404);
-    return;
-  }
+  getAllActiveDevicesHandler = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    const allActiveDevices = await this.deviceRepository.findAllDevicesByUserId(
+      req.user!.id,
+    );
 
-  const result = allActiveDevices.map((d) => deviceViewMapper(d));
+    if (!allActiveDevices) {
+      res.sendStatus(HttpStatuses.NOT_FOUND_404);
+      return;
+    }
 
-  res.status(HttpStatuses.OK_200).send(result);
+    const result = allActiveDevices.map((d) => deviceViewMapper(d));
+
+    res.status(HttpStatuses.OK_200).send(result);
+  };
 }

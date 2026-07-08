@@ -1,15 +1,18 @@
 import { Request, Response } from "express";
-import { container } from "../../../../composition-root";
 import { UserRepository } from "../../repositories/user-repository-mongodb";
-
-const userRepository = container.get(UserRepository);
 import { HttpStatuses } from "../../../../core/types/http-statuses";
+import { inject, injectable } from "inversify";
 
-export async function deleteUserHandler(req: Request, res: Response) {
-  const isDeleted = await userRepository.deleteUser(req.params.id);
+@injectable()
+export class DeleteUserHandler {
+  constructor(@inject(UserRepository) private userRepository: UserRepository) {}
 
-  if (!isDeleted) {
-    res.sendStatus(HttpStatuses.NOT_FOUND_404);
-  }
-  res.sendStatus(HttpStatuses.NO_CONTENT_204);
+  deleteUserHandler = async (req: Request, res: Response) => {
+    const isDeleted = await this.userRepository.deleteUser(req.params.id);
+
+    if (!isDeleted) {
+      res.sendStatus(HttpStatuses.NOT_FOUND_404);
+    }
+    res.sendStatus(HttpStatuses.NO_CONTENT_204);
+  };
 }

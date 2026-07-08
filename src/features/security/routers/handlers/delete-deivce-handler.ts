@@ -1,27 +1,31 @@
 import { Request, Response } from "express";
-import { container } from "../../../../composition-root";
+import { inject, injectable } from "inversify";
 import { DeviceRepository } from "../../repository/device-repository";
-
-const deviceRepository = container.get(DeviceRepository);
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 
-export async function deleteDeivceHandler(
-  req: Request,
-  res: Response,
-): Promise<void> {
-  const device = await deviceRepository.findDeviceById(req.params.deviceId);
+@injectable()
+export class DeleteDeivceHandler {
+  constructor(
+    @inject(DeviceRepository) private deviceRepository: DeviceRepository,
+  ) {}
 
-  if (!device) {
-    res.sendStatus(HttpStatuses.NOT_FOUND_404);
-    return;
-  }
+  deleteDeivceHandler = async (req: Request, res: Response): Promise<void> => {
+    const device = await this.deviceRepository.findDeviceById(
+      req.params.deviceId,
+    );
 
-  if (device.userId !== req.user!.id) {
-    res.sendStatus(HttpStatuses.FORBIDDEN_403);
-    return;
-  }
+    if (!device) {
+      res.sendStatus(HttpStatuses.NOT_FOUND_404);
+      return;
+    }
 
-  await deviceRepository.deleteDevice(req.params.deviceId);
+    if (device.userId !== req.user!.id) {
+      res.sendStatus(HttpStatuses.FORBIDDEN_403);
+      return;
+    }
 
-  res.sendStatus(HttpStatuses.NO_CONTENT_204);
+    await this.deviceRepository.deleteDevice(req.params.deviceId);
+
+    res.sendStatus(HttpStatuses.NO_CONTENT_204);
+  };
 }

@@ -1,16 +1,21 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { container } from "../../../../composition-root";
 import { BlogsQueryRepository } from "../../repositories/blogs.query-mongodb.repositories";
+import { inject, injectable } from "inversify";
 
-const blogsQueryRepository = container.get(BlogsQueryRepository);
+@injectable()
+export class GetBlogByIdHandler {
+  constructor(
+    @inject(BlogsQueryRepository) private blogsQueryRepository: BlogsQueryRepository,
+  ) {}
 
-export async function getBlogById(req: Request, res: Response) {
-  const blog = await blogsQueryRepository.findByObjectId(req.params.id);
-  if (!blog) {
-    res.sendStatus(HttpStatuses.NOT_FOUND_404);
-    return;
-  }
+  getBlogById = async (req: Request, res: Response) => {
+    const blog = await this.blogsQueryRepository.findByObjectId(req.params.id);
+    if (!blog) {
+      res.sendStatus(HttpStatuses.NOT_FOUND_404);
+      return;
+    }
 
-  res.status(HttpStatuses.OK_200).send(blog);
+    res.status(HttpStatuses.OK_200).send(blog);
+  };
 }

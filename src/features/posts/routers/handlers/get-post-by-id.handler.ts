@@ -1,20 +1,25 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { Request, Response } from "express";
-import { container } from "../../../../composition-root";
 import { PostView } from "../../application/queries/dto/output-dto/posts-view";
 import { PostsQueryRepository } from "../../repositories/posts.mongodb-query-repository";
+import { inject, injectable } from "inversify";
 
-const postsQueryRepository = container.get(PostsQueryRepository);
+@injectable()
+export class GetPostByIdHandler {
+  constructor(
+    @inject(PostsQueryRepository) private postsQueryRepository: PostsQueryRepository,
+  ) {}
 
-export async function getPostById(req: Request, res: Response) {
-  const post: PostView | null = await postsQueryRepository.findByObjectId(
-    req.params.id,
-  );
+  getPostById = async (req: Request, res: Response) => {
+    const post: PostView | null = await this.postsQueryRepository.findByObjectId(
+      req.params.id,
+    );
 
-  if (!post) {
-    res.sendStatus(HttpStatuses.NOT_FOUND_404);
-    return;
-  }
+    if (!post) {
+      res.sendStatus(HttpStatuses.NOT_FOUND_404);
+      return;
+    }
 
-  res.status(HttpStatuses.OK_200).send(post);
+    res.status(HttpStatuses.OK_200).send(post);
+  };
 }

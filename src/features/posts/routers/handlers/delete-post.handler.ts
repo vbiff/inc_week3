@@ -1,19 +1,22 @@
 import { HttpStatuses } from "../../../../core/types/http-statuses";
 import { createErrorMessage } from "../../../../core/utils/error.utils";
 import { Response, Request } from "express";
-import { container } from "../../../../composition-root";
 import { PostsService } from "../../application/command-services/posts-services";
+import { inject, injectable } from "inversify";
 
-const postsService = container.get(PostsService);
+@injectable()
+export class DeletePostHandler {
+  constructor(@inject(PostsService) private postsService: PostsService) {}
 
-export async function deletePostHandler(req: Request, res: Response) {
-  const isDeleted = await postsService.deletePost(req.params.id);
-  if (!isDeleted) {
-    res
-      .status(HttpStatuses.NOT_FOUND_404)
-      .send(createErrorMessage([{ field: "id", message: "blog not found" }]));
-    return;
-  }
+  deletePostHandler = async (req: Request, res: Response) => {
+    const isDeleted = await this.postsService.deletePost(req.params.id);
+    if (!isDeleted) {
+      res
+        .status(HttpStatuses.NOT_FOUND_404)
+        .send(createErrorMessage([{ field: "id", message: "blog not found" }]));
+      return;
+    }
 
-  res.sendStatus(HttpStatuses.NO_CONTENT_204);
+    res.sendStatus(HttpStatuses.NO_CONTENT_204);
+  };
 }
