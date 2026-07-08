@@ -8,6 +8,7 @@ import { AUTH_PATH, LOGIN_PATH, USERS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import { container } from "../src/composition-root";
 import { NodemailerService } from "../src/features/auth/adapters/email-service/nodemailer-service";
+import mongoose from "mongoose";
 
 const nodemailerService = container.get(NodemailerService);
 
@@ -35,6 +36,7 @@ describe("auth tests", () => {
     await request(app)
       .delete("/testing/all-data")
       .expect(HttpStatuses.NO_CONTENT_204);
+    await mongoose.disconnect();
     await client.close();
   });
 

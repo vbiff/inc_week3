@@ -6,6 +6,7 @@ import { client, runDb } from "../src/db/mongo.db";
 import { BlogInputDto } from "../src/features/blogs/application/queries/dto/input-dto/blog_input_dto";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import { BLOGS_PATH } from "../src/core/paths/paths";
+import mongoose from "mongoose";
 
 describe("Test for CRUD blogs", () => {
   const app = express();
@@ -21,6 +22,7 @@ describe("Test for CRUD blogs", () => {
   });
 
   afterAll(async () => {
+    await mongoose.disconnect();
     await client.close();
   });
 

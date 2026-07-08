@@ -1,12 +1,12 @@
-import { blogCreateDto } from "../application/command-services/dto/blog-create-dto";
-import { Filter, ObjectId, WithId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { PaginationAndSortingReq } from "../../../core/types/pagination-and-sorting-req";
 import { BlogView } from "../application/queries/dto/output-dto/blog-view";
 import { mapBlogs } from "../mappers/mapper-blogs-output";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
 import { OutputDtoBlogs } from "../application/queries/dto/output-dto/output-dto-blogs";
-import { blogCollection } from "../../../db/mongo.db";
 import { injectable } from "inversify";
+import { BlogEntity, BlogModel } from "../domain/blog_entity";
+import { QueryFilter } from "mongoose";
 
 @injectable()
 export class BlogsQueryRepository {
@@ -14,24 +14,21 @@ export class BlogsQueryRepository {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
     const skip: number = (pageNumber - 1) * pageSize;
-    const filter: Filter<blogCreateDto> = {};
+    const filter: QueryFilter<BlogEntity> = {};
 
     if (searchNameTerm) {
-      filter.$or = [];
-      filter.$or.push({ name: { $regex: searchNameTerm, $options: "i" } });
+      filter.name = { $regex: searchNameTerm, $options: "i" };
     }
 
-    const items = await blogCollection
-      .find(filter)
+    const items = await BlogModel.find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
-      .limit(pageSize)
-      .toArray();
+      .limit(pageSize);
 
-    const totalCount = await blogCollection.countDocuments(filter);
+    const totalCount = await BlogModel.countDocuments(filter);
 
     const mappedItems: BlogView[] = items.map(
-      (item: WithId<blogCreateDto>): BlogView => mapBlogs(item),
+      (item): BlogView => mapBlogs(item),
     );
 
     return mapperOutput(mappedItems, {
@@ -43,7 +40,7 @@ export class BlogsQueryRepository {
   }
 
   async findByObjectId(id: string): Promise<BlogView | null> {
-    const blog = await blogCollection.findOne({ _id: new ObjectId(id) });
+    const blog = await BlogModel.findOne({ _id: new ObjectId(id) });
     if (!blog) return null;
     return mapBlogs(blog);
   }

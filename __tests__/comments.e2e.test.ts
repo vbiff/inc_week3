@@ -15,6 +15,7 @@ import {
 import { PostInputDTO } from "../src/features/posts/application/queries/dto/input-dto/post-input-dto";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import { UserInputDTO } from "../src/features/users/application/queries/dto/input-dto/user-input-dto";
+import mongoose from "mongoose";
 
 describe("comments", () => {
   const app = express();
@@ -30,6 +31,7 @@ describe("comments", () => {
   });
 
   afterAll(async () => {
+    await mongoose.disconnect();
     await client.close();
   });
 

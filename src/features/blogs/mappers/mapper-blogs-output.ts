@@ -1,8 +1,7 @@
 import { BlogView } from "../application/queries/dto/output-dto/blog-view";
-import { WithId } from "mongodb";
-import { blogCreateDto } from "../application/command-services/dto/blog-create-dto";
+import { BlogDocument } from "../domain/blog_entity";
 
-export function mapBlogs(blogs: WithId<blogCreateDto>): BlogView {
+export function mapBlogs(blogs: BlogDocument): BlogView {
   return {
     id: blogs._id.toString(),
     name: blogs.name,

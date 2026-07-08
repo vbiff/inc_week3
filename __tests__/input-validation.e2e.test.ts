@@ -6,6 +6,7 @@ import { client, runDb } from "../src/db/mongo.db";
 import { BLOGS_PATH, POSTS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import { HttpStatuses } from "../src/core/types/http-statuses";
+import mongoose from "mongoose";
 
 describe("InputValidation", () => {
   const app = express();
@@ -21,6 +22,7 @@ describe("InputValidation", () => {
   });
 
   afterAll(async () => {
+    await mongoose.disconnect();
     await client.close();
   });
 

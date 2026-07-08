@@ -3,6 +3,7 @@ import express from "express";
 import { setupApp } from "../src/setup-app";
 import { HttpStatuses } from "../src/core/types/http-statuses";
 import { client, runDb } from "../src/db/mongo.db";
+import mongoose from "mongoose";
 
 describe("Testing API", () => {
   const app = express();
@@ -13,6 +14,7 @@ describe("Testing API", () => {
   });
 
   afterAll(async () => {
+    await mongoose.disconnect();
     await client.close();
   });
 

@@ -1,8 +1,9 @@
 import { PostInputDTO } from "../application/queries/dto/input-dto/post-input-dto";
-import { blogCollection, postsCollection } from "../../../db/mongo.db";
+import { postsCollection } from "../../../db/mongo.db";
 import { ObjectId } from "mongodb";
 import { PostCreateDto } from "../application/command-services/dto/post-create-dto";
 import { injectable } from "inversify";
+import { BlogModel } from "../../blogs/domain/blog_entity";
 
 @injectable()
 export class PostsRepository {
@@ -12,8 +13,7 @@ export class PostsRepository {
   }
 
   async updatePost(dto: PostInputDTO, id: string): Promise<void | null> {
-    console.log(dto.blogId);
-    const blog = await blogCollection.findOne({
+    const blog = await BlogModel.findOne({
       _id: new ObjectId(dto.blogId),
     });
     if (!blog) {

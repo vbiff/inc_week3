@@ -9,12 +9,7 @@ export class BlogsService {
   ) {}
 
   async createBlog(inputBlog: BlogInputDto): Promise<string | null> {
-    const newBlog = {
-      ...inputBlog,
-      createdAt: new Date().toISOString(),
-      isMembership: false,
-    };
-    return await this.blogsRepository.createBlog(newBlog);
+    return await this.blogsRepository.createBlog(inputBlog);
   }
 
   async updateBlog(dto: BlogInputDto, id: string): Promise<void | null> {
