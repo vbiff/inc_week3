@@ -1,6 +1,5 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-import { CommentCreateDto } from "../features/comments/application/command-service/dto/comment-create-dto";
 import { AppConfig } from "../core/config/config";
 import { UserCreateDto } from "../features/users/application/command-services/dto/user-create-dto";
 import { RefreshTokenDTO } from "../features/auth/application/command-services/dto/refresh-token-dto";
@@ -18,9 +17,6 @@ const dbName = "blogger";
 export const usersCollection = client
   .db(dbName)
   .collection<UserCreateDto>("users");
-export const commentsCollection = client
-  .db(dbName)
-  .collection<CommentCreateDto>("comments");
 export const refreshTokensCollection = client
   .db(dbName)
   .collection<RefreshTokenDTO>("refreshTokens");

@@ -2,21 +2,18 @@ import { Router, Request, Response } from "express";
 import { HttpStatuses } from "../../core/types/http-statuses";
 import { client } from "../../db/mongo.db";
 import { UserView } from "../../features/users/application/queries/dto/output-dto/user-view";
-import { CommentCreateDto } from "../../features/comments/application/command-service/dto/comment-create-dto";
 import { DeviceDTO } from "../../features/security/application/dto/device-dto";
 import { BlogModel } from "../../features/blogs/domain/blog_entity";
 import { PostModel } from "../../features/posts/domain/post_entity";
+import { CommentModel } from "../../features/comments/domain/comment_entity";
 
 export const testingRouter: Router = Router({});
 
 testingRouter.delete("/all-data", async (req: Request, res: Response) => {
   await BlogModel.deleteMany();
   await PostModel.deleteMany();
+  await CommentModel.deleteMany();
   await client.db("blogger").collection<UserView>("users").deleteMany({});
-  await client
-    .db("blogger")
-    .collection<CommentCreateDto>("comments")
-    .deleteMany({});
   await client.db("blogger").collection<DeviceDTO>("devices").deleteMany({});
   await client
     .db("blogger")

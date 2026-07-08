@@ -1,9 +1,8 @@
-import { CommentCreateDto } from "../application/command-service/dto/comment-create-dto";
-import { WithId } from "mongodb";
 import { CommentOutputResultDto } from "../application/queries/dto/output-dto/output-result-dto";
+import { CommentDocument } from "../domain/comment_entity";
 
 export const mapperToCommentOutputResDto = (
-  rawComment: WithId<CommentCreateDto>,
+  rawComment: CommentDocument,
 ): CommentOutputResultDto => {
   return {
     id: rawComment._id.toString(),
