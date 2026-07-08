@@ -1,8 +1,8 @@
-import { commentsCollection, postsCollection } from "../../../db/mongo.db";
-import { ObjectId, WithId } from "mongodb";
+import { commentsCollection } from "../../../db/mongo.db";
+import { PostModel } from "../../posts/domain/post_entity";
+import { ObjectId } from "mongodb";
 import { mapperToCommentOutputResDto } from "../mappers/mapper-to-comment-output-res-dto";
 import { ResultCommentsOutputDto } from "../../posts/application/queries/dto/output-dto/result-comments-output-dto";
-import { PostCreateDto } from "../../posts/application/command-services/dto/post-create-dto";
 import { PaginationAndSortingReq } from "../../../core/types/pagination-and-sorting-req";
 import { getSkipNumber } from "../../../core/utils/skip";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
@@ -24,9 +24,7 @@ export class CommentsQueryRepository {
     postId: string,
     queryInput: PaginationAndSortingReq,
   ): Promise<ResultCommentsOutputDto | null> {
-    const post: WithId<PostCreateDto> | null = await postsCollection.findOne({
-      _id: new ObjectId(postId),
-    });
+    const post = await PostModel.findById(postId);
     if (!post) {
       return null;
     }

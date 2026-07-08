@@ -1,15 +1,14 @@
-import { PostCreateDto } from "../application/command-services/dto/post-create-dto";
-import { WithId } from "mongodb";
 import { PostView } from "../application/queries/dto/output-dto/posts-view";
+import { PostDocument } from "../domain/post_entity";
 
-export function mapperPost(postWithObjectId: WithId<PostCreateDto>): PostView {
+export function mapperPost(post: PostDocument): PostView {
   return {
-    id: postWithObjectId._id.toString(),
-    title: postWithObjectId.title,
-    shortDescription: postWithObjectId.shortDescription,
-    content: postWithObjectId.content,
-    blogId: postWithObjectId.blogId,
-    blogName: postWithObjectId.blogName,
-    createdAt: postWithObjectId.createdAt,
+    id: post._id.toString(),
+    title: post.title,
+    shortDescription: post.shortDescription,
+    content: post.content,
+    blogId: post.blogId,
+    blogName: post.blogName,
+    createdAt: post.createdAt,
   };
 }

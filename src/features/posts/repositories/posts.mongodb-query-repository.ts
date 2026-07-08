@@ -1,27 +1,24 @@
-import { PostCreateDto } from "../application/command-services/dto/post-create-dto";
-import { Filter, ObjectId } from "mongodb";
+import { QueryFilter } from "mongoose";
 import { PaginationAndSortingReq } from "../../../core/types/pagination-and-sorting-req";
-import { postsCollection } from "../../../db/mongo.db";
 import { PostView } from "../application/queries/dto/output-dto/posts-view";
 import { mapperPost } from "../mappers/mapper-post";
 import { mapperOutput } from "../../../core/mappers/mapper-output";
 import { ResultPostOutputDto } from "../application/queries/dto/output-dto/result-post-output-dto";
 import { getSkipNumber } from "../../../core/utils/skip";
 import { injectable } from "inversify";
+import { PostEntity, PostModel } from "../domain/post_entity";
 
 @injectable()
 export class PostsQueryRepository {
   async findAll(query: PaginationAndSortingReq): Promise<ResultPostOutputDto> {
     const { pageNumber, pageSize, sortBy, sortDirection } = query;
     const skip: number = getSkipNumber(pageNumber, pageSize);
-    const posts = await postsCollection
-      .find({})
+    const posts = await PostModel.find({})
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
-      .limit(pageSize)
-      .toArray();
+      .limit(pageSize);
 
-    const totalCount = await postsCollection.countDocuments({});
+    const totalCount = await PostModel.countDocuments({});
 
     const mappedPosts: PostView[] = posts.map((post) => mapperPost(post));
 
@@ -34,11 +31,11 @@ export class PostsQueryRepository {
   }
 
   async findByObjectId(id: string): Promise<PostView | null> {
-    const Post = await postsCollection.findOne({ _id: new ObjectId(id) });
-    if (!Post) {
+    const post = await PostModel.findById(id);
+    if (!post) {
       return null;
     }
-    return mapperPost(Post);
+    return mapperPost(post);
   }
 
   async findAllPostsByBlogId(
@@ -48,16 +45,14 @@ export class PostsQueryRepository {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryInput;
     const skip: number = getSkipNumber(pageNumber, pageSize);
 
-    const filter: Filter<PostCreateDto> = { blogId: blogId };
+    const filter: QueryFilter<PostEntity> = { blogId: blogId };
 
-    const posts = await postsCollection
-      .find(filter)
+    const posts = await PostModel.find(filter)
       .skip(skip)
       .limit(pageSize)
-      .sort({ [sortBy]: sortDirection })
-      .toArray();
+      .sort({ [sortBy]: sortDirection });
 
-    const totalCount = await postsCollection.countDocuments(filter);
+    const totalCount = await PostModel.countDocuments(filter);
 
     const mappedPosts: PostView[] = posts.map((post) => mapperPost(post));
 
