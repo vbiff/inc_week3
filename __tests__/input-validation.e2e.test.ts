@@ -2,7 +2,7 @@ import express from "express";
 import { setupApp } from "../src/setup-app";
 import { BlogInputDto } from "../src/features/blogs/application/queries/dto/input-dto/blog_input_dto";
 import request from "supertest";
-import { client, runDb } from "../src/db/mongo.db";
+import { runDb } from "../src/db/mongo.db";
 import { BLOGS_PATH, POSTS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import { HttpStatuses } from "../src/core/types/http-statuses";
@@ -23,7 +23,6 @@ describe("InputValidation", () => {
 
   afterAll(async () => {
     await mongoose.disconnect();
-    await client.close();
   });
 
   //first we need to create a blog and get blogId

@@ -2,7 +2,7 @@ import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
 import express from "express";
 import { setupApp } from "../src/setup-app";
-import { client, runDb } from "../src/db/mongo.db";
+import { runDb } from "../src/db/mongo.db";
 import { UserInputDTO } from "../src/features/users/application/queries/dto/input-dto/user-input-dto";
 import { AUTH_PATH, LOGIN_PATH, USERS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
@@ -37,7 +37,6 @@ describe("auth tests", () => {
       .delete("/testing/all-data")
       .expect(HttpStatuses.NO_CONTENT_204);
     await mongoose.disconnect();
-    await client.close();
   });
 
   //create new user

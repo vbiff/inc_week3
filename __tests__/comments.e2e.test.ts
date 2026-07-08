@@ -2,7 +2,7 @@ import express from "express";
 import { setupApp } from "../src/setup-app";
 import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
-import { client, runDb } from "../src/db/mongo.db";
+import { runDb } from "../src/db/mongo.db";
 import { BlogInputDto } from "../src/features/blogs/application/queries/dto/input-dto/blog_input_dto";
 import {
   AUTH_PATH,
@@ -32,7 +32,6 @@ describe("comments", () => {
 
   afterAll(async () => {
     await mongoose.disconnect();
-    await client.close();
   });
 
   //first we need to create a blog and get blogId

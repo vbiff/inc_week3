@@ -3,7 +3,7 @@ import { setupApp } from "../src/setup-app";
 import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
 import { UserInputDTO } from "../src/features/users/application/queries/dto/input-dto/user-input-dto";
-import { client, runDb } from "../src/db/mongo.db";
+import { runDb } from "../src/db/mongo.db";
 import { USERS_PATH } from "../src/core/paths/paths";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import mongoose from "mongoose";
@@ -23,7 +23,6 @@ describe("Test for CRUD Users", () => {
 
   afterAll(async () => {
     await mongoose.disconnect();
-    await client.close();
   });
 
   //create new user

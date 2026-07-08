@@ -3,7 +3,7 @@ import { setupApp } from "../src/setup-app";
 import request from "supertest";
 import { HttpStatuses } from "../src/core/types/http-statuses";
 import { BlogInputDto } from "../src/features/blogs/application/queries/dto/input-dto/blog_input_dto";
-import { client, runDb } from "../src/db/mongo.db";
+import { runDb } from "../src/db/mongo.db";
 import { generateBasicAuthToken } from "../src/core/utils/generate-admin-auth-token";
 import { PostInputDTO } from "../src/features/posts/application/queries/dto/input-dto/post-input-dto";
 import { BLOGS_PATH, POSTS_PATH } from "../src/core/paths/paths";
@@ -24,7 +24,6 @@ describe("Test for CRUD posts", () => {
 
   afterAll(async () => {
     await mongoose.disconnect();
-    await client.close();
   });
 
   //first we need to create a blog and get blogId

@@ -3,7 +3,7 @@ import { HttpStatuses } from "../src/core/types/http-statuses";
 import express from "express";
 import { setupApp } from "../src/setup-app";
 import { AUTH_PATH } from "../src/core/paths/paths";
-import { client, runDb } from "../src/db/mongo.db";
+import { runDb } from "../src/db/mongo.db";
 import mongoose from "mongoose";
 
 describe("rate limit tests", () => {
@@ -16,7 +16,6 @@ describe("rate limit tests", () => {
 
   afterAll(async () => {
     await mongoose.disconnect();
-    await client.close();
   });
 
   beforeEach(async () => {
