@@ -1,16 +1,13 @@
-import { refreshTokensCollection } from "../../../db/mongo.db";
+import {
+  RefreshTokenEntity,
+  RefreshTokenModel,
+} from "../domain/refresh_token_entity";
 
 export class AuthRepository {
   async isTokenInBlackList(token: string): Promise<boolean> {
     try {
-      const result = await refreshTokensCollection.findOne({
-        refreshToken: token,
-      });
-
-      if (!result) {
-        return false;
-      }
-      return true;
+      const result = await RefreshTokenModel.findOne({ refreshToken: token });
+      return !!result;
     } catch (err) {
       console.error(err);
       return false;
@@ -19,10 +16,11 @@ export class AuthRepository {
 
   async addTokenToBlackList(token: string): Promise<boolean> {
     try {
-      await refreshTokensCollection.insertOne({
+      const entry = new RefreshTokenEntity({
         refreshToken: token,
         expiresAt: new Date(Date.now() + 60000),
       });
+      await RefreshTokenModel.create(entry);
       return true;
     } catch (e) {
       console.error(e);

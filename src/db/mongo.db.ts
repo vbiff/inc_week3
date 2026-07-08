@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import { AppConfig } from "../core/config/config";
-import { RefreshTokenDTO } from "../features/auth/application/command-services/dto/refresh-token-dto";
 import mongoose from "mongoose";
 
 dotenv.config();
@@ -11,13 +10,6 @@ const mongoUri = AppConfig.MONGO_URL || "mongodb://localhost:27017";
 export const client = new MongoClient(mongoUri);
 
 const dbName = "blogger";
-
-export const refreshTokensCollection = client
-  .db(dbName)
-  .collection<RefreshTokenDTO>("refreshTokens");
-export const rateLimitCollection = client
-  .db(dbName)
-  .collection<{ ip: string; url: string; date: Date }>("rateLimit");
 
 export async function runDb(): Promise<void> {
   try {
