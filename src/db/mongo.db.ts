@@ -2,7 +2,6 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import { AppConfig } from "../core/config/config";
 import { RefreshTokenDTO } from "../features/auth/application/command-services/dto/refresh-token-dto";
-import { DeviceDTO } from "../features/security/application/dto/device-dto";
 import mongoose from "mongoose";
 
 dotenv.config();
@@ -16,9 +15,6 @@ const dbName = "blogger";
 export const refreshTokensCollection = client
   .db(dbName)
   .collection<RefreshTokenDTO>("refreshTokens");
-export const devicesCollection = client
-  .db(dbName)
-  .collection<DeviceDTO>("devices");
 export const rateLimitCollection = client
   .db(dbName)
   .collection<{ ip: string; url: string; date: Date }>("rateLimit");
