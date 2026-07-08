@@ -1,8 +1,7 @@
 import { AuthInputDTO } from "../queries/dto/auth-input-dto/auth-input-dto";
 import { Result } from "../../../../core/result/resultType";
 import { ResultStatus } from "../../../../core/result/resultCode";
-import { UserCreateByAdminDto } from "../../../users/application/command-services/dto/user-create-by-admin-dto";
-import { WithId } from "mongodb";
+import { UserDocument } from "../../../users/domain/user_entity";
 import { RegistrationInputDto } from "./dto/registration-input-dto";
 import { randomUUID } from "node:crypto";
 import { add } from "date-fns/add";
@@ -244,10 +243,10 @@ export class AuthService {
 
   async checkUserCredentials(
     input: AuthInputDTO,
-  ): Promise<Result<WithId<UserCreateByAdminDto> | null>> {
+  ): Promise<Result<UserDocument | null>> {
     const { password, loginOrEmail } = input;
 
-    const user: WithId<UserCreateByAdminDto> | null =
+    const user: UserDocument | null =
       await this.userRepository.findUserByLoginOrEmail(loginOrEmail);
 
     if (!user) {

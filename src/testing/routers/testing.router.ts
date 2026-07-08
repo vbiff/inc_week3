@@ -1,11 +1,11 @@
 import { Router, Request, Response } from "express";
 import { HttpStatuses } from "../../core/types/http-statuses";
 import { client } from "../../db/mongo.db";
-import { UserView } from "../../features/users/application/queries/dto/output-dto/user-view";
 import { DeviceDTO } from "../../features/security/application/dto/device-dto";
 import { BlogModel } from "../../features/blogs/domain/blog_entity";
 import { PostModel } from "../../features/posts/domain/post_entity";
 import { CommentModel } from "../../features/comments/domain/comment_entity";
+import { UserModel } from "../../features/users/domain/user_entity";
 
 export const testingRouter: Router = Router({});
 
@@ -13,7 +13,7 @@ testingRouter.delete("/all-data", async (req: Request, res: Response) => {
   await BlogModel.deleteMany();
   await PostModel.deleteMany();
   await CommentModel.deleteMany();
-  await client.db("blogger").collection<UserView>("users").deleteMany({});
+  await UserModel.deleteMany();
   await client.db("blogger").collection<DeviceDTO>("devices").deleteMany({});
   await client
     .db("blogger")

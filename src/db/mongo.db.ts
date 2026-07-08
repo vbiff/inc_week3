@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import { AppConfig } from "../core/config/config";
-import { UserCreateDto } from "../features/users/application/command-services/dto/user-create-dto";
 import { RefreshTokenDTO } from "../features/auth/application/command-services/dto/refresh-token-dto";
 import { DeviceDTO } from "../features/security/application/dto/device-dto";
 import mongoose from "mongoose";
@@ -14,9 +13,6 @@ export const client = new MongoClient(mongoUri);
 
 const dbName = "blogger";
 
-export const usersCollection = client
-  .db(dbName)
-  .collection<UserCreateDto>("users");
 export const refreshTokensCollection = client
   .db(dbName)
   .collection<RefreshTokenDTO>("refreshTokens");
