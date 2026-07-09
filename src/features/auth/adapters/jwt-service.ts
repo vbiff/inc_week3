@@ -5,12 +5,12 @@ import { injectable } from "inversify";
 @injectable()
 export class JwtService {
   async createAccessToken(userId: string): Promise<string> {
-    return jwt.sign({ id: userId }, AppConfig.SECRET, { expiresIn: "10s" });
+    return jwt.sign({ id: userId }, AppConfig.SECRET, { expiresIn: "10m" });
   }
 
   async createRefreshToken(userId: string, did: string): Promise<string> {
     return jwt.sign({ id: userId, deviceId: did }, AppConfig.REFRESH_SECRET, {
-      expiresIn: "20s",
+      expiresIn: "20m",
     });
   }
 

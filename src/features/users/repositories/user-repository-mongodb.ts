@@ -5,7 +5,7 @@ import { injectable } from "inversify";
 @injectable()
 export class UserRepository {
   async createUser(dto: UserCreateDto): Promise<string | null> {
-    const user = new UserEntity(dto);
+    const user = UserEntity.createUser(dto);
     const created = await UserModel.create(user);
     return created._id.toString();
   }

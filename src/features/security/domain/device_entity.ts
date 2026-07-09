@@ -2,20 +2,24 @@ import { HydratedDocument, Model, model, Schema } from "mongoose";
 import { DeviceDTO } from "../application/dto/device-dto";
 
 export class DeviceEntity {
-  userId: string;
-  deviceId: string;
-  title: string;
-  ip: string;
-  iat: number;
-  exp: number;
+  private constructor(
+    public userId: string,
+    public deviceId: string,
+    public title: string,
+    public ip: string,
+    public iat: number,
+    public exp: number,
+  ) {}
 
-  constructor(dto: DeviceDTO) {
-    this.userId = dto.userId;
-    this.deviceId = dto.deviceId;
-    this.title = dto.title;
-    this.ip = dto.ip;
-    this.iat = dto.iat;
-    this.exp = dto.exp;
+  static createDevice(dto: DeviceDTO): DeviceEntity {
+    return new DeviceEntity(
+      dto.userId,
+      dto.deviceId,
+      dto.title,
+      dto.ip,
+      dto.iat,
+      dto.exp,
+    );
   }
 
   updateSession(iat: number, exp: number): void {

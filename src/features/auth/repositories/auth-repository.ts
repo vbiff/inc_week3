@@ -16,7 +16,7 @@ export class AuthRepository {
 
   async addTokenToBlackList(token: string): Promise<boolean> {
     try {
-      const entry = new RefreshTokenEntity({
+      const entry = RefreshTokenEntity.createRefreshToken({
         refreshToken: token,
         expiresAt: new Date(Date.now() + 60000),
       });

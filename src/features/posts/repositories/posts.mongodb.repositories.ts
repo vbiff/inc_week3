@@ -8,7 +8,7 @@ import { injectable } from "inversify";
 @injectable()
 export class PostsRepository {
   async createPost(inputPost: PostCreateDto): Promise<ObjectId> {
-    const post = new PostEntity(inputPost);
+    const post = PostEntity.createPost(inputPost);
     const created = await PostModel.create(post);
     // mongoose bundles its own mongodb/bson dependency, so its ObjectId is
     // nominally distinct from the one used everywhere else in this codebase.

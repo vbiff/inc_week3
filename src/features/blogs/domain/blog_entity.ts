@@ -2,20 +2,24 @@ import { HydratedDocument, Model, model, Schema } from "mongoose";
 import { BlogInputDto } from "../application/queries/dto/input-dto/blog_input_dto";
 
 export class BlogEntity {
-  name: string;
-  description: string;
-  websiteUrl: string;
-  createdAt: string;
-  isMembership: boolean;
+  private constructor(
+    public name: string,
+    public description: string,
+    public websiteUrl: string,
+    public createdAt: string,
+    public isMembership: boolean,
+  ) {}
 
   // Creation defaults live here, not in the service — the service just
   // forwards the input DTO to the repository.
-  constructor(dto: BlogInputDto) {
-    this.name = dto.name;
-    this.description = dto.description;
-    this.websiteUrl = dto.websiteUrl;
-    this.createdAt = new Date().toISOString();
-    this.isMembership = false;
+  static createBlog(dto: BlogInputDto): BlogEntity {
+    return new BlogEntity(
+      dto.name,
+      dto.description,
+      dto.websiteUrl,
+      new Date().toISOString(),
+      false,
+    );
   }
 
   updateBlog(dto: BlogInputDto): void {

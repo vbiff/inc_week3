@@ -2,12 +2,13 @@ import { HydratedDocument, Model, model, Schema } from "mongoose";
 import { RefreshTokenDTO } from "../application/command-services/dto/refresh-token-dto";
 
 export class RefreshTokenEntity {
-  refreshToken: string;
-  expiresAt: Date;
+  private constructor(
+    public refreshToken: string,
+    public expiresAt: Date,
+  ) {}
 
-  constructor(dto: RefreshTokenDTO) {
-    this.refreshToken = dto.refreshToken;
-    this.expiresAt = dto.expiresAt;
+  static createRefreshToken(dto: RefreshTokenDTO): RefreshTokenEntity {
+    return new RefreshTokenEntity(dto.refreshToken, dto.expiresAt);
   }
 }
 

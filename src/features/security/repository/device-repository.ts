@@ -16,7 +16,7 @@ export class DeviceRepository {
   }
 
   async createDevice(dto: DeviceDTO): Promise<void> {
-    const device = new DeviceEntity(dto);
+    const device = DeviceEntity.createDevice(dto);
     await DeviceModel.create(device);
   }
 

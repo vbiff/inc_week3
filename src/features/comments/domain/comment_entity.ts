@@ -2,19 +2,23 @@ import { HydratedDocument, Model, model, Schema } from "mongoose";
 import { CommentCreateDto } from "../application/command-service/dto/comment-create-dto";
 
 export class CommentEntity {
-  content: string;
-  postId: string;
-  commentatorInfo: {
-    userId: string;
-    userLogin: string;
-  };
-  createdAt: string;
+  private constructor(
+    public content: string,
+    public postId: string,
+    public commentatorInfo: {
+      userId: string;
+      userLogin: string;
+    },
+    public createdAt: string,
+  ) {}
 
-  constructor(dto: CommentCreateDto) {
-    this.content = dto.content;
-    this.postId = dto.postId;
-    this.commentatorInfo = dto.commentatorInfo;
-    this.createdAt = dto.createdAt;
+  static createComment(dto: CommentCreateDto): CommentEntity {
+    return new CommentEntity(
+      dto.content,
+      dto.postId,
+      dto.commentatorInfo,
+      dto.createdAt,
+    );
   }
 
   updateContent(content: string): void {

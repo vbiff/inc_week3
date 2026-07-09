@@ -7,7 +7,7 @@ import { injectable } from "inversify";
 @injectable()
 export class CommentsRepository {
   async createComment(newComment: CommentCreateDto): Promise<string> {
-    const comment = new CommentEntity(newComment);
+    const comment = CommentEntity.createComment(newComment);
     const created = await CommentModel.create(comment);
     return created._id.toString();
   }

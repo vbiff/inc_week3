@@ -2,27 +2,31 @@ import { HydratedDocument, Model, model, Schema } from "mongoose";
 import { UserCreateDto } from "../application/command-services/dto/user-create-dto";
 
 export class UserEntity {
-  login: string;
-  email: string;
-  password: string;
-  createdAt: string;
-  emailConfirmation: {
-    confirmationCode: string;
-    expirationDate: Date;
-    isConfirmed: boolean;
-  };
-  passwordRecovery: {
-    recoveryCode: string | null;
-    expirationDate: Date | null;
-  };
+  private constructor(
+    public login: string,
+    public email: string,
+    public password: string,
+    public createdAt: string,
+    public emailConfirmation: {
+      confirmationCode: string;
+      expirationDate: Date;
+      isConfirmed: boolean;
+    },
+    public passwordRecovery: {
+      recoveryCode: string | null;
+      expirationDate: Date | null;
+    },
+  ) {}
 
-  constructor(dto: UserCreateDto) {
-    this.login = dto.login;
-    this.email = dto.email;
-    this.password = dto.password;
-    this.createdAt = dto.createdAt;
-    this.emailConfirmation = dto.emailConfirmation;
-    this.passwordRecovery = dto.passwordRecovery;
+  static createUser(dto: UserCreateDto): UserEntity {
+    return new UserEntity(
+      dto.login,
+      dto.email,
+      dto.password,
+      dto.createdAt,
+      dto.emailConfirmation,
+      dto.passwordRecovery,
+    );
   }
 
   updateHash(newHash: string): void {

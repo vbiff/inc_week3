@@ -3,20 +3,24 @@ import { PostCreateDto } from "../application/command-services/dto/post-create-d
 import { PostInputDTO } from "../application/queries/dto/input-dto/post-input-dto";
 
 export class PostEntity {
-  title: string;
-  shortDescription: string;
-  content: string;
-  blogId: string;
-  blogName: string;
-  createdAt: string;
+  private constructor(
+    public title: string,
+    public shortDescription: string,
+    public content: string,
+    public blogId: string,
+    public blogName: string,
+    public createdAt: string,
+  ) {}
 
-  constructor(dto: PostCreateDto) {
-    this.title = dto.title;
-    this.shortDescription = dto.shortDescription;
-    this.content = dto.content;
-    this.blogId = dto.blogId;
-    this.blogName = dto.blogName;
-    this.createdAt = dto.createdAt;
+  static createPost(dto: PostCreateDto): PostEntity {
+    return new PostEntity(
+      dto.title,
+      dto.shortDescription,
+      dto.content,
+      dto.blogId,
+      dto.blogName,
+      dto.createdAt,
+    );
   }
 
   updatePost(dto: PostInputDTO, blogName: string): void {
