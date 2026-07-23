@@ -50,6 +50,9 @@ import { CreateUserHandler } from "./features/users/routers/handlers/create-user
 import { DeleteUserHandler } from "./features/users/routers/handlers/delete-user-handler";
 import { GetAllUsersHandler } from "./features/users/routers/handlers/get-all-users-handler";
 import { GetUserHandler } from "./features/users/routers/handlers/get-user-handler";
+import { CommentsLikesRepository } from "./features/comments/repositories/commentsLikesRepository";
+import { Setter } from "date-fns/parse/_lib/Setter";
+import { SetLikeForCommentHandler } from "./features/comments/routers/handlers/set-like-for-comment-handler";
 
 export const container = new Container();
 
@@ -66,6 +69,7 @@ container.bind(BlogsQueryRepository).toSelf().inSingletonScope();
 container.bind(PostsRepository).toSelf().inSingletonScope();
 container.bind(PostsQueryRepository).toSelf().inSingletonScope();
 container.bind(CommentsRepository).toSelf().inSingletonScope();
+container.bind(CommentsLikesRepository).toSelf().inSingletonScope();
 container.bind(CommentsQueryRepository).toSelf().inSingletonScope();
 container.bind(DeviceRepository).toSelf().inSingletonScope();
 
@@ -111,3 +115,4 @@ container.bind(CreateUserHandler).toSelf().inSingletonScope();
 container.bind(DeleteUserHandler).toSelf().inSingletonScope();
 container.bind(GetAllUsersHandler).toSelf().inSingletonScope();
 container.bind(GetUserHandler).toSelf().inSingletonScope();
+container.bind(SetLikeForCommentHandler).toSelf().inSingletonScope();

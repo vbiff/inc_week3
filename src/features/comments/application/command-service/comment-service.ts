@@ -23,6 +23,8 @@ export class CommentService {
         userLogin: userInfo.login,
       },
       createdAt: new Date().toISOString(),
+      lcount: 0,
+      dcount: 0,
     };
 
     return await this.commentsRepository.createComment(newComment);

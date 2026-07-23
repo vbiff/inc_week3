@@ -6,4 +6,6 @@ export type CommentCreateDto = {
     userLogin: string;
   };
   createdAt: string;
+  lcount: number;
+  dcount: number;
 };

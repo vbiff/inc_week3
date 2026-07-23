@@ -7,10 +7,12 @@ import { mongoCommentIdValidation } from "../validation/mongo-comment-id-param-v
 import { commentInputDtoValidation } from "../validation/comment-inputDto-validation";
 import { UpdateCommentByIdHandler } from "./handlers/update-comment-by-id-handler";
 import { container } from "../../../composition-root";
+import { SetLikeForCommentHandler } from "./handlers/set-like-for-comment-handler";
 
 const getCommentByIdHandler = container.get(GetCommentByIdHandler);
 const deleteCommentByIdHandler = container.get(DeleteCommentByIdHandler);
 const updateCommentByIdHandler = container.get(UpdateCommentByIdHandler);
+const setCommentLike = container.get(SetLikeForCommentHandler);
 
 export const commentsRouter = Router();
 
@@ -31,4 +33,13 @@ commentsRouter.put(
   commentInputDtoValidation,
   validationResultMiddleware,
   updateCommentByIdHandler.updateCommentByIdHandler,
+);
+
+commentsRouter.put(
+  "/:commentId/like-status",
+  accessTokenGuardMiddleware,
+  // mongoCommentIdValidation,
+  // commentInputDtoValidation,
+  // validationResultMiddleware,
+  setCommentLike.setLikeForCommentByIdHandler,
 );

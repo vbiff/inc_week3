@@ -10,6 +10,8 @@ export class CommentEntity {
       userLogin: string;
     },
     public createdAt: string,
+    public lcount: number,
+    public dcount: number,
   ) {}
 
   static createComment(dto: CommentCreateDto): CommentEntity {
@@ -18,6 +20,8 @@ export class CommentEntity {
       dto.postId,
       dto.commentatorInfo,
       dto.createdAt,
+      dto.lcount,
+      dto.dcount,
     );
   }
 
@@ -34,6 +38,8 @@ export const CommentSchema = new Schema<CommentEntity>({
     userLogin: { type: String, required: true },
   },
   createdAt: { type: String, required: true },
+  lcount: { type: Number },
+  dcount: { type: Number },
 });
 
 CommentSchema.loadClass(CommentEntity);
