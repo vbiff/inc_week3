@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify/lib/esm";
+import { inject, injectable } from "inversify";
 import { CommentsRepository } from "../../repositories/commentsRepository";
 import { CommentsLikesRepository } from "../../repositories/commentsLikesRepository";
 import { LikeStatuses } from "../../domain/comment_like_entity";

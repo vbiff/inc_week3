@@ -51,7 +51,7 @@ import { DeleteUserHandler } from "./features/users/routers/handlers/delete-user
 import { GetAllUsersHandler } from "./features/users/routers/handlers/get-all-users-handler";
 import { GetUserHandler } from "./features/users/routers/handlers/get-user-handler";
 import { CommentsLikesRepository } from "./features/comments/repositories/commentsLikesRepository";
-import { Setter } from "date-fns/parse/_lib/Setter";
+import { CommentLikeService } from "./features/comments/application/command-service/comment-like-service";
 import { SetLikeForCommentHandler } from "./features/comments/routers/handlers/set-like-for-comment-handler";
 
 export const container = new Container();
@@ -78,6 +78,7 @@ container.bind(UserService).toSelf().inSingletonScope();
 container.bind(BlogsService).toSelf().inSingletonScope();
 container.bind(PostsService).toSelf().inSingletonScope();
 container.bind(CommentService).toSelf().inSingletonScope();
+container.bind(CommentLikeService).toSelf().inSingletonScope();
 container.bind(AuthService).toSelf().inSingletonScope();
 
 //Handlers

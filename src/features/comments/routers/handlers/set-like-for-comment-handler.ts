@@ -1,5 +1,4 @@
-import { inject, injectable } from "inversify/lib/esm";
-import { CommentService } from "../../application/command-service/comment-service";
+import { inject, injectable } from "inversify";
 import { Request, Response } from "express";
 import { Result } from "../../../../core/result/resultType";
 import { ResultStatus } from "../../../../core/result/resultCode";
