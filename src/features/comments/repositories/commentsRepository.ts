@@ -1,5 +1,9 @@
 import { CommentCreateDto } from "../application/command-service/dto/comment-create-dto";
-import { CommentEntity, CommentModel } from "../domain/comment_entity";
+import {
+  CommentDocument,
+  CommentEntity,
+  CommentModel,
+} from "../domain/comment_entity";
 import { Result } from "../../../core/result/resultType";
 import { ResultStatus } from "../../../core/result/resultCode";
 import { injectable } from "inversify";
@@ -38,6 +42,10 @@ export class CommentsRepository {
       extensions: [],
       data: null,
     };
+  }
+
+  async findCommentById(commentId: string): Promise<CommentDocument | null> {
+    return CommentModel.findById(commentId);
   }
 
   async updateCommentById(

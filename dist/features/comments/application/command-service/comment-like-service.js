@@ -34,13 +34,13 @@ let CommentLikeService = class CommentLikeService {
     }
     setLike(commentId, likeStatus, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const newLike = {
+            const newLike = comment_like_entity_1.CommentLikeEntity.createCommentLike({
                 status: likeStatus,
                 userId,
                 commentId,
                 createdAt: new Date().toISOString(),
                 lastModifiedAt: new Date().toISOString(),
-            };
+            });
             const likeExisted = yield this.commentsLikesRepository.findLikeById(newLike.userId, newLike.commentId);
             if (!likeExisted) {
                 const setLike = yield this.commentsLikesRepository.createLike(newLike);
@@ -107,8 +107,15 @@ let CommentLikeService = class CommentLikeService {
                             data: null,
                         };
                     }
-                    yield this.commentsRepository.updateCommentById(newLike.commentId, userId, { dcount: 1, myStatus: newLike.status });
-                    yield this.commentsLikesRepository.updateLike(likeExisted._id.toString(), newLike);
+                }
+                if (newLike.status === comment_like_entity_1.LikeStatuses.None) {
+                    yield this.commentsLikesRepository.deleteLike(likeExisted.id);
+                    if (likeExisted.status === comment_like_entity_1.LikeStatuses.Dislike) {
+                        yield this.commentsRepository.updateCommentById(newLike.commentId, userId, { dcount: -1, myStatus: newLike.status });
+                    }
+                    if (likeExisted.status === comment_like_entity_1.LikeStatuses.Like) {
+                        yield this.commentsRepository.updateCommentById(newLike.commentId, userId, { lcount: -1, myStatus: newLike.status });
+                    }
                     return {
                         status: resultCode_1.ResultStatus.Success,
                         errorMessage: "",

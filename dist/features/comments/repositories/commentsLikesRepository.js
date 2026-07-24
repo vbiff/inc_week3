@@ -54,6 +54,11 @@ let CommentsLikesRepository = class CommentsLikesRepository {
             return comment_like_entity_1.CommentLikeModel.findOne({ commentId, userId });
         });
     }
+    deleteLike(likeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield comment_like_entity_1.CommentLikeModel.findByIdAndDelete(likeId);
+        });
+    }
 };
 exports.CommentsLikesRepository = CommentsLikesRepository;
 exports.CommentsLikesRepository = CommentsLikesRepository = __decorate([

@@ -21,6 +21,15 @@ export class CommentLikeService {
     likeStatus: LikeStatuses,
     userId: string,
   ): Promise<Result> {
+    const comment = CommentsRepository.findCommentById(commentId);
+    if (!comment) {
+      return {
+        status: ResultStatus.BadRequest,
+        errorMessage: "Something went wrong",
+        extensions: [],
+        data: null,
+      };
+    }
     const newLike = CommentLikeEntity.createCommentLike({
       status: likeStatus,
       userId,

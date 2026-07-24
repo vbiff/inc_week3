@@ -24,8 +24,8 @@ exports.CommentSchema = new mongoose_1.Schema({
     },
     createdAt: { type: String, required: true },
     likesInfo: {
-        lcount: { type: Number },
-        dcount: { type: Number },
+        likesCount: { type: Number },
+        dislikesCount: { type: Number },
         myStatus: { type: String },
     },
 });

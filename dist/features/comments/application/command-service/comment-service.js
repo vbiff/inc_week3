@@ -35,8 +35,8 @@ let CommentService = class CommentService {
                     userId: userInfo.userId,
                     userLogin: userInfo.login,
                 }, createdAt: new Date().toISOString(), likesInfo: {
-                    lcount: 0,
-                    dcount: 0,
+                    likesCount: 0,
+                    dislikesCount: 0,
                     myStatus: comment_like_entity_1.LikeStatuses.None,
                 } });
             return yield this.commentsRepository.createComment(newComment);
