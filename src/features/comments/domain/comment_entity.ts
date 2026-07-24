@@ -1,5 +1,6 @@
 import { HydratedDocument, Model, model, Schema } from "mongoose";
 import { CommentCreateDto } from "../application/command-service/dto/comment-create-dto";
+import { CommentLikeEntity, LikeStatuses } from "./comment_like_entity";
 
 export class CommentEntity {
   private constructor(
@@ -10,8 +11,11 @@ export class CommentEntity {
       userLogin: string;
     },
     public createdAt: string,
-    public lcount: number,
-    public dcount: number,
+    public likesInfo: {
+      lcount: number;
+      dcount: number;
+      myStatus: LikeStatuses;
+    },
   ) {}
 
   static createComment(dto: CommentCreateDto): CommentEntity {
@@ -20,13 +24,8 @@ export class CommentEntity {
       dto.postId,
       dto.commentatorInfo,
       dto.createdAt,
-      dto.lcount,
-      dto.dcount,
+      dto.likesInfo,
     );
-  }
-
-  updateContent(content: string): void {
-    this.content = content;
   }
 }
 
@@ -38,8 +37,11 @@ export const CommentSchema = new Schema<CommentEntity>({
     userLogin: { type: String, required: true },
   },
   createdAt: { type: String, required: true },
-  lcount: { type: Number },
-  dcount: { type: Number },
+  likesInfo: {
+    lcount: { type: Number },
+    dcount: { type: Number },
+    myStatus: { type: String },
+  },
 });
 
 CommentSchema.loadClass(CommentEntity);

@@ -1,9 +1,9 @@
 import { HydratedDocument, model, Model, Schema } from "mongoose";
 
 export enum LikeStatuses {
-  Like = "like",
-  Dislike = "dislike",
-  None = "none",
+  Like = "Like",
+  Dislike = "Dislike",
+  None = "None",
 }
 
 import { CommentLikeCreateDTO } from "../application/command-service/dto/comment-like-create-dto";

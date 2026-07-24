@@ -14,7 +14,7 @@ export class SetLikeForCommentHandler {
   setLikeForCommentByIdHandler = async (req: Request, res: Response) => {
     const result: Result = await this.commentLikeService.setLike(
       req.params.commentId,
-      req.body.content,
+      req.body.likeStatus,
       req.user!.id,
     );
     if (result.status === ResultStatus.Success) {

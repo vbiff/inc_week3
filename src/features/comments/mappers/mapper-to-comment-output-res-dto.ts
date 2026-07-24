@@ -12,5 +12,6 @@ export const mapperToCommentOutputResDto = (
       userLogin: rawComment.commentatorInfo.userLogin,
     },
     createdAt: rawComment.createdAt,
+    likesInfo: rawComment.likesInfo,
   };
 };

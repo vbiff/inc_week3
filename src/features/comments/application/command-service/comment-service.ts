@@ -3,6 +3,7 @@ import { CommentsRepository } from "../../repositories/commentsRepository";
 import { AuthMeDto } from "../../../auth/application/queries/dto/auth-output-dto/auth-me-dto";
 import { Result } from "../../../../core/result/resultType";
 import { inject, injectable } from "inversify";
+import { LikeStatuses } from "../../domain/comment_like_entity";
 
 @injectable()
 export class CommentService {
@@ -23,8 +24,11 @@ export class CommentService {
         userLogin: userInfo.login,
       },
       createdAt: new Date().toISOString(),
-      lcount: 0,
-      dcount: 0,
+      likesInfo: {
+        lcount: 0,
+        dcount: 0,
+        myStatus: LikeStatuses.None,
+      },
     };
 
     return await this.commentsRepository.createComment(newComment);
@@ -39,10 +43,8 @@ export class CommentService {
     content: string,
     userId: string,
   ): Promise<Result> {
-    return await this.commentsRepository.updateCommentById(
-      commentId,
-      content,
-      userId,
-    );
+    return await this.commentsRepository.updateCommentById(commentId, userId, {
+      content: content,
+    });
   }
 }

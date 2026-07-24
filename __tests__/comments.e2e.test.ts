@@ -208,6 +208,85 @@ describe("comments", () => {
     expect(result.body.content).toBe("new updated content!!");
   });
 
+  // likes
+  it("Should set like None to comment", async () => {
+    await request(app)
+      .put(`${COMMENT_PATH}/${commentId}/like-status`)
+      .set("Authorization", "Bearer " + token)
+      .send({
+        likeStatus: "None",
+      })
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
+  it("Should set like like to comment", async () => {
+    await request(app)
+      .put(`${COMMENT_PATH}/${commentId}/like-status`)
+      .set("Authorization", "Bearer " + token)
+      .send({
+        likeStatus: "Like",
+      })
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
+
+  it("Should set like like to comment", async () => {
+    await request(app)
+      .put(`${COMMENT_PATH}/${commentId}/like-status`)
+      .set("Authorization", "Bearer " + token)
+      .send({
+        likeStatus: "Like",
+      })
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
+  it("Should set like like to comment", async () => {
+    await request(app)
+      .put(`${COMMENT_PATH}/${commentId}/like-status`)
+      .set("Authorization", "Bearer " + token)
+      .send({
+        likeStatus: "Dislike",
+      })
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
+
+  it("Should set like like to comment", async () => {
+    await request(app)
+      .put(`${COMMENT_PATH}/${commentId}/like-status`)
+      .set("Authorization", "Bearer " + token)
+      .send({
+        likeStatus: "Dislike",
+      })
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
+
+  it("Should set like like to comment", async () => {
+    await request(app)
+      .put(`${COMMENT_PATH}/${commentId}/like-status`)
+      .set("Authorization", "Bearer " + token)
+      .send({
+        likeStatus: "Like",
+      })
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
+
+  it("Should set like like to comment", async () => {
+    await request(app)
+      .put(`${COMMENT_PATH}/${commentId}/like-status`)
+      .set("Authorization", "Bearer " + token)
+      .send({
+        likeStatus: "None",
+      })
+      .expect(HttpStatuses.NO_CONTENT_204);
+  });
+
+  it("Should get comment by id", async () => {
+    const result = await request(app)
+      .get(`${COMMENT_PATH}/${commentId}`)
+      .expect(HttpStatuses.OK_200);
+
+    console.log(result.body);
+  });
+
+  // comments delete
+
   it("Should not delete a comment by wrong id", async () => {
     await request(app)
       .delete(`${COMMENT_PATH}/63189b06003380064c4193be`)

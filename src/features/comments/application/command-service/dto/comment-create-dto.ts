@@ -1,3 +1,5 @@
+import { LikeStatuses } from "../../../domain/comment_like_entity";
+
 export type CommentCreateDto = {
   content: string;
   postId: string;
@@ -6,6 +8,5 @@ export type CommentCreateDto = {
     userLogin: string;
   };
   createdAt: string;
-  lcount: number;
-  dcount: number;
+  likesInfo: { lcount: number; dcount: number; myStatus: LikeStatuses };
 };
