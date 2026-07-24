@@ -12,7 +12,7 @@ export type CommentCreateDto = {
 };
 
 export type LikesInfo = {
-  lcount: number;
-  dcount: number;
+  likesCount: number;
+  dislikesCount: number;
   myStatus: LikeStatuses;
 };

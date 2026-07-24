@@ -12,7 +12,7 @@ type CommentatorInfo = {
 };
 
 type LikesInfo = {
-  lcount: number;
-  dcount: number;
+  likesCount: number;
+  dislikesCount: number;
   myStatus: string;
 };

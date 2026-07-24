@@ -71,10 +71,10 @@ export class CommentsRepository {
 
     if (fields.content !== undefined) comment.content = fields.content;
     if (fields.lcount === 1 || fields.lcount === -1) {
-      comment.likesInfo.lcount += fields.lcount;
+      comment.likesInfo.likesCount += fields.lcount;
     }
     if (fields.dcount === 1 || fields.dcount === -1)
-      comment.likesInfo.dcount += fields.dcount;
+      comment.likesInfo.dislikesCount += fields.dcount;
     if (fields.myStatus) comment.likesInfo.myStatus = fields.myStatus;
 
     await comment.save();

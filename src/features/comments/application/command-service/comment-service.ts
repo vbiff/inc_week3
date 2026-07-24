@@ -25,8 +25,8 @@ export class CommentService {
       },
       createdAt: new Date().toISOString(),
       likesInfo: {
-        lcount: 0,
-        dcount: 0,
+        likesCount: 0,
+        dislikesCount: 0,
         myStatus: LikeStatuses.None,
       },
     };
