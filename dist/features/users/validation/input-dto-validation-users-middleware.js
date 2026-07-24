@@ -1,0 +1,38 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.validationUserInputMiddleware = void 0;
+const express_validator_1 = require("express-validator");
+const loginPattern = /^[a-zA-Z0-9_-]+$/;
+const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+const loginValidation = (0, express_validator_1.body)("login")
+    .isString()
+    .trim()
+    .notEmpty()
+    .withMessage({ message: "Login can not be empty" })
+    .isLength({ min: 3, max: 10 })
+    .withMessage({
+    message: "Login must be at least 3 characters long and less than 10",
+})
+    .matches(loginPattern)
+    .withMessage({ message: "Should match the pattern" });
+const passwordValidation = (0, express_validator_1.body)("password")
+    .isString()
+    .withMessage("Password is wrong")
+    .trim()
+    .notEmpty()
+    .withMessage({ message: "Password can not be empty" })
+    .isLength({ min: 6, max: 10 })
+    .withMessage({
+    message: "Password must be at least 6 characters long and less than 20",
+});
+const emailValidation = (0, express_validator_1.body)("email")
+    .isString()
+    .trim()
+    .notEmpty()
+    .withMessage({ message: "email can not be empty" })
+    .matches(emailPattern);
+exports.validationUserInputMiddleware = [
+    loginValidation,
+    emailValidation,
+    passwordValidation,
+];

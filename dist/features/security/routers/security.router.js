@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.securityRouter = void 0;
+const express_1 = require("express");
+const refresh_token_guard_1 = require("../../../core/middlewares/auth/refresh-token-guard");
+const composition_root_1 = require("../../../composition-root");
+const get_all_active_devices_handler_1 = require("./handlers/get-all-active-devices-handler");
+const delete_all_devices_handler_1 = require("./handlers/delete-all-devices-handler");
+const delete_deivce_handler_1 = require("./handlers/delete-deivce-handler");
+exports.securityRouter = (0, express_1.Router)();
+const getAllActiveDevicesHandler = composition_root_1.container.get(get_all_active_devices_handler_1.GetAllActiveDevicesHandler);
+const deleteAllDevicesHandler = composition_root_1.container.get(delete_all_devices_handler_1.DeleteAllDevicesHandler);
+const deleteDeivceHandler = composition_root_1.container.get(delete_deivce_handler_1.DeleteDeivceHandler);
+exports.securityRouter.get("/", refresh_token_guard_1.refreshTokenGuardMiddleware, getAllActiveDevicesHandler.getAllActiveDevicesHandler);
+exports.securityRouter.delete("/", refresh_token_guard_1.refreshTokenGuardMiddleware, deleteAllDevicesHandler.deleteAllDevicesHandler);
+exports.securityRouter.delete("/:deviceId", refresh_token_guard_1.refreshTokenGuardMiddleware, deleteDeivceHandler.deleteDeivceHandler);
