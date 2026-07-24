@@ -46,4 +46,8 @@ export class CommentsLikesRepository {
   ): Promise<CommentLikeDocument | null> {
     return CommentLikeModel.findOne({ commentId, userId });
   }
+
+  async deleteLike(likeId: string): Promise<void> {
+    await CommentLikeModel.findByIdAndDelete(likeId);
+  }
 }

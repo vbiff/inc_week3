@@ -69,12 +69,12 @@ export class CommentsRepository {
       };
     }
 
-    if (fields.content) comment.content = fields.content;
+    if (fields.content !== undefined) comment.content = fields.content;
     if (fields.lcount === 1 || fields.lcount === -1) {
-      comment.likesInfo.lcount = comment.likesInfo.lcount += fields.lcount;
+      comment.likesInfo.lcount += fields.lcount;
     }
     if (fields.dcount === 1 || fields.dcount === -1)
-      comment.likesInfo.dcount = comment.likesInfo.dcount += fields.dcount;
+      comment.likesInfo.dcount += fields.dcount;
     if (fields.myStatus) comment.likesInfo.myStatus = fields.myStatus;
 
     await comment.save();

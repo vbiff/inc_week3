@@ -8,5 +8,11 @@ export type CommentCreateDto = {
     userLogin: string;
   };
   createdAt: string;
-  likesInfo: { lcount: number; dcount: number; myStatus: LikeStatuses };
+  likesInfo: LikesInfo;
+};
+
+export type LikesInfo = {
+  lcount: number;
+  dcount: number;
+  myStatus: LikeStatuses;
 };
