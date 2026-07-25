@@ -34,6 +34,15 @@ let CommentLikeService = class CommentLikeService {
     }
     setLike(commentId, likeStatus, userId) {
         return __awaiter(this, void 0, void 0, function* () {
+            const comment = yield this.commentsRepository.findCommentById(commentId);
+            if (!comment) {
+                return {
+                    status: resultCode_1.ResultStatus.NotFound,
+                    errorMessage: "Something went wrong",
+                    extensions: [],
+                    data: null,
+                };
+            }
             const newLike = comment_like_entity_1.CommentLikeEntity.createCommentLike({
                 status: likeStatus,
                 userId,

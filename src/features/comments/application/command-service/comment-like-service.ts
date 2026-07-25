@@ -21,10 +21,10 @@ export class CommentLikeService {
     likeStatus: LikeStatuses,
     userId: string,
   ): Promise<Result> {
-    const comment = CommentsRepository.findCommentById(commentId);
+    const comment = await this.commentsRepository.findCommentById(commentId);
     if (!comment) {
       return {
-        status: ResultStatus.BadRequest,
+        status: ResultStatus.NotFound,
         errorMessage: "Something went wrong",
         extensions: [],
         data: null,

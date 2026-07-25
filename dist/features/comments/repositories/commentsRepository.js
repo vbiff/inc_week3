@@ -55,6 +55,11 @@ let CommentsRepository = class CommentsRepository {
             };
         });
     }
+    findCommentById(commentId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return comment_entity_1.CommentModel.findById(commentId);
+        });
+    }
     updateCommentById(commentId, userId, fields) {
         return __awaiter(this, void 0, void 0, function* () {
             const comment = yield comment_entity_1.CommentModel.findById(commentId);
