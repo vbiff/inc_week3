@@ -68,16 +68,18 @@ export class CommentsRepository {
         data: null,
       };
     }
-    if (userId !== comment.commentatorInfo.userId) {
-      return {
-        status: ResultStatus.Forbidden,
-        errorMessage: "The comment is not belongs to current user",
-        extensions: [],
-        data: null,
-      };
-    }
 
-    if (fields.content !== undefined) comment.content = fields.content;
+    if (fields.content !== undefined) {
+      if (userId !== comment.commentatorInfo.userId) {
+        return {
+          status: ResultStatus.Forbidden,
+          errorMessage: "The comment is not belongs to current user",
+          extensions: [],
+          data: null,
+        };
+      }
+      comment.content = fields.content;
+    }
     if (fields.lcount === 1 || fields.lcount === -1) {
       comment.likesInfo.likesCount += fields.lcount;
     }

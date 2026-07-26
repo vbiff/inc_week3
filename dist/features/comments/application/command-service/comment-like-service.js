@@ -50,7 +50,7 @@ let CommentLikeService = class CommentLikeService {
                 createdAt: new Date().toISOString(),
                 lastModifiedAt: new Date().toISOString(),
             });
-            const likeExisted = yield this.commentsLikesRepository.findLikeById(newLike.userId, newLike.commentId);
+            const likeExisted = yield this.commentsLikesRepository.findLikeById(userId, commentId);
             if (!likeExisted) {
                 const setLike = yield this.commentsLikesRepository.createLike(newLike);
                 // add lcounts .... d counts

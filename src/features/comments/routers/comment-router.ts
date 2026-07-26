@@ -8,6 +8,8 @@ import { commentInputDtoValidation } from "../validation/comment-inputDto-valida
 import { UpdateCommentByIdHandler } from "./handlers/update-comment-by-id-handler";
 import { container } from "../../../composition-root";
 import { SetLikeForCommentHandler } from "./handlers/set-like-for-comment-handler";
+import { optionalAccessTokenGuardMiddleware } from "../../../core/middlewares/auth/optional-access-token-guard";
+import { commentLikeStatusValidation } from "../validation/comment-like-status-validation";
 
 const getCommentByIdHandler = container.get(GetCommentByIdHandler);
 const deleteCommentByIdHandler = container.get(DeleteCommentByIdHandler);
@@ -16,7 +18,11 @@ const setCommentLike = container.get(SetLikeForCommentHandler);
 
 export const commentsRouter = Router();
 
-commentsRouter.get("/:id", getCommentByIdHandler.getCommentByIdHandler);
+commentsRouter.get(
+  "/:id",
+  optionalAccessTokenGuardMiddleware,
+  getCommentByIdHandler.getCommentByIdHandler,
+);
 
 commentsRouter.delete(
   "/:commentId",
@@ -38,8 +44,9 @@ commentsRouter.put(
 commentsRouter.put(
   "/:commentId/like-status",
   accessTokenGuardMiddleware,
+  commentLikeStatusValidation,
   // mongoCommentIdValidation,
   // commentInputDtoValidation,
-  // validationResultMiddleware,
+  validationResultMiddleware,
   setCommentLike.setLikeForCommentByIdHandler,
 );

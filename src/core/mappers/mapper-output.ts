@@ -2,10 +2,10 @@ import { PaginationRes } from "../types/pagination-res";
 
 export function mapperOutput<T>(items: T[], meta: PaginationRes) {
   return {
-    page: meta.page,
     pagesCount: meta.pagesCount,
-    totalCount: meta.totalCount,
+    page: meta.page,
     pageSize: meta.pageSize,
+    totalCount: meta.totalCount,
     items,
   };
 }

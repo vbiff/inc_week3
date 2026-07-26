@@ -22,17 +22,28 @@ const skip_1 = require("../../../core/utils/skip");
 const mapper_output_1 = require("../../../core/mappers/mapper-output");
 const inversify_1 = require("inversify");
 const comment_entity_1 = require("../domain/comment_entity");
+const comment_like_entity_1 = require("../domain/comment_like_entity");
 let CommentsQueryRepository = class CommentsQueryRepository {
-    getCommentById(id) {
+    getCommentById(id, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const comment = yield comment_entity_1.CommentModel.findById(id);
             if (!comment) {
                 return null;
             }
-            return (0, mapper_to_comment_output_res_dto_1.mapperToCommentOutputResDto)(comment);
+            if (userId === undefined) {
+                return (0, mapper_to_comment_output_res_dto_1.mapperToCommentOutputResDto)(comment, userId, comment_like_entity_1.LikeStatuses.None);
+            }
+            const userLike = yield comment_like_entity_1.CommentLikeModel.findOne({
+                userId: userId,
+                commentId: id,
+            });
+            if (!userLike) {
+                return (0, mapper_to_comment_output_res_dto_1.mapperToCommentOutputResDto)(comment, userId, comment_like_entity_1.LikeStatuses.None);
+            }
+            return (0, mapper_to_comment_output_res_dto_1.mapperToCommentOutputResDto)(comment, userId, userLike.status);
         });
     }
-    getCommentsForPostId(postId, queryInput) {
+    getCommentsForPostId(postId, queryInput, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const post = yield post_entity_1.PostModel.findById(postId);
             if (!post) {
@@ -48,7 +59,37 @@ let CommentsQueryRepository = class CommentsQueryRepository {
                     .sort({ [sortBy]: sortDirection }),
                 comment_entity_1.CommentModel.countDocuments(filter),
             ]);
-            const mappedComments = comments.map((comment) => (0, mapper_to_comment_output_res_dto_1.mapperToCommentOutputResDto)(comment));
+            let mappedComments = [];
+            if (userId === undefined) {
+                mappedComments = comments.map((comment) => (0, mapper_to_comment_output_res_dto_1.mapperToCommentOutputResDto)(comment, // живой документ, геттеры работают
+                userId, comment_like_entity_1.LikeStatuses.None));
+            }
+            else {
+                const likesArray = yield comment_like_entity_1.CommentLikeModel.find({
+                    userId,
+                    commentId: { $in: comments.map((c) => c._id.toString()) },
+                });
+                const likesByCommentId = new Map(likesArray.map((like) => [like.commentId, like.status]));
+                mappedComments = comments.map((comment) => {
+                    var _a;
+                    return (0, mapper_to_comment_output_res_dto_1.mapperToCommentOutputResDto)(comment, // живой документ, геттеры работают
+                    userId, (_a = likesByCommentId.get(comment.id)) !== null && _a !== void 0 ? _a : comment_like_entity_1.LikeStatuses.None);
+                });
+            }
+            // const mappedComments = [];
+            // for (const comment of comments) {
+            //   const like = await CommentLikeModel.findOne({
+            //     commentId: comment.id,
+            //     userId: userId,
+            //   });
+            //   const likeStatus = like ? like.status : LikeStatuses.None;
+            //   const trueComment = mapperToCommentOutputResDto(
+            //     comment,
+            //     userId,
+            //     likeStatus,
+            //   );
+            //   mappedComments.push(trueComment);
+            // }
             return (0, mapper_output_1.mapperOutput)(mappedComments, {
                 pagesCount: Math.ceil(totalCount / queryInput.pageSize),
                 page: queryInput.pageNumber,

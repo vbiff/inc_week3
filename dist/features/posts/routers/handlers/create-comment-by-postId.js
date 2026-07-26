@@ -46,7 +46,7 @@ let CreateCommentHandler = class CreateCommentHandler {
             // 2 create new comment
             const commentId = yield this.commentService.createComment(req.body, post.id, userInfo);
             // 3 get new comment from query repo
-            const newComment = yield this.commentsQueryRepository.getCommentById(commentId);
+            const newComment = yield this.commentsQueryRepository.getCommentById(commentId, req.user.id);
             if (!newComment) {
                 res.sendStatus(http_statuses_1.HttpStatuses.NOT_FOUND_404);
                 return;

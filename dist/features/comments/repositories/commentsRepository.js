@@ -71,16 +71,17 @@ let CommentsRepository = class CommentsRepository {
                     data: null,
                 };
             }
-            if (userId !== comment.commentatorInfo.userId) {
-                return {
-                    status: resultCode_1.ResultStatus.Forbidden,
-                    errorMessage: "The comment is not belongs to current user",
-                    extensions: [],
-                    data: null,
-                };
-            }
-            if (fields.content !== undefined)
+            if (fields.content !== undefined) {
+                if (userId !== comment.commentatorInfo.userId) {
+                    return {
+                        status: resultCode_1.ResultStatus.Forbidden,
+                        errorMessage: "The comment is not belongs to current user",
+                        extensions: [],
+                        data: null,
+                    };
+                }
                 comment.content = fields.content;
+            }
             if (fields.lcount === 1 || fields.lcount === -1) {
                 comment.likesInfo.likesCount += fields.lcount;
             }

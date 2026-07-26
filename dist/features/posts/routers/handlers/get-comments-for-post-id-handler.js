@@ -30,11 +30,13 @@ let GetCommentsForPostIdHandler = class GetCommentsForPostIdHandler {
     constructor(commentsQueryRepository) {
         this.commentsQueryRepository = commentsQueryRepository;
         this.getCommentsForPostIdHandler = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const queryInput = (0, query_input_dto_helper_1.queryInputDtoHelper)(req);
             //1 request to Query repo
-            const result = yield this.commentsQueryRepository.getCommentsForPostId(req.params.postId, queryInput);
+            const result = yield this.commentsQueryRepository.getCommentsForPostId(req.params.postId, queryInput, (_a = req.user) === null || _a === void 0 ? void 0 : _a.id);
             if (!result) {
                 res.sendStatus(http_statuses_1.HttpStatuses.NOT_FOUND_404);
+                return;
             }
             res.status(http_statuses_1.HttpStatuses.OK_200).send(result);
         });

@@ -13,6 +13,7 @@ import { commentInputDtoValidation } from "../../comments/validation/comment-inp
 import { accessTokenGuardMiddleware } from "../../../core/middlewares/auth/access-token-guard";
 import { GetCommentsForPostIdHandler } from "./handlers/get-comments-for-post-id-handler";
 import { container } from "../../../composition-root";
+import { optionalAccessTokenGuardMiddleware } from "../../../core/middlewares/auth/optional-access-token-guard";
 
 const createPostHandler = container.get(CreatePostHandler);
 const getPostByIdHandler = container.get(GetPostByIdHandler);
@@ -35,6 +36,7 @@ postRouter.post(
 // get comment for postId
 postRouter.get(
   "/:postId/comments/",
+  optionalAccessTokenGuardMiddleware,
   queryValidation,
   validationResultMiddleware,
   getCommentsForPostIdHandler.getCommentsForPostIdHandler,

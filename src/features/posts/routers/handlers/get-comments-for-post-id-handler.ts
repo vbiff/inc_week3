@@ -21,10 +21,12 @@ export class GetCommentsForPostIdHandler {
       await this.commentsQueryRepository.getCommentsForPostId(
         req.params.postId,
         queryInput,
+        req.user?.id,
       );
 
     if (!result) {
       res.sendStatus(HttpStatuses.NOT_FOUND_404);
+      return;
     }
     res.status(HttpStatuses.OK_200).send(result);
   };

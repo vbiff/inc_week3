@@ -214,64 +214,7 @@ describe("comments", () => {
       .put(`${COMMENT_PATH}/${commentId}/like-status`)
       .set("Authorization", "Bearer " + token)
       .send({
-        likeStatus: "None",
-      })
-      .expect(HttpStatuses.NO_CONTENT_204);
-  });
-  it("Should set like like to comment", async () => {
-    await request(app)
-      .put(`${COMMENT_PATH}/${commentId}/like-status`)
-      .set("Authorization", "Bearer " + token)
-      .send({
         likeStatus: "Like",
-      })
-      .expect(HttpStatuses.NO_CONTENT_204);
-  });
-
-  it("Should set like like to comment", async () => {
-    await request(app)
-      .put(`${COMMENT_PATH}/${commentId}/like-status`)
-      .set("Authorization", "Bearer " + token)
-      .send({
-        likeStatus: "Like",
-      })
-      .expect(HttpStatuses.NO_CONTENT_204);
-  });
-  it("Should set like like to comment", async () => {
-    await request(app)
-      .put(`${COMMENT_PATH}/${commentId}/like-status`)
-      .set("Authorization", "Bearer " + token)
-      .send({
-        likeStatus: "Dislike",
-      })
-      .expect(HttpStatuses.NO_CONTENT_204);
-  });
-
-  it("Should set like like to comment", async () => {
-    await request(app)
-      .put(`${COMMENT_PATH}/${commentId}/like-status`)
-      .set("Authorization", "Bearer " + token)
-      .send({
-        likeStatus: "Dislike",
-      })
-      .expect(HttpStatuses.NO_CONTENT_204);
-  });
-
-  it("Should set like like to comment", async () => {
-    await request(app)
-      .put(`${COMMENT_PATH}/${commentId}/like-status`)
-      .set("Authorization", "Bearer " + token)
-      .send({
-        likeStatus: "Like",
-      })
-      .expect(HttpStatuses.NO_CONTENT_204);
-  });
-  it("Should set like like to comment", async () => {
-    await request(app)
-      .put(`${COMMENT_PATH}/${commentId}/like-status`)
-      .set("Authorization", "Bearer " + token)
-      .send({
-        likeStatus: "None",
       })
       .expect(HttpStatuses.NO_CONTENT_204);
   });

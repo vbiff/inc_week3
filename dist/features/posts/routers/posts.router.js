@@ -16,6 +16,7 @@ const comment_inputDto_validation_1 = require("../../comments/validation/comment
 const access_token_guard_1 = require("../../../core/middlewares/auth/access-token-guard");
 const get_comments_for_post_id_handler_1 = require("./handlers/get-comments-for-post-id-handler");
 const composition_root_1 = require("../../../composition-root");
+const optional_access_token_guard_1 = require("../../../core/middlewares/auth/optional-access-token-guard");
 const createPostHandler = composition_root_1.container.get(create_post_handler_1.CreatePostHandler);
 const getPostByIdHandler = composition_root_1.container.get(get_post_by_id_handler_1.GetPostByIdHandler);
 const updatePostHandler = composition_root_1.container.get(update_post_handler_1.UpdatePostHandler);
@@ -27,7 +28,7 @@ exports.postRouter = (0, express_1.Router)();
 // create comment with postId
 exports.postRouter.post("/:postId/comments", access_token_guard_1.accessTokenGuardMiddleware, comment_inputDto_validation_1.commentInputDtoValidation, validation_result_middleware_1.validationResultMiddleware, createCommentHandler.createCommentHandler);
 // get comment for postId
-exports.postRouter.get("/:postId/comments/", query_pagination_sorting_validation_1.queryValidation, validation_result_middleware_1.validationResultMiddleware, getCommentsForPostIdHandler.getCommentsForPostIdHandler);
+exports.postRouter.get("/:postId/comments/", optional_access_token_guard_1.optionalAccessTokenGuardMiddleware, query_pagination_sorting_validation_1.queryValidation, validation_result_middleware_1.validationResultMiddleware, getCommentsForPostIdHandler.getCommentsForPostIdHandler);
 //get all posts
 exports.postRouter.get("/", query_pagination_sorting_validation_1.queryValidation, validation_result_middleware_1.validationResultMiddleware, getAllPostsHandler.getAllPostsHandler);
 // create post

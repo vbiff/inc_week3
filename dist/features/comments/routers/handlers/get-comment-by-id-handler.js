@@ -29,7 +29,8 @@ let GetCommentByIdHandler = class GetCommentByIdHandler {
     constructor(commentsQueryRepository) {
         this.commentsQueryRepository = commentsQueryRepository;
         this.getCommentByIdHandler = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const comment = yield this.commentsQueryRepository.getCommentById(req.params.id);
+            var _a;
+            const comment = yield this.commentsQueryRepository.getCommentById(req.params.id, (_a = req.user) === null || _a === void 0 ? void 0 : _a.id);
             if (!comment) {
                 res.sendStatus(http_statuses_1.HttpStatuses.NOT_FOUND_404);
                 return;

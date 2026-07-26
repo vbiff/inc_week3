@@ -38,8 +38,8 @@ export class CommentLikeService {
       lastModifiedAt: new Date().toISOString(),
     });
     const likeExisted = await this.commentsLikesRepository.findLikeById(
-      newLike.userId,
-      newLike.commentId,
+      userId,
+      commentId,
     );
     if (!likeExisted) {
       const setLike = await this.commentsLikesRepository.createLike(newLike);
